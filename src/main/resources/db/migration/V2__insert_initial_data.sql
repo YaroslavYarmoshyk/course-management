@@ -24,6 +24,7 @@ INSERT INTO lesson (course_code, title, description, credits)
 VALUES (22324, 'Introduction to Algebra', 'Basic concepts and operations in algebra', 3),
        (22324, 'Geometry Fundamentals', 'Fundamentals of geometric shapes and properties', 2.5),
        (22324, 'Calculus Basics', 'Introduction to differentiation and integration', 4),
+       (22324, 'Statistics Fundamentals', 'Basic concepts in statistics and data analysis', 2.5),
        (22324, 'Probability Theory', 'Introduction to probability theory and applications', 3.5),
        (34432, 'Ancient Civilizations', 'Study of ancient cultures and civilizations', 3.5),
        (34432, 'Middle Ages and Renaissance', 'Examination of the Middle Ages and the Renaissance period', 4),

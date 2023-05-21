@@ -1,0 +1,43 @@
+package com.coursemanagement.repository.entity;
+
+import com.coursemanagement.enumeration.TokenType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@Table(name = "confirmation_token")
+public class ConfirmationTokenEntity {
+    @Id
+    @GeneratedValue(generator = "token_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "token_id_seq",
+            sequenceName = "token_id_seq",
+            allocationSize = 1
+    )
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userId;
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "type")
+    private TokenType type;
+    @Column(name = "token")
+    private String token;
+    @Column(name = "expiration_date")
+    private LocalDateTime expirationDate;
+    @Column(name = "activated")
+    private Boolean activated;
+}

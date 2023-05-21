@@ -3,7 +3,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: alonso-321
-    url: jdbc:postgresql://course-management-db:5432/course-management
+    url: jdbc:postgresql://localhost:5432/course-management
   jpa:
     show-sql: true
     generate-ddl: true

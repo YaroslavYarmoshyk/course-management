@@ -1,0 +1,23 @@
+services:
+  course-management:
+    image: 'yarmoshyk/course-management:1'
+    build:
+      context: .
+    container_name: course-management-app
+    depends_on:
+      - course-management-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://course-management-db:5432/course-management
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=alonso-321
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+
+  course-management-db:
+    image: 'postgres:15.2-alpine'
+    container_name: course-management-db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=alonso-321
+      - POSTGRES_DB=course-management

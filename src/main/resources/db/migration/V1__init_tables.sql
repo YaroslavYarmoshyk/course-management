@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS "user"
     first_name TEXT,
     last_name  TEXT,
     email      TEXT UNIQUE NOT NULL,
+    "password" TEXT,
     phone      TEXT UNIQUE,
     status     TEXT CHECK (status = 'ACTIVE' OR status = 'INACTIVE')
 );

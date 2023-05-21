@@ -37,6 +37,8 @@ public class UserEntity {
     private String lastName;
     @Column(name = "email")
     private String email;
+    @Column(name = "password")
+    private String password;
     @Column(name = "phone")
     private String phone;
     @Enumerated(value = EnumType.STRING)

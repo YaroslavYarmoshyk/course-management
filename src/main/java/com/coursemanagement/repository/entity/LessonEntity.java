@@ -33,6 +33,8 @@ public class LessonEntity {
     private CourseEntity course;
     @Column(name = "title")
     private String title;
+    @Column(name = "description")
+    private String description;
     @Column(name = "credits")
     private BigDecimal credits;
     @Column(name = "homework")

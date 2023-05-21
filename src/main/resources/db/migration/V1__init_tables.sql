@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS role
 (
-    id   BIGINT PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL
+    id   BIGSERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL CHECK (name = 'ADMIN' OR name = 'INSTRUCTOR' OR name = 'STUDENT')
 );
 
 CREATE TABLE IF NOT EXISTS "user"
 (
-    id         BIGINT PRIMARY KEY,
+    id         BIGSERIAL PRIMARY KEY,
     first_name TEXT,
     last_name  TEXT,
     email      TEXT UNIQUE NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "user"
 
 CREATE TABLE IF NOT EXISTS confirmation_token
 (
-    id              BIGINT PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     user_id         BIGINT NOT NULL,
     "type"          TEXT,
     token           TEXT,
@@ -34,11 +34,11 @@ CREATE TABLE IF NOT EXISTS course
 
 CREATE TABLE IF NOT EXISTS lesson
 (
-    id          BIGINT PRIMARY KEY,
+    id          BIGSERIAL PRIMARY KEY,
     course_code BIGINT,
     title       TEXT NOT NULL,
-    credits     NUMERIC,
     description TEXT,
+    credits     NUMERIC,
     homework    BYTEA
 );
 
@@ -69,8 +69,3 @@ CREATE TABLE IF NOT EXISTS user_mark
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (lesson_id) REFERENCES lesson (id)
 );
-
-CREATE SEQUENCE IF NOT EXISTS role_id_seq INCREMENT 1 START 1 MINVALUE 1;
-CREATE SEQUENCE IF NOT EXISTS user_id_seq INCREMENT 1 START 1 MINVALUE 1;
-CREATE SEQUENCE IF NOT EXISTS token_id_seq INCREMENT 1 START 1 MINVALUE 1;
-CREATE SEQUENCE IF NOT EXISTS lesson_id_seq INCREMENT 1 START 1 MINVALUE 1;

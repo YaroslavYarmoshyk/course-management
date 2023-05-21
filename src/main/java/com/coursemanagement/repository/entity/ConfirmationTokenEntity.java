@@ -21,10 +21,10 @@ import java.time.LocalDateTime;
 @Table(name = "confirmation_token")
 public class ConfirmationTokenEntity {
     @Id
-    @GeneratedValue(generator = "token_id_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "confirmation_token_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
-            name = "token_id_seq",
-            sequenceName = "token_id_seq",
+            name = "confirmation_token_id_seq",
+            sequenceName = "confirmation_token_id_seq",
             allocationSize = 1
     )
     private Long id;

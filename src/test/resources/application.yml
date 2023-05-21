@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: postgres
+    username: cm-admin
     password: alonso-321
     url: jdbc:postgresql://localhost:5432/course-management
   jpa:

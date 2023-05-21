@@ -1,16 +1,24 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: postgres
+    username: cm-admin
     password: alonso-321
     url: jdbc:postgresql://course-management-db:5432/course-management
   jpa:
+    open-in-view: false
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
   sql:
     init:
       platform: postgres
       mode:
       continue-on-error: true
+  flyway:
+    enabled: true
+    user: cm-admin
+    password: alonso-321
+    baseline-on-migrate: true
+    baseline-description: 'init'
+    baseline-version: 0

@@ -11,16 +11,16 @@ CREATE TABLE IF NOT EXISTS "user"
     last_name  TEXT,
     email      TEXT UNIQUE NOT NULL,
     phone      TEXT UNIQUE,
-    active     BOOLEAN
+    status     TEXT CHECK (status = 'ACTIVE' OR status = 'INACTIVE')
 );
 
 CREATE TABLE IF NOT EXISTS confirmation_token
 (
     id              BIGINT PRIMARY KEY,
     user_id         BIGINT NOT NULL,
-    token_type      TEXT,
+    "type"          TEXT,
     token           TEXT,
-    expiration_date DATE,
+    expiration_date TIMESTAMP,
     activated       BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES "user" (id)
 );

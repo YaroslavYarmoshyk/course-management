@@ -10,6 +10,8 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: validate
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   sql:
     init:
       platform: postgres

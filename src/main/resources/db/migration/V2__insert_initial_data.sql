@@ -4,9 +4,9 @@ VALUES ('ADMIN'),
        ('STUDENT');
 
 INSERT INTO "user" (first_name, last_name, email, "password", phone, status)
-VALUES ('John', 'Smith', 'john-smith@gmail.com', null, '+380974309331', 'ACTIVE'),
-       ('Marry', 'Poppins', 'poppins@yahoo.com', null, '+380971668744', 'ACTIVE'),
-       ('Tyrion', 'Lannister', 'goldlannister@gmail.com', null, '+380971205151', 'ACTIVE');
+VALUES ('John', 'Smith', 'john-smith@gmail.com', '$2a$10$2DXHDU2uYMrlIiRHVb2CletM6kMjhLmvHzgyfOHQlV2SrLzE17hSK', '+380974309331', 'ACTIVE'),
+       ('Marry', 'Poppins', 'poppins@yahoo.com', '$2a$10$Zd/kQRuvnJ2br8dN5OyWt.LskBDAHL1UpZoRdbdOz7QcmNPJYJdYe', '+380971668744', 'ACTIVE'),
+       ('Tyrion', 'Lannister', 'goldlannister@gmail.com', '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m', '+380971205151', 'ACTIVE');
 
 INSERT INTO user_role (user_id, role_id)
 VALUES (1, 1),

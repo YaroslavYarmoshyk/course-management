@@ -19,9 +19,9 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
     @Value("${jwt.security-key}")
-    private static String secretKey;
+    private String secretKey;
     @Value("${jwt.expiration-time}")
-    private static int expirationTime;
+    private int expirationTime;
 
     @Override
     public String extractUsername(final String token) {

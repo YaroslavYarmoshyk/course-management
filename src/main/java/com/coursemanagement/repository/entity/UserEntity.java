@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class UserEntity {
     @Id
     @GeneratedValue(generator = "user_id_seq", strategy = GenerationType.SEQUENCE)

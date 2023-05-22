@@ -1,6 +1,7 @@
 package com.coursemanagement.security.impl;
 
 import com.coursemanagement.enumeration.UserStatus;
+import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.User;
 import com.coursemanagement.security.AuthenticationService;
 import com.coursemanagement.security.JwtService;
@@ -8,6 +9,7 @@ import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,16 +25,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse register(final AuthenticationRequest authenticationRequest) {
+        final String email = authenticationRequest.email();
+        checkIfEmailIsTaken(email);
         var user = new User()
                 .setFirstName(authenticationRequest.firstName())
                 .setLastName(authenticationRequest.lastName())
-                .setEmail(authenticationRequest.email())
+                .setEmail(email)
                 .setPhone(authenticationRequest.phone())
-                .setStatus(UserStatus.ACTIVE)
+                .setStatus(UserStatus.INACTIVE)
                 .setPassword(passwordEncoder.encode(authenticationRequest.password()));
         userService.save(user);
         final String token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
+    }
+
+    private void checkIfEmailIsTaken(final String email) {
+        if (userService.isEmailAlreadyRegistered(email)) {
+            throw new SystemException("User with email " + email + " already exists", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override

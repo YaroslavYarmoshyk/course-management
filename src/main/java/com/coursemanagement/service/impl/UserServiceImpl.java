@@ -3,19 +3,25 @@ package com.coursemanagement.service.impl;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.mapper.UserMapper;
+import com.coursemanagement.repository.RoleRepository;
 import com.coursemanagement.repository.UserRepository;
+import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
     @Override
@@ -28,20 +34,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User save(final User user) {
-        if (isAlreadyExists(user)) {
-            throw new SystemException(
-                    "User with email " + user.getEmail() + " already exists",
-                    HttpStatus.BAD_REQUEST
-            );
-        }
         final UserEntity userEntity = userMapper.toEntity(user);
+        setRoles(user, userEntity);
         final UserEntity savedUser = userRepository.save(userEntity);
         return userMapper.toModel(savedUser);
     }
 
-    private boolean isAlreadyExists(final User user) {
-        final String email = user.getEmail();
+    @Override
+    public boolean isEmailAlreadyRegistered(final String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    private void setRoles(final User user, final UserEntity userEntity) {
+        final Set<RoleEntity> roleEntities = Optional.ofNullable(user.getRoles())
+                .map(roleRepository::findAllByNameIn)
+                .orElse(new HashSet<>());
+        userEntity.setRoles(roleEntities);
     }
 }

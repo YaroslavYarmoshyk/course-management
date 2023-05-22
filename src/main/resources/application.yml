@@ -24,3 +24,7 @@ spring:
     baseline-on-migrate: true
     baseline-description: 'init'
     baseline-version: 0
+
+jwt:
+  security-key: 77397A24432646294A404E635266556A586E327234753778214125442A472D4B6150645367566B59703373367638792F423F4528482B4D6251655468576D5A71
+  expiration-time: 1_000*60*24 # 1 day

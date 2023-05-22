@@ -15,10 +15,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Set;
 
 @Data
+@Accessors(chain = true)
 @Entity
 @Table(name = "\"user\"")
 public class UserEntity {
@@ -50,5 +52,5 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleEntity> role;
+    private Set<RoleEntity> roles;
 }

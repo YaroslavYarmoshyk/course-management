@@ -2,12 +2,12 @@ package com.coursemanagement.service.impl;
 
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.mapper.UserMapper;
 import com.coursemanagement.repository.UserRepository;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +18,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
     @Override
     public User findByEmail(final String email) {
         final Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isPresent()) {
-            return modelMapper.map(userEntity, User.class);
+            return userMapper.toModel(userEntity.get());
         }
         throw new SystemException("User by email " + email + " not found", HttpStatus.BAD_REQUEST);
     }
@@ -37,9 +37,9 @@ public class UserServiceImpl implements UserService {
                     HttpStatus.BAD_REQUEST
             );
         }
-        final UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+        final UserEntity userEntity = userMapper.toEntity(user);
         final UserEntity savedUser = userRepository.save(userEntity);
-        return modelMapper.map(savedUser, User.class);
+        return userMapper.toModel(savedUser);
     }
 
     private boolean isAlreadyExists(final User user) {

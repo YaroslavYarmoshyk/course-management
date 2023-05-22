@@ -26,4 +26,11 @@ public class UserServiceImpl implements UserService {
         }
         throw new SystemException("User by email " + email + " not found", HttpStatus.BAD_REQUEST);
     }
+
+    @Override
+    public User save(final User user) {
+        final UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+        final UserEntity savedUser = userRepository.save(userEntity);
+        return modelMapper.map(savedUser, User.class);
+    }
 }

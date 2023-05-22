@@ -19,7 +19,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.coursemanagement.util.Constants.*;
+import static com.coursemanagement.util.Constants.AUTHORIZATION_HEADER;
+import static com.coursemanagement.util.Constants.BEARER;
+import static com.coursemanagement.util.Constants.BEARER_TOKEN_START_INDEX;
 
 @Component
 @RequiredArgsConstructor
@@ -35,24 +37,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final boolean isAlreadyAuthenticated = Objects.nonNull(SecurityContextHolder.getContext().getAuthentication());
         if (
                 Objects.isNull(authenticationHeader)
-                || !authenticationHeader.startsWith(BEARER)
-                || isAlreadyAuthenticated
+                        || !authenticationHeader.startsWith(BEARER)
+                        || isAlreadyAuthenticated
         ) {
             filterChain.doFilter(request, response);
             return;
         }
         final String jwt = authenticationHeader.substring(BEARER_TOKEN_START_INDEX);
         final String userEmail = jwtService.extractUsername(jwt);
-        if (Objects.nonNull(userEmail)) {
-            var authenticationToken = getUsernamePasswordAuthenticationToken(request, userEmail);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        final boolean tokenIsValid = jwtService.isTokenValid(jwt, userDetails);
+        if (tokenIsValid) {
+            var authenticationToken = getUsernamePasswordAuthenticationToken(request, userDetails);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
         filterChain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(final HttpServletRequest request,
-                                                                                       final String userEmail) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+                                                                                       final UserDetails userDetails) {
         final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 null,

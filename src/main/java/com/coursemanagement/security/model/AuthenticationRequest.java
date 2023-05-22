@@ -1,13 +1,13 @@
-package com.coursemanagement.security.dto;
+package com.coursemanagement.security.model;
 
-public record AuthenticationRequestDto(
+public record AuthenticationRequest(
         String firstName,
         String lastName,
         String email,
         String phone,
         String password
 ) {
-    public AuthenticationRequestDto(final String email, final String password) {
+    public AuthenticationRequest(final String email, final String password) {
         this(null, null, email, null, password);
     }
 }

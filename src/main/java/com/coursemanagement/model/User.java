@@ -3,6 +3,7 @@ package com.coursemanagement.model;
 import com.coursemanagement.enumeration.RoleName;
 import com.coursemanagement.enumeration.UserStatus;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Data
+@Accessors(chain = true)
 public class User implements UserDetails {
     private Long id;
     private String firstName;

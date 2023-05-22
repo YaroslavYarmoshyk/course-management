@@ -7,7 +7,4 @@ public record AuthenticationRequest(
         String phone,
         String password
 ) {
-    public AuthenticationRequest(final String email, final String password) {
-        this(null, null, email, null, password);
-    }
 }

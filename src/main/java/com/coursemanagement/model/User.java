@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -58,6 +57,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return Objects.equals(status, UserStatus.ACTIVE);
+        return true;
     }
 }

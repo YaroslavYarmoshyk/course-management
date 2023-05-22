@@ -1,5 +1,6 @@
 package com.coursemanagement.security.impl;
 
+import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.model.User;
 import com.coursemanagement.security.AuthenticationService;
 import com.coursemanagement.security.JwtService;
@@ -27,6 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .setLastName(authenticationRequest.lastName())
                 .setEmail(authenticationRequest.email())
                 .setPhone(authenticationRequest.phone())
+                .setStatus(UserStatus.ACTIVE)
                 .setPassword(passwordEncoder.encode(authenticationRequest.password()));
         userService.save(user);
         final String token = jwtService.generateToken(user);

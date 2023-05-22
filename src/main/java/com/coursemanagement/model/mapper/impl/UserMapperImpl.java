@@ -6,6 +6,9 @@ import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,9 +40,15 @@ public class UserMapperImpl implements UserMapper {
                 .setPassword(user.getPassword())
                 .setStatus(user.getStatus())
                 .setRoles(
-                        user.getRoles().stream()
-                                .map(RoleEntity::new)
-                                .collect(Collectors.toSet())
+                        getRoleEntitiesFromUser(user)
                 );
+    }
+
+    private static Set<RoleEntity> getRoleEntitiesFromUser(final User user) {
+        return Optional.ofNullable(user.getRoles())
+                .stream()
+                .flatMap(Collection::stream)
+                .map(RoleEntity::new)
+                .collect(Collectors.toSet());
     }
 }

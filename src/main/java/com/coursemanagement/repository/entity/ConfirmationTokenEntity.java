@@ -30,7 +30,7 @@ public class ConfirmationTokenEntity {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    private UserEntity userEntity;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
     private TokenType type;
@@ -38,6 +38,6 @@ public class ConfirmationTokenEntity {
     private String token;
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
-    @Column(name = "activated")
-    private Boolean activated;
+    @Column(name = "active")
+    private Boolean active;
 }

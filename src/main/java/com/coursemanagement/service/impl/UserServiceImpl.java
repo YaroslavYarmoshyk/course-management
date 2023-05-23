@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(final String email) {
         final Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isPresent()) {
-            return userMapper.toModel(userEntity.get());
+            return userMapper.entityToModel(userEntity.get());
         }
         throw new SystemException("User by email " + email + " not found", HttpStatus.BAD_REQUEST);
     }
@@ -36,21 +36,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User save(final User user) {
-        final UserEntity userEntity = userMapper.toEntity(user);
-        setRoles(user, userEntity);
+        final UserEntity userEntity = userMapper.modelToEntity(user);
+        final Set<RoleEntity> roleEntities = Optional.ofNullable(user.getRoles())
+                .map(roleRepository::findAllByNameIn)
+                .orElse(new HashSet<>());
+        userEntity.setRoles(roleEntities);
         final UserEntity savedUser = userRepository.save(userEntity);
-        return userMapper.toModel(savedUser);
+        return userMapper.entityToModel(savedUser);
     }
 
     @Override
     public boolean isEmailAlreadyRegistered(final String email) {
         return userRepository.findByEmail(email).isPresent();
-    }
-
-    private void setRoles(final User user, final UserEntity userEntity) {
-        final Set<RoleEntity> roleEntities = Optional.ofNullable(user.getRoles())
-                .map(roleRepository::findAllByNameIn)
-                .orElse(new HashSet<>());
-        userEntity.setRoles(roleEntities);
     }
 }

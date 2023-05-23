@@ -18,9 +18,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-    @Value("${jwt.security-key}")
+    @Value("${token.jwt.security-key}")
     private String secretKey;
-    @Value("${jwt.expiration-time}")
+    @Value("${token.jwt.expiration-time}")
     private int expirationTime;
 
     @Override

@@ -12,5 +12,5 @@ public interface ConfirmationTokenMapper {
     ConfirmationTokenEntity modelToEntity(final ConfirmationToken confirmationToken);
 
     @Mapping(source = "userEntity.id", target = "userId")
-    ConfirmationToken modelToModel(final ConfirmationTokenEntity confirmationTokenEntity);
+    ConfirmationToken entityToModel(final ConfirmationTokenEntity confirmationTokenEntity);
 }

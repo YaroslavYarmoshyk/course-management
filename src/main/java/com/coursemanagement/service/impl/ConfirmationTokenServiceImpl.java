@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,12 +44,12 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                 user.getId(),
                 TokenType.EMAIL_CONFIRMATION,
                 getEncryptedEmailConfirmationToken(user),
-                LocalDateTime.now(DEFAULT_ZONE_ID).plusHours(emailTokenExpirationTime),
+                LocalDateTime.now(DEFAULT_ZONE_ID).plus(emailTokenExpirationTime, ChronoUnit.HOURS),
                 true
         );
         final ConfirmationTokenEntity confirmationTokenEntity = confirmationTokenMapper.modelToEntity(newToken);
-        tokenRepository.save(confirmationTokenEntity);
-        return newToken;
+        final ConfirmationTokenEntity savedToken = tokenRepository.save(confirmationTokenEntity);
+        return confirmationTokenMapper.entityToModel(savedToken);
     }
 
     private String getEncryptedEmailConfirmationToken(final User user) {
@@ -65,7 +66,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                 log.info("Cannot find token: {} in the database", encryptedToken);
                 return false;
             }
-            final ConfirmationToken tokenFromDb = confirmationTokenMapper.modelToModel(tokenEntity.get());
+            final ConfirmationToken tokenFromDb = confirmationTokenMapper.entityToModel(tokenEntity.get());
             return isValidByUserAndExpiration(tokenFromDb);
         } catch (Exception e) {
             log.warn("Cannot validate token: {}", token);

@@ -14,7 +14,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         return userService.findByEmail(username);
     }

@@ -9,6 +9,7 @@ import com.coursemanagement.security.JwtService;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.ConfirmationTokenService;
+import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenService confirmationTokenService;
     private final UserService userService;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -41,8 +43,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .setPassword(passwordEncoder.encode(authenticationRequest.password()));
         final User savedUser = userService.save(user);
         final String token = jwtService.generateToken(savedUser);
-//        TODO: sent email confirmation token to the user
         final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(savedUser);
+        emailService.sendEmailConfirmation(savedUser, emailConfirmationToken.token());
         return new AuthenticationResponse(token);
     }
 
@@ -53,7 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(final AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse verify(final AuthenticationRequest authenticationRequest) {
         var authenticationToken = getAuthenticationToken(authenticationRequest);
         var authentication = authenticationManager.authenticate(authenticationToken);
         var user = (User) authentication.getPrincipal();

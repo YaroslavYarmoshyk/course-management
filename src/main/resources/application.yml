@@ -24,6 +24,20 @@ spring:
     baseline-on-migrate: true
     baseline-description: 'init'
     baseline-version: 0
+  mail:
+    host: smtp.gmail.com
+    username: iryna19890909@gmail.com
+    password: eofhvaklswvejhto
+    port: 587
+    protocol: smtp
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
+
+course-management:
+  url:
+    base: http://localhost:8080
 
 token:
   jwt:

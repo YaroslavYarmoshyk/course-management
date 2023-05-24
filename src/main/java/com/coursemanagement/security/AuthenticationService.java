@@ -7,5 +7,5 @@ public interface AuthenticationService {
 
     AuthenticationResponse register(AuthenticationRequest authenticationRequest);
 
-    AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
+    AuthenticationResponse verify(AuthenticationRequest authenticationRequest);
 }

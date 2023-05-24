@@ -1,6 +1,7 @@
 package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.TokenType;
+import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.mapper.ConfirmationTokenMapper;
@@ -10,10 +11,10 @@ import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EncryptionService;
-import com.coursemanagement.util.UserUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,41 +53,33 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         return confirmationTokenMapper.entityToModel(savedToken);
     }
 
+    @Override
+    public ConfirmationToken findByTokenAndType(final String token, final TokenType type) {
+        final Optional<ConfirmationTokenEntity> tokenEntity = tokenRepository.findByTokenAndType(token, type);
+        if (tokenEntity.isPresent()) {
+            return confirmationTokenMapper.entityToModel(tokenEntity.get());
+        }
+        throw new SystemException("Cannot find token: " + token + " in the database ", HttpStatus.BAD_REQUEST);
+    }
+
     private String getEncryptedEmailConfirmationToken(final User user) {
         final String plainToken = String.format("%s%s", user.getEmail(), LocalDateTime.now(DEFAULT_ZONE_ID));
         return encryptionService.encrypt(plainToken);
     }
 
     @Override
-    public boolean isConfirmationTokenValid(final String token, final TokenType type) {
-        try {
-            final String encryptedToken = encryptionService.encrypt(token);
-            final var tokenEntity = tokenRepository.findByTokenAndType(encryptedToken, type);
-            if (tokenEntity.isEmpty()) {
-                log.info("Cannot find token: {} in the database", encryptedToken);
-                return false;
-            }
-            final ConfirmationToken tokenFromDb = confirmationTokenMapper.entityToModel(tokenEntity.get());
-            return isValidByUserAndExpiration(tokenFromDb);
-        } catch (Exception e) {
-            log.warn("Cannot validate token: {}", token);
-            return false;
-        }
-    }
-
-    @Override
     public void invalidateToken(final ConfirmationToken token) {
         final Optional<ConfirmationTokenEntity> tokenEntity = tokenRepository.findById(token.id());
         tokenEntity.ifPresent(tokenFromDb -> {
-            tokenFromDb.setActivated(Boolean.FALSE);
+            tokenFromDb.setActivated(Boolean.TRUE);
             tokenRepository.save(tokenFromDb);
         });
     }
 
-    private boolean isValidByUserAndExpiration(final ConfirmationToken token) {
-        final User user = UserUtils.resolveCurrentUser();
-        return token.expirationDate().isBefore(LocalDateTime.now(DEFAULT_ZONE_ID))
-                && Objects.equals(token.userId(), user.getId());
+    @Override
+    public boolean isTokenValid(final ConfirmationToken token) {
+        return token.expirationDate().isAfter(LocalDateTime.now(DEFAULT_ZONE_ID))
+                && Objects.equals(token.activated(), Boolean.FALSE);
     }
 
     private void invalidateOldTokens(final User user, final TokenType tokenType) {

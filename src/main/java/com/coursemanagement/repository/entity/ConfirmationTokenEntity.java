@@ -38,6 +38,6 @@ public class ConfirmationTokenEntity {
     private String token;
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
-    @Column(name = "active")
-    private Boolean active;
+    @Column(name = "activated")
+    private Boolean activated;
 }

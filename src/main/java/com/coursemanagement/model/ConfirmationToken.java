@@ -10,5 +10,5 @@ public record ConfirmationToken(
         TokenType type,
         String token,
         LocalDateTime expirationDate,
-        boolean active) {
+        boolean activated) {
 }

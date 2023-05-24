@@ -45,7 +45,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                 TokenType.EMAIL_CONFIRMATION,
                 getEncryptedEmailConfirmationToken(user),
                 LocalDateTime.now(DEFAULT_ZONE_ID).plus(emailTokenExpirationTime, ChronoUnit.HOURS),
-                true
+                false
         );
         final ConfirmationTokenEntity confirmationTokenEntity = confirmationTokenMapper.modelToEntity(newToken);
         final ConfirmationTokenEntity savedToken = tokenRepository.save(confirmationTokenEntity);
@@ -78,7 +78,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     public void invalidateToken(final ConfirmationToken token) {
         final Optional<ConfirmationTokenEntity> tokenEntity = tokenRepository.findById(token.id());
         tokenEntity.ifPresent(tokenFromDb -> {
-            tokenFromDb.setActive(Boolean.FALSE);
+            tokenFromDb.setActivated(Boolean.FALSE);
             tokenRepository.save(tokenFromDb);
         });
     }
@@ -92,7 +92,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private void invalidateOldTokens(final User user, final TokenType tokenType) {
         final UserEntity userEntity = userMapper.modelToEntity(user);
         var oldTokens = tokenRepository.findAllByUserEntityAndType(userEntity, tokenType);
-        oldTokens.forEach(token -> token.setActive(Boolean.FALSE));
+        oldTokens.forEach(token -> token.setActivated(Boolean.FALSE));
         tokenRepository.saveAll(oldTokens);
     }
 }

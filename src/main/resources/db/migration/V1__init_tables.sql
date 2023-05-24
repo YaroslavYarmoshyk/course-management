@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS confirmation_token
     "type"          TEXT,
     token           TEXT,
     expiration_date TIMESTAMP,
-    active          BOOL NOT NULL,
+    activated       BOOL   NOT NULL,
     FOREIGN KEY (user_id) REFERENCES "user" (id)
 );
 

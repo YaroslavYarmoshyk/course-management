@@ -18,6 +18,8 @@ import java.nio.charset.StandardCharsets;
 import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_SUBJECT;
 import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_URL;
 import static com.coursemanagement.util.Constants.EMAIL_SENDER;
+import static com.coursemanagement.util.Constants.RESET_PASSWORD_CONFIRMATION_SUBJECT;
+import static com.coursemanagement.util.Constants.RESET_PASSWORD_CONFIRMATION_URL;
 
 @Slf4j
 @Service
@@ -29,14 +31,26 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmailConfirmation(final User user, final String token) {
+        final String confirmationUrl = baseUrl + EMAIL_CONFIRMATION_URL + token;
+        final String context = EmailUtils.getEmailConfirmationTemplate(confirmationUrl);
+        sendEmail(user, EMAIL_CONFIRMATION_SUBJECT, context);
+    }
+
+    @Override
+    public void sendResetPasswordConfirmation(final User user, final String token) {
+        final String confirmationUrl = baseUrl + RESET_PASSWORD_CONFIRMATION_URL + token;
+        final String context = EmailUtils.getResetPasswordTemplate(confirmationUrl);
+        sendEmail(user, RESET_PASSWORD_CONFIRMATION_SUBJECT, context);
+    }
+
+    private void sendEmail(final User user, final String subject, final String context) {
         try {
             final MimeMessagePreparator mailMessage = mimeMessage -> {
                 final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
                 message.setFrom(EMAIL_SENDER, EMAIL_SENDER);
                 message.setTo(user.getEmail());
-                message.setSubject(EMAIL_CONFIRMATION_SUBJECT);
-                final String confirmationUrl = baseUrl + EMAIL_CONFIRMATION_URL + token;
-                message.setText(EmailUtils.getEmailConfirmationTemplate(confirmationUrl), true);
+                message.setSubject(subject);
+                message.setText(context, true);
             };
             javaMailSender.send(mailMessage);
         } catch (Exception e) {

@@ -11,4 +11,14 @@ public record ConfirmationToken(
         String token,
         LocalDateTime expirationDate,
         boolean activated) {
+
+    public ConfirmationToken(
+            Long userId,
+            TokenType type,
+            String token,
+            LocalDateTime expirationDate,
+            boolean activated
+    ) {
+        this(null, userId, type, token, expirationDate, activated);
+    }
 }

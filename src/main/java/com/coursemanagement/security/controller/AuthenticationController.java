@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.coursemanagement.util.Constants.AUTHENTICATION_ENDPOINT;
-import static com.coursemanagement.util.Constants.TOKEN_CONFIRMATION_ENDPOINT;
+import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_ENDPOINT;
 import static com.coursemanagement.util.Constants.TOKEN_CONFIRMATION_ENDPOINT_PARAMETER;
 
 @RestController
@@ -33,7 +33,7 @@ public class AuthenticationController {
         return authenticationService.verify(authenticationRequest);
     }
 
-    @GetMapping(value = TOKEN_CONFIRMATION_ENDPOINT)
+    @GetMapping(value = EMAIL_CONFIRMATION_ENDPOINT)
     public void confirmEmail(@RequestParam(value = TOKEN_CONFIRMATION_ENDPOINT_PARAMETER) final String token) {
         userService.confirmUserEmailByToken(token);
     }

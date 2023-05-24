@@ -12,6 +12,7 @@ import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthenticationResponse register(final AuthenticationRequest authenticationRequest) {
         final String email = authenticationRequest.email();
+        validateAuthenticationRequest(authenticationRequest);
         checkIfEmailIsTaken(email);
         var user = new User()
                 .setFirstName(authenticationRequest.firstName())
@@ -48,19 +50,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new AuthenticationResponse(token);
     }
 
-    private void checkIfEmailIsTaken(final String email) {
-        if (userService.isEmailAlreadyRegistered(email)) {
-            throw new SystemException("User with email " + email + " already exists", HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @Override
     public AuthenticationResponse verify(final AuthenticationRequest authenticationRequest) {
+        validateAuthenticationRequest(authenticationRequest);
         var authenticationToken = getAuthenticationToken(authenticationRequest);
         var authentication = authenticationManager.authenticate(authenticationToken);
         var user = (User) authentication.getPrincipal();
         var token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
+    }
+
+    private void validateAuthenticationRequest(final AuthenticationRequest authenticationRequest) {
+        final String email = authenticationRequest.email();
+        final String password = authenticationRequest.password();
+        if (Strings.isBlank(email)) {
+            throw new SystemException("Email cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        if (Strings.isBlank(password)) {
+            throw new SystemException("Password cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void checkIfEmailIsTaken(final String email) {
+        if (userService.isEmailAlreadyRegistered(email)) {
+            throw new SystemException("User with email " + email + " already exists", HttpStatus.BAD_REQUEST);
+        }
     }
 
     private static UsernamePasswordAuthenticationToken getAuthenticationToken(final AuthenticationRequest authenticationRequest) {

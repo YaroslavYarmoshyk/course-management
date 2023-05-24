@@ -44,15 +44,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void confirmUserEmailByToken(final String token) {
         final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
-        final ConfirmationToken confirmationToken = confirmationTokenService.findByTokenAndType(encodedToken, TokenType.EMAIL_CONFIRMATION);
-        if (confirmationTokenService.isTokenValid(confirmationToken)) {
-            confirmationTokenService.invalidateToken(confirmationToken);
-            final Long userId = confirmationToken.userId();
-            final UserEntity userEntity = userRepository.findById(userId)
-                    .orElseThrow(() -> new SystemException("Cannot find user by id: " + userId, HttpStatus.INTERNAL_SERVER_ERROR));
-            userEntity.setStatus(UserStatus.ACTIVE);
-            userRepository.save(userEntity);
-        }
+        final ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(encodedToken, TokenType.EMAIL_CONFIRMATION);
+        final Long userId = confirmationToken.userId();
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new SystemException("Cannot find user by id: " + userId, HttpStatus.INTERNAL_SERVER_ERROR));
+        userEntity.setStatus(UserStatus.ACTIVE);
+        userRepository.save(userEntity);
     }
 
     @Override

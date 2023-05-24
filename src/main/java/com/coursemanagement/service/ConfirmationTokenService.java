@@ -8,9 +8,9 @@ public interface ConfirmationTokenService {
 
     ConfirmationToken createEmailConfirmationToken(final User user);
 
+    ConfirmationToken createResetPasswordToken(final User user);
+
     ConfirmationToken findByTokenAndType(final String token, final TokenType type);
 
-    boolean isTokenValid(final ConfirmationToken token);
-
-    void invalidateToken(final ConfirmationToken token);
+    ConfirmationToken confirmToken(final String token, final TokenType type);
 }

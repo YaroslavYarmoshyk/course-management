@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.coursemanagement.util.Constants.AUTHENTICATION_ENDPOINT;
+import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers(AUTHENTICATION_ENDPOINT + "/**")
+                                .requestMatchers(
+                                        AUTHENTICATION_ENDPOINT + "/**",
+                                        RESET_PASSWORD_ENDPOINT + "/**"
+                                )
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )

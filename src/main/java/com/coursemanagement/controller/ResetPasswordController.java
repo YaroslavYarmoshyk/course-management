@@ -26,7 +26,7 @@ public class ResetPasswordController {
     private final ResetPasswordService resetPasswordService;
     private final ConfirmationTokenService confirmationTokenService;
 
-    @PostMapping
+    @PostMapping(value = RESET_PASSWORD_CONFIRMATION_ENDPOINT)
     public void sendResetConfirmation(@RequestBody final String email) {
         resetPasswordService.sendResetConfirmation(email);
     }
@@ -37,8 +37,8 @@ public class ResetPasswordController {
         confirmationTokenService.confirmToken(encodedToken, TokenType.RESET_PASSWORD);
     }
 
-    @PostMapping(value = "/new")
+    @PostMapping
     public AuthenticationResponse resetPassword(@RequestBody AuthenticationRequest authenticationRequest) {
-        return null;
+        return resetPasswordService.resetPassword(authenticationRequest);
     }
 }

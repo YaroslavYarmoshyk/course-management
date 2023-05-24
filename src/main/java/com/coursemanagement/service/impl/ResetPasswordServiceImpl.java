@@ -3,6 +3,7 @@ package com.coursemanagement.service.impl;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
+import com.coursemanagement.security.JwtService;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.ConfirmationTokenService;
@@ -12,14 +13,17 @@ import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ResetPasswordServiceImpl implements ResetPasswordService {
     private final ConfirmationTokenService confirmationTokenService;
+    private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final UserService userService;
+    private final JwtService jwtService;
 
     @Override
     public void sendResetConfirmation(final String email) {
@@ -33,6 +37,14 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     @Override
     public AuthenticationResponse resetPassword(final AuthenticationRequest authenticationRequest) {
-        return null;
+        final String email = authenticationRequest.email();
+        if (Strings.isNotBlank(email)) {
+            final User user = userService.findByEmail(email);
+            user.setPassword(passwordEncoder.encode(authenticationRequest.password()));
+            final User savedUser = userService.save(user);
+            final String token = jwtService.generateToken(savedUser);
+            return new AuthenticationResponse(token);
+        }
+        throw new SystemException("Email cannot be empty", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

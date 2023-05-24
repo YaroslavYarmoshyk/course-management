@@ -7,8 +7,6 @@ import com.coursemanagement.repository.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.Set;
-
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserEntity modelToEntity(User user);
@@ -23,8 +21,4 @@ public interface UserMapper {
     default RoleName mapToRoleName(RoleEntity roleEntity) {
         return roleEntity.getName();
     }
-
-    Set<RoleEntity> mapToRoleEntitySet(Set<RoleName> roleNames);
-
-    Set<RoleName> mapToRoleNameSet(Set<RoleEntity> roles);
 }

@@ -35,6 +35,6 @@ public class AuthenticationController {
 
     @GetMapping(value = EMAIL_CONFIRMATION_ENDPOINT)
     public void confirmEmail(@RequestParam(value = TOKEN_CONFIRMATION_ENDPOINT_PARAMETER) final String token) {
-        userService.confirmUserEmailByToken(token);
+        userService.confirmUserByEmailToken(token);
     }
 }

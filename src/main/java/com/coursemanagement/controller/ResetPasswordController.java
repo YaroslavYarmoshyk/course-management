@@ -31,14 +31,14 @@ public class ResetPasswordController {
         resetPasswordService.sendResetConfirmation(email);
     }
 
-    @PostMapping(value = "/new")
-    public AuthenticationResponse resetPassword(@RequestBody AuthenticationRequest authenticationRequest) {
-        return null;
-    }
-
     @GetMapping(value = RESET_PASSWORD_CONFIRMATION_ENDPOINT)
     public void confirmResetting(@RequestParam(value = TOKEN_CONFIRMATION_ENDPOINT_PARAMETER) final String token) {
         final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
         confirmationTokenService.confirmToken(encodedToken, TokenType.RESET_PASSWORD);
+    }
+
+    @PostMapping(value = "/new")
+    public AuthenticationResponse resetPassword(@RequestBody AuthenticationRequest authenticationRequest) {
+        return null;
     }
 }

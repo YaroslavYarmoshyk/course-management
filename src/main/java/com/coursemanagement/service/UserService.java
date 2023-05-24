@@ -5,7 +5,7 @@ import com.coursemanagement.model.User;
 public interface UserService {
     User findByEmail(final String email);
 
-    void confirmUserEmailByToken(final String token);
+    void confirmUserByEmailToken(final String token);
 
     User save(final User user);
 

@@ -22,7 +22,7 @@ public class AuthenticationController {
         return authenticationService.register(authenticationRequest);
     }
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping(value = "/verify")
     public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         return authenticationService.authenticate(authenticationRequest);
     }

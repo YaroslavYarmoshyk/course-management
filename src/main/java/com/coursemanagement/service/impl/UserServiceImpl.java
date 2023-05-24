@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void confirmUserEmailByToken(final String token) {
-        final String encodedToken = getEncodedToken(token);
+        final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
         final ConfirmationToken confirmationToken = confirmationTokenService.findByTokenAndType(encodedToken, TokenType.EMAIL_CONFIRMATION);
         if (confirmationTokenService.isTokenValid(confirmationToken)) {
             confirmationTokenService.invalidateToken(confirmationToken);
@@ -53,11 +53,6 @@ public class UserServiceImpl implements UserService {
             userEntity.setStatus(UserStatus.ACTIVE);
             userRepository.save(userEntity);
         }
-    }
-
-    private String getEncodedToken(final String token) {
-        final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
-        return encodedToken.replaceAll(" ", "+");
     }
 
     @Override

@@ -6,11 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -45,7 +46,7 @@ public class EncryptionServiceImpl implements EncryptionService {
 
             final String encryptedString = Base64.getEncoder().encodeToString(joinedBytes);
 
-            return UriUtils.encodeQueryParam(encryptedString, StandardCharsets.UTF_8);
+            return URLEncoder.encode(encryptedString, StandardCharsets.UTF_8);
         } catch (final GeneralSecurityException e) {
             throw new SystemException("Unable to encrypt string", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -57,7 +58,7 @@ public class EncryptionServiceImpl implements EncryptionService {
             final Cipher cipher = Cipher.getInstance(AES_CBC_PKCS5PADDING, SUN_JSE);
             final SecretKeySpec key = new SecretKeySpec(getBytes(encryptionKey), AES);
 
-            final String nonUrlSafeString = UriUtils.decode(string, StandardCharsets.UTF_8);
+            final String nonUrlSafeString = URLDecoder.decode(string, StandardCharsets.UTF_8);
             final byte[] decodedBase64 = Base64.getDecoder().decode(nonUrlSafeString);
 
             cipher.init(DECRYPT_MODE, key, new IvParameterSpec(getIvFromJoinByteArray(decodedBase64)));

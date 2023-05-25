@@ -1,11 +1,13 @@
 package com.coursemanagement.security.config;
 
 import com.coursemanagement.security.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,7 @@ import static com.coursemanagement.util.Constants.AUTHORIZATION_HEADER;
 import static com.coursemanagement.util.Constants.BEARER;
 import static com.coursemanagement.util.Constants.BEARER_TOKEN_START_INDEX;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -43,13 +46,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        final String jwt = authenticationHeader.substring(BEARER_TOKEN_START_INDEX);
-        final String userEmail = jwtService.extractUsername(jwt);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-        final boolean tokenIsValid = jwtService.isTokenValid(jwt, userDetails);
-        if (tokenIsValid) {
-            var authenticationToken = getUsernamePasswordAuthenticationToken(request, userDetails);
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        try {
+            final String jwt = authenticationHeader.substring(BEARER_TOKEN_START_INDEX);
+            final String userEmail = jwtService.extractUsername(jwt);
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            final boolean tokenIsValid = jwtService.isTokenValid(jwt, userDetails);
+            if (tokenIsValid) {
+                var authenticationToken = getUsernamePasswordAuthenticationToken(request, userDetails);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        } catch (JwtException e) {
+            final String expiredMsg = e.getMessage();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, expiredMsg);
+            log.warn(e.getMessage(), e);
+            return;
         }
         filterChain.doFilter(request, response);
     }

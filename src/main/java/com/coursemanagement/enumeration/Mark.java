@@ -3,7 +3,6 @@ package com.coursemanagement.enumeration;
 import com.coursemanagement.exeption.SystemException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -24,6 +23,6 @@ public enum Mark {
         return Arrays.stream(Mark.values())
                 .filter(mark -> Objects.equals(mark.getValue(), BigDecimal.valueOf(value)))
                 .findAny()
-                .orElseThrow(() -> new SystemException("Cannot parse " + value + " to mark", HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new SystemException("Cannot parse " + value + " to mark", SystemErrorCode.INTERNAL_SERVER_ERROR));
     }
 }

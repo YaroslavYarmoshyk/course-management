@@ -1,14 +1,14 @@
 package com.coursemanagement.exeption;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 public class SystemException extends RuntimeException {
     @Getter
-    private final HttpStatus status;
+    private final SystemErrorCode errorCode;
 
-    public SystemException(final String message, final HttpStatus status) {
+    public SystemException(final String message, final SystemErrorCode errorCode) {
         super(message);
-        this.status = status;
+        this.errorCode = errorCode;
     }
 }

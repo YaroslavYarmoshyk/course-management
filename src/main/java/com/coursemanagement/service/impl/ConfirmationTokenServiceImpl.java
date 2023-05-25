@@ -1,5 +1,6 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
@@ -14,7 +15,6 @@ import com.coursemanagement.service.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +55,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         if (tokenEntity.isPresent()) {
             return confirmationTokenMapper.entityToModel(tokenEntity.get());
         }
-        throw new SystemException("Cannot find token: " + token + " in the database ", HttpStatus.BAD_REQUEST);
+        throw new SystemException("Cannot find token: " + token + " in the database ", SystemErrorCode.BAD_REQUEST);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
             log.info("{} sent by user with id {} is confirmed", type, confirmationToken.userId());
             return confirmationToken;
         }
-        throw new SystemException(type + " sent by user with id " + confirmationToken.userId() + " is invalid", HttpStatus.BAD_REQUEST);
+        throw new SystemException(type + " sent by user with id " + confirmationToken.userId() + " is invalid", SystemErrorCode.BAD_REQUEST);
     }
 
     private void invalidateToken(final ConfirmationToken token) {

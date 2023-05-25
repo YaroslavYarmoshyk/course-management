@@ -1,5 +1,6 @@
 package com.coursemanagement.security.impl;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
@@ -13,7 +14,6 @@ import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,16 +64,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = authenticationRequest.email();
         final String password = authenticationRequest.password();
         if (Strings.isBlank(email)) {
-            throw new SystemException("Email cannot be empty", HttpStatus.BAD_REQUEST);
+            throw new SystemException("Email cannot be empty", SystemErrorCode.BAD_REQUEST);
         }
         if (Strings.isBlank(password)) {
-            throw new SystemException("Password cannot be empty", HttpStatus.BAD_REQUEST);
+            throw new SystemException("Password cannot be empty", SystemErrorCode.BAD_REQUEST);
         }
     }
 
     private void checkIfEmailIsTaken(final String email) {
         if (userService.isEmailAlreadyRegistered(email)) {
-            throw new SystemException("User with email " + email + " already exists", HttpStatus.BAD_REQUEST);
+            throw new SystemException("User with email " + email + " already exists", SystemErrorCode.BAD_REQUEST);
         }
     }
 

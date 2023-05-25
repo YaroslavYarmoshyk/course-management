@@ -1,5 +1,6 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.User;
 import com.coursemanagement.service.EmailService;
@@ -7,7 +8,6 @@ import com.coursemanagement.util.EmailUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -15,11 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_SUBJECT;
-import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_URL;
-import static com.coursemanagement.util.Constants.EMAIL_SENDER;
-import static com.coursemanagement.util.Constants.RESET_PASSWORD_CONFIRMATION_SUBJECT;
-import static com.coursemanagement.util.Constants.RESET_PASSWORD_CONFIRMATION_URL;
+import static com.coursemanagement.util.Constants.*;
 
 @Slf4j
 @Service
@@ -54,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
             };
             javaMailSender.send(mailMessage);
         } catch (Exception e) {
-            throw new SystemException("Sending email confirmation was failed", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException("Sending email confirmation was failed", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
@@ -13,7 +14,6 @@ import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         if (userEntity.isPresent()) {
             return userMapper.entityToModel(userEntity.get());
         }
-        throw new SystemException("User by email " + email + " not found", HttpStatus.BAD_REQUEST);
+        throw new SystemException("User by email " + email + " not found", SystemErrorCode.BAD_REQUEST);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         final ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(encodedToken, TokenType.EMAIL_CONFIRMATION);
         final Long userId = confirmationToken.userId();
         final UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new SystemException("Cannot find user by id: " + userId, HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new SystemException("Cannot find user by id: " + userId, SystemErrorCode.INTERNAL_SERVER_ERROR));
         userEntity.setStatus(UserStatus.ACTIVE);
         userRepository.save(userEntity);
     }

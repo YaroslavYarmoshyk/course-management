@@ -1,10 +1,10 @@
 package com.coursemanagement.util;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +34,7 @@ public final class EmailUtils {
             }
             return document.toString();
         } catch (Exception e) {
-            throw new SystemException("Cannot provide template", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException("Cannot provide template", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 }

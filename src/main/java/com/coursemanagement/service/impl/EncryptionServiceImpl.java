@@ -1,10 +1,10 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.service.EncryptionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -48,7 +48,7 @@ public class EncryptionServiceImpl implements EncryptionService {
 
             return URLEncoder.encode(encryptedString, StandardCharsets.UTF_8);
         } catch (final GeneralSecurityException e) {
-            throw new SystemException("Unable to encrypt string", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException("Unable to encrypt string", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -65,7 +65,7 @@ public class EncryptionServiceImpl implements EncryptionService {
 
             return new String(cipher.doFinal(getCipherFromJoinByteArray(decodedBase64)), StandardCharsets.UTF_8);
         } catch (GeneralSecurityException e) {
-            throw new SystemException("Unable to decrypt string", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException("Unable to decrypt string", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

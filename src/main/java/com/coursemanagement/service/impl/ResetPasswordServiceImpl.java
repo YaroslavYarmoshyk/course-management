@@ -1,5 +1,6 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
@@ -12,7 +13,6 @@ import com.coursemanagement.service.ResetPasswordService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     @Override
     public void sendResetConfirmation(final String email) {
         if (Strings.isBlank(email)) {
-            throw new SystemException("Email cannot be empty", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SystemException("Email cannot be empty", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
         final User user = userService.findByEmail(email);
         final ConfirmationToken resetPasswordToken = confirmationTokenService.createResetPasswordToken(user);
@@ -45,6 +45,6 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             final String token = jwtService.generateToken(savedUser);
             return new AuthenticationResponse(token);
         }
-        throw new SystemException("Email cannot be empty", HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new SystemException("Email cannot be empty", SystemErrorCode.INTERNAL_SERVER_ERROR);
     }
 }

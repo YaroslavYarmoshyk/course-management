@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.coursemanagement.util.Constants.AUTHENTICATION_ENDPOINT;
+import static com.coursemanagement.util.Constants.ERROR_ENDPOINT;
 import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
 
 @Configuration
@@ -29,7 +30,8 @@ public class SecurityConfiguration {
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
                                         AUTHENTICATION_ENDPOINT + "/**",
-                                        RESET_PASSWORD_ENDPOINT + "/**"
+                                        RESET_PASSWORD_ENDPOINT + "/**",
+                                        ERROR_ENDPOINT
                                 )
                                 .permitAll()
                                 .anyRequest().authenticated()

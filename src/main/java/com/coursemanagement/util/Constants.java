@@ -6,6 +6,7 @@ public final class Constants {
     public static final int BEARER_TOKEN_START_INDEX = 7;
     public static final String AUTHENTICATION_ENDPOINT = "/api/authentication";
     public static final String RESET_PASSWORD_ENDPOINT = "/api/reset-password";
+    public static final String ERROR_ENDPOINT = "/error";
 
     public static final String EMAIL_CONFIRMATION_ENDPOINT = "/confirm-email";
     public static final String RESET_PASSWORD_CONFIRMATION_ENDPOINT = "/confirm";

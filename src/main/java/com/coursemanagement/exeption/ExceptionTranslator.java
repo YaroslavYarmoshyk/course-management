@@ -38,13 +38,4 @@ public class ExceptionTranslator {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(apiErrorDto);
     }
-
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ApiErrorDto> handleException(final Exception e, final HttpServletRequest request) {
-        log.warn(e.getClass().getSimpleName(), e);
-        final ApiErrorDto apiErrorDto = new ApiErrorDto(e, HttpStatus.INTERNAL_SERVER_ERROR, request);
-        return ResponseEntity.status(apiErrorDto.getStatus())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(apiErrorDto);
-    }
 }

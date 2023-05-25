@@ -30,8 +30,8 @@ public class ExceptionTranslator {
     }
 
     @ExceptionHandler(value = {BadCredentialsException.class, AccessDeniedException.class})
-    public ResponseEntity<ApiErrorDto> handleBadCredentialsException(final BadCredentialsException e,
-                                                                     final HttpServletRequest request) {
+    public ResponseEntity<ApiErrorDto> handleAccessException(final BadCredentialsException e,
+                                                             final HttpServletRequest request) {
         log.warn(e.getClass().getSimpleName(), e);
         final ApiErrorDto apiErrorDto = new ApiErrorDto(e, HttpStatus.FORBIDDEN, request);
         return ResponseEntity.status(apiErrorDto.getStatus())

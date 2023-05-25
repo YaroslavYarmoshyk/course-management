@@ -11,6 +11,8 @@ import com.coursemanagement.repository.RoleRepository;
 import com.coursemanagement.repository.UserRepository;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import com.coursemanagement.rest.dto.RoleAssignmentDto;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(final Long id) {
+        final Optional<UserEntity> userEntity = userRepository.findById(id);
+        if (userEntity.isPresent()) {
+            return userMapper.entityToModel(userEntity.get());
+        }
+        throw new SystemException("User by id " + id + " not found", SystemErrorCode.BAD_REQUEST);
+    }
+
+    @Override
     @Transactional
     public void confirmUserByEmailToken(final String token) {
         final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
@@ -67,5 +78,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isEmailAlreadyRegistered(final String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public UserDto assignRole(final RoleAssignmentDto roleAssignmentDto) {
+        final User user = findById(roleAssignmentDto.userId());
+        user.getRoles().addAll(roleAssignmentDto.roles());
+        final User savedUser = save(user);
+        return userMapper.modelToDto(savedUser);
     }
 }

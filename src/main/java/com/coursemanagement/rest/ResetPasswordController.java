@@ -1,4 +1,4 @@
-package com.coursemanagement.controller;
+package com.coursemanagement.rest;
 
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.security.model.AuthenticationRequest;

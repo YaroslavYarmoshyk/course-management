@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -37,7 +36,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -48,7 +47,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(final UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        return generateToken(Map.of("roles", userDetails.getAuthorities()), userDetails);
     }
 
     private String generateToken(final Map<String, Object> extraClaims, final UserDetails userDetails) {

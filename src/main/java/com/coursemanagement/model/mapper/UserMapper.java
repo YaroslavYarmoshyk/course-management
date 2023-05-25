@@ -4,15 +4,18 @@ import com.coursemanagement.enumeration.RoleName;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import com.coursemanagement.rest.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserEntity modelToEntity(User user);
+    UserEntity modelToEntity(final User user);
 
     @Mapping(target = "authorities", ignore = true)
-    User entityToModel(UserEntity userEntity);
+    User entityToModel(final UserEntity userEntity);
+
+    UserDto modelToDto(final User user);
 
     default RoleEntity mapToRoleEntity(RoleName roleName) {
         return new RoleEntity(roleName);

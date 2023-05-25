@@ -1,30 +1,26 @@
 package com.coursemanagement.exeption.dto;
 
-import com.coursemanagement.enumeration.SystemErrorCode;
-import com.coursemanagement.exeption.SystemException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Data
 public class ApiErrorDto {
-    private HttpStatus httpStatus;
+    private HttpStatus status;
+    private int code;
+    private String path;
     private String message;
-    private LocalDateTime timestamp = LocalDateTime.now(DEFAULT_ZONE_ID);
+    private LocalDateTime timestamp;
 
-    public ApiErrorDto(final HttpStatus httpStatus, final String message) {
-        this.httpStatus = httpStatus;
-        this.message = message;
-    }
-
-    public ApiErrorDto(final SystemException systemException) {
-        final SystemErrorCode systemErrorCode = systemException.getErrorCode();
-        this.httpStatus = HttpStatus.valueOf(systemErrorCode.getValue());
-        this.message = Optional.ofNullable(systemException.getMessage())
-                .orElse(systemErrorCode.getText());
+    public ApiErrorDto(final Exception exception, final HttpStatus status, final HttpServletRequest request) {
+        this.status = status;
+        this.code = status.value();
+        this.message = exception.getMessage();
+        this.path = request.getServletPath();
+        this.timestamp = LocalDateTime.now(DEFAULT_ZONE_ID);
     }
 }

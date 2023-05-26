@@ -1,7 +1,6 @@
 package com.coursemanagement.security.config;
 
 import com.coursemanagement.security.JwtService;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,21 +45,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        try {
-            final String jwt = authenticationHeader.substring(BEARER_TOKEN_START_INDEX);
-            final String userEmail = jwtService.extractUsername(jwt);
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            final boolean tokenIsValid = jwtService.isTokenValid(jwt, userDetails);
-            if (tokenIsValid) {
-                var authenticationToken = getUsernamePasswordAuthenticationToken(request, userDetails);
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        } catch (JwtException e) {
-            final String expiredMsg = e.getMessage();
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, expiredMsg);
-            log.warn(e.getMessage(), e);
+        final String jwt = authenticationHeader.substring(BEARER_TOKEN_START_INDEX);
+        if (!jwtService.isTokenValid(jwt)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid authentication token");
             return;
         }
+        final String userEmail = jwtService.extractUsername(jwt);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        var authenticationToken = getUsernamePasswordAuthenticationToken(request, userDetails);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
         filterChain.doFilter(request, response);
     }
 

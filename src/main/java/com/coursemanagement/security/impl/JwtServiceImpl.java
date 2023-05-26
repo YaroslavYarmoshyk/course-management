@@ -2,10 +2,14 @@ package com.coursemanagement.security.impl;
 
 import com.coursemanagement.security.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 public class JwtServiceImpl implements JwtService {
     @Value("${token.jwt.security-key}")
@@ -61,13 +66,17 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public boolean isTokenValid(final String token, final UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-    }
-
-    private boolean isTokenExpired(final String token) {
-        final Date expirationDate = extractClaim(token, Claims::getExpiration);
-        return expirationDate.before(new Date(System.currentTimeMillis()));
+    public boolean isTokenValid(final String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return true;
+        } catch (ExpiredJwtException | IllegalArgumentException | MalformedJwtException | UnsupportedJwtException ex) {
+            log.warn(ex.getMessage(), ex);
+        }
+        return false;
     }
 }

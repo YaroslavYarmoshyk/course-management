@@ -1,6 +1,6 @@
-package com.coursemanagement.security.impl;
+package com.coursemanagement.security.service.impl;
 
-import com.coursemanagement.security.JwtService;
+import com.coursemanagement.security.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

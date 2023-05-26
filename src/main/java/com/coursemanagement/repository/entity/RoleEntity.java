@@ -1,6 +1,6 @@
 package com.coursemanagement.repository.entity;
 
-import com.coursemanagement.enumeration.RoleName;
+import com.coursemanagement.enumeration.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,10 +28,6 @@ public class RoleEntity {
     @Column(name = "id")
     private Long id;
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "name")
-    private RoleName name;
-
-    public RoleEntity(final RoleName name) {
-        this.name = name;
-    }
+    @Column(name = "role_name")
+    private Role role;
 }

@@ -1,6 +1,6 @@
 package com.coursemanagement.security.config;
 
-import com.coursemanagement.security.JwtService;
+import com.coursemanagement.security.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

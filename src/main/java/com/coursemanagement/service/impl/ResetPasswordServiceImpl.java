@@ -4,9 +4,9 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
-import com.coursemanagement.security.JwtService;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
+import com.coursemanagement.security.service.JwtService;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.ResetPasswordService;
@@ -32,7 +32,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         final User user = userService.findByEmail(email);
         final ConfirmationToken resetPasswordToken = confirmationTokenService.createResetPasswordToken(user);
-        emailService.sendResetPasswordConfirmation(user, resetPasswordToken.token());
+        emailService.sendResetPasswordConfirmation(user, resetPasswordToken.getToken());
     }
 
     @Override

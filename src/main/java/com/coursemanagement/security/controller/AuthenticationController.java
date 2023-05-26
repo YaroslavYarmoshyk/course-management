@@ -1,6 +1,6 @@
 package com.coursemanagement.security.controller;
 
-import com.coursemanagement.security.AuthenticationService;
+import com.coursemanagement.security.service.AuthenticationService;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.UserService;

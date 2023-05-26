@@ -1,6 +1,6 @@
 package com.coursemanagement.model;
 
-import com.coursemanagement.enumeration.RoleName;
+import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String password;
     private String phone;
     private UserStatus status;
-    private Set<RoleName> roles;
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

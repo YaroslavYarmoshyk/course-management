@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS role
 (
-    id   BIGSERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL CHECK (name = 'ADMIN' OR name = 'INSTRUCTOR' OR name = 'STUDENT')
+    id        BIGSERIAL PRIMARY KEY,
+    role_name TEXT UNIQUE NOT NULL CHECK (role_name = 'ADMIN' OR role_name = 'INSTRUCTOR' OR role_name = 'STUDENT')
 );
 
 CREATE TABLE IF NOT EXISTS "user"

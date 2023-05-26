@@ -1,4 +1,4 @@
-package com.coursemanagement.security;
+package com.coursemanagement.security.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

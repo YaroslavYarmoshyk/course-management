@@ -1,5 +1,5 @@
 package com.coursemanagement.enumeration;
 
-public enum RoleName {
+public enum Role {
     ADMIN, INSTRUCTOR, STUDENT
 }

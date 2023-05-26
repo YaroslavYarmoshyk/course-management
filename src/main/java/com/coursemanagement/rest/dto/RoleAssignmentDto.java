@@ -1,8 +1,8 @@
 package com.coursemanagement.rest.dto;
 
-import com.coursemanagement.enumeration.RoleName;
+import com.coursemanagement.enumeration.Role;
 
 import java.util.Set;
 
-public record RoleAssignmentDto(Long userId, Set<RoleName> roles) {
+public record RoleAssignmentDto(Long userId, Set<Role> roles) {
 }

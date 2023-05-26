@@ -1,4 +1,4 @@
-INSERT INTO role (name)
+INSERT INTO "role" (role_name)
 VALUES ('ADMIN'),
        ('INSTRUCTOR'),
        ('STUDENT');

@@ -5,8 +5,6 @@ import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
-import com.coursemanagement.model.mapper.ConfirmationTokenMapper;
-import com.coursemanagement.model.mapper.UserMapper;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
 import com.coursemanagement.repository.entity.UserEntity;
@@ -14,6 +12,7 @@ import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +30,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private final EncryptionService encryptionService;
     private final ConfirmationTokenRepository tokenRepository;
-    private final ConfirmationTokenMapper confirmationTokenMapper;
-    private final UserMapper userMapper;
+    private final ModelMapper mapper;
     @Value("${token.confirmation.expiration-time.email}")
     private Long emailTokenExpirationTime;
     @Value("${token.confirmation.expiration-time.reset-password}")
@@ -53,7 +51,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     public ConfirmationToken findByTokenAndType(final String token, final TokenType type) {
         final Optional<ConfirmationTokenEntity> tokenEntity = tokenRepository.findByTokenAndType(token, type);
         if (tokenEntity.isPresent()) {
-            return confirmationTokenMapper.entityToModel(tokenEntity.get());
+            return mapper.map(tokenEntity.get(), ConfirmationToken.class);
         }
         throw new SystemException("Cannot find token: " + token + " in the database ", SystemErrorCode.BAD_REQUEST);
     }
@@ -63,14 +61,14 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         final ConfirmationToken confirmationToken = findByTokenAndType(token, type);
         if (isTokenValid(confirmationToken)) {
             invalidateToken(confirmationToken);
-            log.info("{} sent by user with id {} is confirmed", type, confirmationToken.userId());
+            log.info("{} sent by user with id {} is confirmed", type, confirmationToken.getUserId());
             return confirmationToken;
         }
-        throw new SystemException(type + " sent by user with id " + confirmationToken.userId() + " is invalid", SystemErrorCode.BAD_REQUEST);
+        throw new SystemException(type + " sent by user with id " + confirmationToken.getUserId() + " is invalid", SystemErrorCode.BAD_REQUEST);
     }
 
     private void invalidateToken(final ConfirmationToken token) {
-        final ConfirmationTokenEntity tokenEntity = confirmationTokenMapper.modelToEntity(token);
+        final ConfirmationTokenEntity tokenEntity = mapper.map(token, ConfirmationTokenEntity.class);
         tokenEntity.setActivated(Boolean.TRUE);
         tokenRepository.save(tokenEntity);
     }
@@ -80,20 +78,18 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                                                     final long expirationTime,
                                                     final ChronoUnit expirationTimeUnit) {
         invalidateOldTokens(user, type);
-        final ConfirmationToken newToken = new ConfirmationToken(
-                user.getId(),
-                type,
-                getEncryptedToken(user),
-                LocalDateTime.now(DEFAULT_ZONE_ID).plus(expirationTime, expirationTimeUnit),
-                false
-        );
-        final ConfirmationTokenEntity confirmationTokenEntity = confirmationTokenMapper.modelToEntity(newToken);
+        final ConfirmationToken newToken = new ConfirmationToken()
+                .setUserId(user.getId())
+                .setType(type)
+                .setToken(getEncryptedToken(user))
+                .setExpirationDate(LocalDateTime.now(DEFAULT_ZONE_ID).plus(expirationTime, expirationTimeUnit));
+        final ConfirmationTokenEntity confirmationTokenEntity = mapper.map(newToken, ConfirmationTokenEntity.class);
         final ConfirmationTokenEntity savedToken = tokenRepository.save(confirmationTokenEntity);
-        return confirmationTokenMapper.entityToModel(savedToken);
+        return mapper.map(savedToken, ConfirmationToken.class);
     }
 
     private void invalidateOldTokens(final User user, final TokenType tokenType) {
-        final UserEntity userEntity = userMapper.modelToEntity(user);
+        final UserEntity userEntity = mapper.map(user, UserEntity.class);
         var oldTokens = tokenRepository.findAllByUserEntityAndType(userEntity, tokenType);
         oldTokens.forEach(token -> token.setActivated(Boolean.TRUE));
         tokenRepository.saveAll(oldTokens);
@@ -105,7 +101,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     private static boolean isTokenValid(final ConfirmationToken token) {
-        return token.expirationDate().isAfter(LocalDateTime.now(DEFAULT_ZONE_ID))
-                && Objects.equals(token.activated(), Boolean.FALSE);
+        return token.getExpirationDate().isAfter(LocalDateTime.now(DEFAULT_ZONE_ID))
+                && Objects.equals(token.isActivated(), Boolean.FALSE);
     }
 }

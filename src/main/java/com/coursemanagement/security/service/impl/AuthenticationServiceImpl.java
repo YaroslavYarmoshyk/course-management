@@ -1,12 +1,12 @@
-package com.coursemanagement.security.impl;
+package com.coursemanagement.security.service.impl;
 
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
-import com.coursemanagement.security.AuthenticationService;
-import com.coursemanagement.security.JwtService;
+import com.coursemanagement.security.service.AuthenticationService;
+import com.coursemanagement.security.service.JwtService;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.ConfirmationTokenService;
@@ -46,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final User savedUser = userService.save(user);
         final String token = jwtService.generateToken(savedUser);
         final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(savedUser);
-        emailService.sendEmailConfirmation(savedUser, emailConfirmationToken.token());
+        emailService.sendEmailConfirmation(savedUser, emailConfirmationToken.getToken());
         return new AuthenticationResponse(token);
     }
 

@@ -10,5 +10,5 @@ public interface CourseService {
 
     Course save(final Course course);
 
-    CourseAssignmentResponseDto assignInstructorToCourse(CourseAssignmentRequestDto courseAssignmentRequestDto);
+    CourseAssignmentResponseDto assignInstructor(CourseAssignmentRequestDto courseAssignmentRequestDto);
 }

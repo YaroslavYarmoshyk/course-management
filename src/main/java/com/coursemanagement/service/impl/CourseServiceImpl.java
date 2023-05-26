@@ -45,7 +45,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
+    public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
         final User user = userService.findById(courseAssignmentRequestDto.userId());
         validateInstructorAssignment(user);
         final Course course = findByCode(courseAssignmentRequestDto.courseCode());

@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
@@ -49,11 +48,9 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Override
     public ConfirmationToken findByTokenAndType(final String token, final TokenType type) {
-        final Optional<ConfirmationTokenEntity> tokenEntity = tokenRepository.findByTokenAndType(token, type);
-        if (tokenEntity.isPresent()) {
-            return mapper.map(tokenEntity.get(), ConfirmationToken.class);
-        }
-        throw new SystemException("Cannot find token: " + token + " in the database ", SystemErrorCode.BAD_REQUEST);
+        return tokenRepository.findByTokenAndType(token, type)
+                .map(entity -> mapper.map(entity, ConfirmationToken.class))
+                .orElseThrow(() -> new SystemException("Cannot find token: " + token + " in the database ", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override

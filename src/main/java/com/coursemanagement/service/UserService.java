@@ -13,7 +13,5 @@ public interface UserService {
 
     User save(final User user);
 
-    boolean isEmailAlreadyRegistered(final String email);
-
     UserDto assignRole(RoleAssignmentDto roleAssignmentDto);
 }

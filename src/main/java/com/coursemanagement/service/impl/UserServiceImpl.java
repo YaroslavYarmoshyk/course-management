@@ -35,20 +35,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(final String email) {
-        final Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-        if (userEntity.isPresent()) {
-            return userMapper.map(userEntity.get(), User.class);
-        }
-        throw new SystemException("User by email " + email + " not found", SystemErrorCode.BAD_REQUEST);
+        return userRepository.findByEmail(email)
+                .map(entity -> userMapper.map(entity, User.class))
+                .orElseThrow(() -> new SystemException("User by email " + email + " not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
     public User findById(final Long id) {
-        final Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isPresent()) {
-            return userMapper.map(userEntity.get(), User.class);
-        }
-        throw new SystemException("User by id " + id + " not found", SystemErrorCode.BAD_REQUEST);
+        return userRepository.findById(id)
+                .map(entity -> userMapper.map(entity, User.class))
+                .orElseThrow(() -> new SystemException("User by id " + id + " not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
@@ -73,11 +69,6 @@ public class UserServiceImpl implements UserService {
         userEntity.setRoles(roleEntities);
         final UserEntity savedUser = userRepository.save(userEntity);
         return userMapper.map(savedUser, User.class);
-    }
-
-    @Override
-    public boolean isEmailAlreadyRegistered(final String email) {
-        return userRepository.findByEmail(email).isPresent();
     }
 
     @Override

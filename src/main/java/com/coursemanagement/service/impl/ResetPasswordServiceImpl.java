@@ -4,6 +4,8 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
+import com.coursemanagement.repository.UserRepository;
+import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.security.service.JwtService;
@@ -23,6 +25,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final JwtService jwtService;
 
     @Override
@@ -39,9 +42,10 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     public AuthenticationResponse resetPassword(final AuthenticationRequest authenticationRequest) {
         final String email = authenticationRequest.email();
         if (Strings.isNotBlank(email)) {
-            final User user = userService.findByEmail(email);
-            user.setPassword(passwordEncoder.encode(authenticationRequest.password()));
-            final User savedUser = userService.save(user);
+            final UserEntity userEntity = userRepository.findByEmail(authenticationRequest.email())
+                    .orElseThrow(() -> new SystemException("User by email " + email + " not found", SystemErrorCode.BAD_REQUEST));
+            userEntity.setPassword(passwordEncoder.encode(authenticationRequest.password()));
+            final UserEntity savedUser = userRepository.save(userEntity);
             final String token = jwtService.generateToken(savedUser);
             return new AuthenticationResponse(token);
         }

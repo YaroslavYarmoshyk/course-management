@@ -5,15 +5,17 @@ import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
-import com.coursemanagement.security.service.AuthenticationService;
-import com.coursemanagement.security.service.JwtService;
+import com.coursemanagement.repository.UserRepository;
+import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
+import com.coursemanagement.security.service.AuthenticationService;
+import com.coursemanagement.security.service.JwtService;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EmailService;
-import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,8 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenService confirmationTokenService;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final EmailService emailService;
+    private final ModelMapper mapper;
 
     @Override
     @Transactional
@@ -36,17 +39,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final String email = authenticationRequest.email();
         validateAuthenticationRequest(authenticationRequest);
         checkIfEmailIsTaken(email);
-        var user = new User()
+
+        var userEntity = new UserEntity()
                 .setFirstName(authenticationRequest.firstName())
                 .setLastName(authenticationRequest.lastName())
                 .setEmail(email)
                 .setPhone(authenticationRequest.phone())
                 .setStatus(UserStatus.INACTIVE)
                 .setPassword(passwordEncoder.encode(authenticationRequest.password()));
-        final User savedUser = userService.save(user);
+        final UserEntity savedUser = userRepository.save(userEntity);
         final String token = jwtService.generateToken(savedUser);
-        final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(savedUser);
-        emailService.sendEmailConfirmation(savedUser, emailConfirmationToken.getToken());
+
+        final User user = mapper.map(savedUser, User.class);
+        final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(user);
+        emailService.sendEmailConfirmation(user, emailConfirmationToken.getToken());
         return new AuthenticationResponse(token);
     }
 
@@ -55,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         validateAuthenticationRequest(authenticationRequest);
         var authenticationToken = getAuthenticationToken(authenticationRequest);
         var authentication = authenticationManager.authenticate(authenticationToken);
-        var user = (User) authentication.getPrincipal();
+        var user = (UserEntity) authentication.getPrincipal();
         var token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
     }
@@ -72,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void checkIfEmailIsTaken(final String email) {
-        if (userService.isEmailAlreadyRegistered(email)) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new SystemException("User with email " + email + " already exists", SystemErrorCode.BAD_REQUEST);
         }
     }

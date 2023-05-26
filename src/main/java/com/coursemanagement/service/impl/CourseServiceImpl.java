@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,11 +30,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course findByCode(final Long code) {
-        final Optional<CourseEntity> courseEntity = courseRepository.findByCode(code);
-        if (courseEntity.isPresent()) {
-            return mapper.map(courseEntity.get(), Course.class);
-        }
-        throw new SystemException("Course with code " + code + " not found", SystemErrorCode.BAD_REQUEST);
+        return courseRepository.findByCode(code)
+                .map(entity -> mapper.map(entity, Course.class))
+                .orElseThrow(() -> new SystemException("Course with code " + code + " not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.coursemanagement.model;
 
 import com.coursemanagement.enumeration.RoleName;
 import com.coursemanagement.enumeration.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +19,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String email;
+    @JsonIgnore
     private String password;
     private String phone;
     private UserStatus status;

@@ -36,12 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull final HttpServletResponse response,
                                     @NonNull final FilterChain filterChain) throws ServletException, IOException {
         final String authenticationHeader = request.getHeader(AUTHORIZATION_HEADER);
-        final boolean isAlreadyAuthenticated = Objects.nonNull(SecurityContextHolder.getContext().getAuthentication());
-        if (
-                Objects.isNull(authenticationHeader)
-                        || !authenticationHeader.startsWith(BEARER)
-                        || isAlreadyAuthenticated
-        ) {
+        if (Objects.isNull(authenticationHeader) || !authenticationHeader.startsWith(BEARER)) {
             filterChain.doFilter(request, response);
             return;
         }

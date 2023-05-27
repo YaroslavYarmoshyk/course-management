@@ -17,6 +17,6 @@ public class ApplicationUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new SystemException("Cannot find user by email: " + username, SystemErrorCode.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new SystemException("Cannot find user by email: " + username, SystemErrorCode.BAD_REQUEST));
     }
 }

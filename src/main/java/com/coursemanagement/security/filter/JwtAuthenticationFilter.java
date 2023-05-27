@@ -1,4 +1,4 @@
-package com.coursemanagement.security.config;
+package com.coursemanagement.security.filter;
 
 import com.coursemanagement.security.service.JwtService;
 import jakarta.servlet.FilterChain;

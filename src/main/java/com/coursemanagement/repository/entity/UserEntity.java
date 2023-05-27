@@ -14,17 +14,16 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@ToString(exclude = "roles")
 @Accessors(chain = true)
 @Entity
 @Table(name = "\"user\"")
@@ -38,26 +37,33 @@ public class UserEntity implements UserDetails {
     )
     @Column(name = "id")
     private Long id;
+
     @Column(name = "first_name")
     private String firstName;
+
     @Column(name = "last_name")
     private String lastName;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "phone")
     private String phone;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
     private UserStatus status;
+
     @ManyToMany
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleEntity> roles;
+    private Set<RoleEntity> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

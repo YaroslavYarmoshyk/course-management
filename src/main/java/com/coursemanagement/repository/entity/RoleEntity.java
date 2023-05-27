@@ -11,12 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "role")
-@NoArgsConstructor
 public class RoleEntity {
     @Id
     @GeneratedValue(generator = "role_id_seq", strategy = GenerationType.SEQUENCE)
@@ -25,8 +23,10 @@ public class RoleEntity {
             sequenceName = "role_id_seq",
             allocationSize = 1
     )
+
     @Column(name = "id")
     private Long id;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role_name")
     private Role role;

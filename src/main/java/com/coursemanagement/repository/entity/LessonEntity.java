@@ -25,18 +25,23 @@ public class LessonEntity {
             allocationSize = 1
     )
     private Long id;
+
     @ManyToOne
     @JoinColumn(
             name = "course_code",
             referencedColumnName = "code"
     )
     private CourseEntity course;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "credits")
     private BigDecimal credits;
+
     @Column(name = "homework")
     private byte[] homework;
 }

@@ -1,4 +1,4 @@
-package com.coursemanagement.security.config;
+package com.coursemanagement.security.service;
 
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;

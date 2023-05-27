@@ -28,16 +28,21 @@ public class ConfirmationTokenEntity {
             allocationSize = 1
     )
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
     private TokenType type;
+
     @Column(name = "token")
     private String token;
+
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
+
     @Column(name = "activated")
     private Boolean activated;
 }

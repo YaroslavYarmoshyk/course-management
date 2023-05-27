@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -19,15 +20,18 @@ public class CourseEntity {
     @Id
     @Column(name = "code")
     private Long code;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "description")
     private String description;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_course",
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             joinColumns = @JoinColumn(name = "course_code", referencedColumnName = "code")
     )
-    private Set<UserEntity> users;
+    private Set<UserEntity> users = new HashSet<>();
 }

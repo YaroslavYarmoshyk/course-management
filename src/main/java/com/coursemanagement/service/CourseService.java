@@ -6,7 +6,7 @@ import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 
 public interface CourseService {
 
-    Course findByCode(final Long code);
+    Course getByCode(final Long code);
 
     Course save(final Course course);
 

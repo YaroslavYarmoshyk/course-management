@@ -5,9 +5,9 @@ import com.coursemanagement.rest.dto.RoleAssignmentDto;
 import com.coursemanagement.rest.dto.UserDto;
 
 public interface UserService {
-    User findByEmail(final String email);
+    User getByEmail(final String email);
 
-    User findById(final Long id);
+    User getById(final Long id);
 
     void confirmUserByEmailToken(final String token);
 

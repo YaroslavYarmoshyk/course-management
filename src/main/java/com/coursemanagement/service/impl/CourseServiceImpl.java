@@ -29,7 +29,7 @@ public class CourseServiceImpl implements CourseService {
     private final ModelMapper mapper;
 
     @Override
-    public Course findByCode(final Long code) {
+    public Course getByCode(final Long code) {
         return courseRepository.findByCode(code)
                 .map(entity -> mapper.map(entity, Course.class))
                 .orElseThrow(() -> new SystemException("Course with code " + code + " not found", SystemErrorCode.BAD_REQUEST));
@@ -43,9 +43,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
-        final User user = userService.findById(courseAssignmentRequestDto.userId());
+        final User user = userService.getById(courseAssignmentRequestDto.userId());
         validateInstructorAssignment(user);
-        final Course course = findByCode(courseAssignmentRequestDto.courseCode());
+        final Course course = getByCode(courseAssignmentRequestDto.courseCode());
         course.getUsers().add(user);
         final Course savedCourse = save(course);
         final Map<Role, Set<UserCourseDto>> usersByRole = getGroupedUsersByRole(savedCourse);

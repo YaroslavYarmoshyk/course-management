@@ -47,7 +47,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public ConfirmationToken findByTokenAndType(final String token, final TokenType type) {
+    public ConfirmationToken getByTokenAndType(final String token, final TokenType type) {
         return tokenRepository.findByTokenAndType(token, type)
                 .map(entity -> mapper.map(entity, ConfirmationToken.class))
                 .orElseThrow(() -> new SystemException("Cannot find token: " + token + " in the database ", SystemErrorCode.BAD_REQUEST));
@@ -55,7 +55,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Override
     public ConfirmationToken confirmToken(final String token, final TokenType type) {
-        final ConfirmationToken confirmationToken = findByTokenAndType(token, type);
+        final ConfirmationToken confirmationToken = getByTokenAndType(token, type);
         if (isTokenValid(confirmationToken)) {
             invalidateToken(confirmationToken);
             log.info("{} sent by user with id {} is confirmed", type, confirmationToken.getUserId());

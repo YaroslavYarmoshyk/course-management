@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper userMapper;
 
     @Override
-    public User findByEmail(final String email) {
+    public User getByEmail(final String email) {
         return userRepository.findByEmail(email)
                 .map(entity -> userMapper.map(entity, User.class))
                 .orElseThrow(() -> new SystemException("User by email " + email + " not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
-    public User findById(final Long id) {
+    public User getById(final Long id) {
         return userRepository.findById(id)
                 .map(entity -> userMapper.map(entity, User.class))
                 .orElseThrow(() -> new SystemException("User by id " + id + " not found", SystemErrorCode.BAD_REQUEST));
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto assignRole(final RoleAssignmentDto roleAssignmentDto) {
-        final User user = findById(roleAssignmentDto.userId());
+        final User user = getById(roleAssignmentDto.userId());
         user.getRoles().addAll(roleAssignmentDto.roles());
         final User savedUser = save(user);
         return userMapper.map(savedUser, UserDto.class);

@@ -52,8 +52,8 @@ public class CourseServiceImpl implements CourseService {
         return new CourseAssignmentResponseDto(
                 savedCourse.getCode(),
                 savedCourse.getTitle(),
-                usersByRole.get(Role.INSTRUCTOR),
-                usersByRole.get(Role.STUDENT)
+                usersByRole.getOrDefault(Role.INSTRUCTOR, Set.of()),
+                usersByRole.getOrDefault(Role.STUDENT, Set.of())
         );
     }
 

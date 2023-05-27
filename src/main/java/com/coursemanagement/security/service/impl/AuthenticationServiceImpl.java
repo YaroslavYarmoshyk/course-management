@@ -40,19 +40,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         validateAuthenticationRequest(authenticationRequest);
         checkIfEmailIsTaken(email);
 
-        var userEntity = new UserEntity()
+        var user = new User()
                 .setFirstName(authenticationRequest.firstName())
                 .setLastName(authenticationRequest.lastName())
                 .setEmail(email)
                 .setPhone(authenticationRequest.phone())
                 .setStatus(UserStatus.INACTIVE)
                 .setPassword(passwordEncoder.encode(authenticationRequest.password()));
-        final UserEntity savedUser = userRepository.save(userEntity);
-        final String token = jwtService.generateToken(savedUser);
-
-        final User user = mapper.map(savedUser, User.class);
-        final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(user);
+        final UserEntity savedEntity = userRepository.save(mapper.map(user, UserEntity.class));
+        final User savedUser = mapper.map(savedEntity, User.class);
+        final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(savedUser);
         emailService.sendEmailConfirmation(user, emailConfirmationToken.getToken());
+
+        final String token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
     }
 
@@ -61,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         validateAuthenticationRequest(authenticationRequest);
         var authenticationToken = getAuthenticationToken(authenticationRequest);
         var authentication = authenticationManager.authenticate(authenticationToken);
-        var user = (UserEntity) authentication.getPrincipal();
+        var user = (User) authentication.getPrincipal();
         var token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
     }

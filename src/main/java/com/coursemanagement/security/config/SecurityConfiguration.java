@@ -12,9 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.coursemanagement.util.Constants.AUTHENTICATION_ENDPOINT;
-import static com.coursemanagement.util.Constants.ERROR_ENDPOINT;
-import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
+import static com.coursemanagement.util.Constants.*;
 
 @Configuration
 @EnableMethodSecurity
@@ -22,6 +20,8 @@ import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final ApplicationAccessDeniedHandler accessDeniedHandler;
+    private final ApplicationAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -39,7 +39,10 @@ public class SecurityConfiguration {
                 )
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(authentication -> authentication
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint));
 
         return http.build();
     }

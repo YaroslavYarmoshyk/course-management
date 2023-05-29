@@ -23,8 +23,8 @@ spring:
       continue-on-error: true
   flyway:
     enabled: true
-    user: cm-admin
-    password: alonso-321
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
     baseline-on-migrate: true
     baseline-description: 'init'
     baseline-version: 0

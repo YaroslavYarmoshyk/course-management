@@ -1,15 +1,21 @@
 spring:
-  datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    username: db-test-user
-    password: db-test-password
   jpa:
-    show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-  sql:
-    init:
-      platform: postgres
-      mode:
-      continue-on-error: true
+    show-sql: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false
+
+users:
+  admin:
+    id: 1
+    email: john-smith@gmail.com
+    password: passw@rd-1
+  instructor:
+    id: 2
+    email: poppins@yahoo.com
+    password: passw@rd-2
+  student:
+    id: 3
+    email: goldlannister@gmail.com
+    password: passw@rd-2

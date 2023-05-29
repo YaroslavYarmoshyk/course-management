@@ -21,6 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -58,7 +59,7 @@ class UserRepositoryTest {
                 .map(RoleEntity::getRole)
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        final Set<Role> expectedRoles = Set.of(Role.ADMIN, Role.STUDENT).stream()
+        final Set<Role> expectedRoles = Stream.of(Role.ADMIN, Role.STUDENT)
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         assertIterableEquals(expectedRoles, actualRoles);
@@ -80,7 +81,7 @@ class UserRepositoryTest {
                 .map(RoleEntity::getRole)
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        final Set<Role> expectedRoles = Set.of(Role.ADMIN, Role.STUDENT).stream()
+        final Set<Role> expectedRoles = Stream.of(Role.ADMIN, Role.STUDENT)
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         assertIterableEquals(expectedRoles, actualRoles);

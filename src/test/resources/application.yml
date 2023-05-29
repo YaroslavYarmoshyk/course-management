@@ -1,14 +1,13 @@
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    username: cm-admin
-    password: alonso-321
-    url: jdbc:postgresql://localhost:5432/course-management
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: db-test-user
+    password: db-test-password
   jpa:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
   sql:
     init:
       platform: postgres

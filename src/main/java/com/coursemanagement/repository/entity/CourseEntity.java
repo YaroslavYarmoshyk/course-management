@@ -9,11 +9,13 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@ToString(exclude = "users")
 @Entity
 @Table(name = "course")
 public class CourseEntity {

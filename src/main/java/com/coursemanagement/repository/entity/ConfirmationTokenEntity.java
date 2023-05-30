@@ -14,10 +14,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Data
+@ToString(exclude = "userEntity")
 @Entity
 @Table(name = "confirmation_token")
 public class ConfirmationTokenEntity {

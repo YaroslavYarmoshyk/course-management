@@ -14,12 +14,14 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@ToString(exclude = "roles")
 @Accessors(chain = true)
 @Entity
 @Table(name = "\"user\"")

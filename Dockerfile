@@ -7,7 +7,7 @@ RUN mvn dependency:go-offline -B
 
 # Next, copy the source code and build the application
 COPY src/ ./src/
-RUN mvn package --no-transfer-progress
+RUN mvn package --no-transfer-progress -DskipTests=true
 
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app

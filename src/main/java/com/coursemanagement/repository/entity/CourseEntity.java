@@ -1,20 +1,23 @@
 package com.coursemanagement.repository.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @ToString(exclude = "users")
 @Entity
 @Table(name = "course")
@@ -29,11 +32,26 @@ public class CourseEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_course",
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            joinColumns = @JoinColumn(name = "course_code", referencedColumnName = "code")
+    @OneToMany(
+            mappedBy = "courseEntity",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
-    private Set<UserEntity> users = new HashSet<>();
+    private Set<UserCourseEntity> users = new HashSet<>();
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof final CourseEntity other)) {
+            return false;
+        }
+        return code != null && Objects.equals(code, other.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

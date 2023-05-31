@@ -10,12 +10,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @ToString(exclude = "course")
 @Entity
 @Table(name = "lesson")
@@ -47,4 +52,20 @@ public class LessonEntity {
 
     @Column(name = "homework")
     private byte[] homework;
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof final LessonEntity other)) {
+            return false;
+        }
+        return id != null && Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

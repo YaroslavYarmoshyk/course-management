@@ -1,10 +1,10 @@
 package com.coursemanagement.repository.entity;
 
 import com.coursemanagement.enumeration.TokenType;
+import com.coursemanagement.enumeration.repository.DatabaseEnumConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,12 +13,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @ToString(exclude = "userEntity")
 @Entity
 @Table(name = "confirmation_token")
@@ -36,7 +41,7 @@ public class ConfirmationTokenEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-    @Enumerated(value = EnumType.STRING)
+    @Convert(converter = DatabaseEnumConverter.class)
     @Column(name = "type")
     private TokenType type;
 
@@ -48,4 +53,20 @@ public class ConfirmationTokenEntity {
 
     @Column(name = "activated")
     private Boolean activated;
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof final ConfirmationTokenEntity other)) {
+            return false;
+        }
+        return id != null && Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS "user"
 CREATE TABLE IF NOT EXISTS confirmation_token
 (
     id              BIGSERIAL PRIMARY KEY,
-    user_id         BIGINT NOT NULL,
-    "type"          TEXT,
+    user_id         BIGINT  NOT NULL,
+    "type"          INT,
     token           TEXT,
     expiration_date TIMESTAMP,
-    activated       BOOL   NOT NULL,
+    activated       BOOLEAN NOT NULL,
     FOREIGN KEY (user_id) REFERENCES "user" (id)
 );
 
@@ -54,11 +54,22 @@ CREATE TABLE IF NOT EXISTS user_role
 
 CREATE TABLE IF NOT EXISTS user_course
 (
+    id          BIGSERIAL PRIMARY KEY,
     user_id     BIGINT NOT NULL,
     course_code BIGINT NOT NULL,
-    PRIMARY KEY (user_id, course_code),
+    finished    BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (course_code) REFERENCES course (code)
+);
+
+CREATE TABLE IF NOT EXISTS course_feedback
+(
+    id             BIGSERIAL PRIMARY KEY,
+    user_course_id BIGINT NOT NULL,
+    feedback       TEXT,
+    instructor_id  BIGINT,
+    "date"         TIMESTAMP,
+    FOREIGN KEY (user_course_id) REFERENCES user_course (id)
 );
 
 CREATE TABLE IF NOT EXISTS user_mark

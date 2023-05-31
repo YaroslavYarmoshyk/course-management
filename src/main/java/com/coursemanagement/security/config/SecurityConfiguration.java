@@ -32,7 +32,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         AUTHENTICATION_ENDPOINT + "/**",
                                         RESET_PASSWORD_ENDPOINT + "/**",
-                                        ERROR_ENDPOINT
+                                        ERROR_ENDPOINT,
+                                        FAVICON
                                 )
                                 .permitAll()
                                 .anyRequest().authenticated()

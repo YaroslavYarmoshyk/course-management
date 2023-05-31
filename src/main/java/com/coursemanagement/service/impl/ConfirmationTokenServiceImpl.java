@@ -61,7 +61,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
             log.info("{} sent by user with id {} is confirmed", type, confirmationToken.getUserId());
             return confirmationToken;
         }
-        throw new SystemException(type + " sent by user with id " + confirmationToken.getUserId() + " is invalid", SystemErrorCode.BAD_REQUEST);
+        throw new SystemException(type + " token sent by user with id " + confirmationToken.getUserId() + " is invalid", SystemErrorCode.BAD_REQUEST);
     }
 
     private void invalidateToken(final ConfirmationToken token) {

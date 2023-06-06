@@ -41,7 +41,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Transactional
     public Course save(final Course course) {
         final CourseEntity courseEntity = CourseEntity.builder()
                 .code(course.getCode())
@@ -55,11 +54,12 @@ public class CourseServiceImpl implements CourseService {
                 .map(userEntity -> new UserCourseEntity(userEntity, courseEntity))
                 .collect(Collectors.toSet());
         courseEntity.setUsers(userCourseEntities);
-        courseRepository.save(courseEntity);
-        return getByCode(course.getCode());
+        final CourseEntity savedCourse = courseRepository.save(courseEntity);
+        return mapper.map(savedCourse, Course.class);
     }
 
     @Override
+    @Transactional
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
         final User user = userService.getById(courseAssignmentRequestDto.userId());
         validateInstructorAssignment(user);

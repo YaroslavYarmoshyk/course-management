@@ -10,9 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+import java.util.Objects;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "role")
 public class RoleEntity {
@@ -30,4 +36,20 @@ public class RoleEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role_name")
     private Role role;
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof final RoleEntity other)) {
+            return false;
+        }
+        return id != null && Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -7,6 +7,8 @@ import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
+import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
@@ -15,9 +17,12 @@ import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,11 +42,24 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course save(final Course course) {
-        final CourseEntity savedCourseEntity = courseRepository.save(mapper.map(course, CourseEntity.class));
-        return mapper.map(savedCourseEntity, Course.class);
+        final CourseEntity courseEntity = CourseEntity.builder()
+                .code(course.getCode())
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .build();
+        final Set<UserCourseEntity> userCourseEntities = Optional.ofNullable(course.getUsers())
+                .stream()
+                .flatMap(Collection::stream)
+                .map(user -> UserEntity.builder().id(user.getId()).build())
+                .map(userEntity -> new UserCourseEntity(userEntity, courseEntity))
+                .collect(Collectors.toSet());
+        courseEntity.setUsers(userCourseEntities);
+        final CourseEntity savedCourse = courseRepository.save(courseEntity);
+        return mapper.map(savedCourse, Course.class);
     }
 
     @Override
+    @Transactional
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
         final User user = userService.getById(courseAssignmentRequestDto.userId());
         validateInstructorAssignment(user);

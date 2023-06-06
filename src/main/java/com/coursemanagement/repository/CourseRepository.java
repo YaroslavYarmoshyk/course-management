@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
 
-    @EntityGraph(attributePaths = {"users"})
+    @EntityGraph(attributePaths = {"users", "users.userEntity", "users.userEntity.roles"})
     Optional<CourseEntity> findByCode(@NonNull final Long code);
 }

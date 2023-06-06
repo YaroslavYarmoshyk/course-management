@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -15,50 +16,48 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "course")
+@ToString(exclude = "userCourseEntity")
 @Entity
-@Table(name = "lesson")
-public class LessonEntity {
+@Table(name = "course_feedback")
+public class CourseFeedbackEntity {
     @Id
-    @GeneratedValue(generator = "lesson_id_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "course_feedback_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
-            name = "lesson_id_seq",
-            sequenceName = "lesson_id_seq",
+            name = "course_feedback_id_seq",
+            sequenceName = "course_feedback_id_seq",
             allocationSize = 1
     )
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "course_code",
-            referencedColumnName = "code"
-    )
-    private CourseEntity course;
+    @JoinColumns({
+            @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            @JoinColumn(name = "course_code", referencedColumnName = "course_code")
+    })
+    private UserCourseEntity userCourseEntity;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "feedback")
+    private String feedback;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "instructorId")
+    private Long instructorId;
 
-    @Column(name = "credits")
-    private BigDecimal credits;
-
-    @Column(name = "homework")
-    private byte[] homework;
+    @Column(name = "date")
+    private LocalDateTime date;
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final LessonEntity other)) {
+        if (!(o instanceof final CourseFeedbackEntity other)) {
             return false;
         }
         return id != null && Objects.equals(id, other.id);

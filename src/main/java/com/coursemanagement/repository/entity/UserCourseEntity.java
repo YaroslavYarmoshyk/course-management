@@ -45,6 +45,11 @@ public class UserCourseEntity {
     @Column(name = "finished")
     private boolean finished;
 
+    public UserCourseEntity(final UserEntity userEntity, final CourseEntity courseEntity) {
+        this.userEntity = userEntity;
+        this.courseEntity = courseEntity;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

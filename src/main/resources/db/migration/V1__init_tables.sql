@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "user"
     email      TEXT UNIQUE NOT NULL,
     "password" TEXT,
     phone      TEXT,
-    status     TEXT CHECK (status = 'ACTIVE' OR status = 'INACTIVE')
+    status     TEXT CHECK (status = 'A' OR status = 'I')
 );
 
 CREATE TABLE IF NOT EXISTS confirmation_token

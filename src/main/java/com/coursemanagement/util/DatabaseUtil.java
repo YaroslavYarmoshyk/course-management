@@ -1,6 +1,6 @@
 package com.coursemanagement.util;
 
-import com.coursemanagement.enumeration.repository.DatabaseEnum;
+import com.coursemanagement.enumeration.converter.DatabaseEnum;
 
 import java.util.Arrays;
 import java.util.Objects;

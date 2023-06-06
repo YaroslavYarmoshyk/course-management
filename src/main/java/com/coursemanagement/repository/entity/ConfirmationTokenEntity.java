@@ -1,7 +1,7 @@
 package com.coursemanagement.repository.entity;
 
 import com.coursemanagement.enumeration.TokenType;
-import com.coursemanagement.enumeration.repository.DatabaseEnumConverter;
+import com.coursemanagement.enumeration.converter.TokenEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -41,7 +41,7 @@ public class ConfirmationTokenEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-    @Convert(converter = DatabaseEnumConverter.class)
+    @Convert(converter = TokenEnumConverter.class)
     @Column(name = "type")
     private TokenType type;
 

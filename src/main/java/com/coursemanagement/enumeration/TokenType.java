@@ -1,6 +1,6 @@
 package com.coursemanagement.enumeration;
 
-import com.coursemanagement.enumeration.repository.DatabaseEnum;
+import com.coursemanagement.enumeration.converter.DatabaseEnum;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

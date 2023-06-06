@@ -1,10 +1,10 @@
 package com.coursemanagement.repository.entity;
 
 import com.coursemanagement.enumeration.UserStatus;
+import com.coursemanagement.enumeration.converter.UserStatusEnumConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -58,7 +58,7 @@ public class UserEntity {
     @Column(name = "phone")
     private String phone;
 
-    @Enumerated(value = EnumType.STRING)
+    @Convert(converter = UserStatusEnumConverter.class)
     @Column(name = "status")
     private UserStatus status;
 

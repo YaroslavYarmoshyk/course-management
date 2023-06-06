@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 @Configuration
-public class ApplicationConfiguration {
+public class MapperConfiguration {
 
     @Bean
     public ModelMapper modelMapper() {

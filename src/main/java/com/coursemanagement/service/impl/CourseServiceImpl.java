@@ -8,9 +8,9 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
-import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.UserService;
@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,18 +44,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course save(final Course course) {
-        final CourseEntity courseEntity = CourseEntity.builder()
-                .code(course.getCode())
-                .title(course.getTitle())
-                .description(course.getDescription())
-                .build();
-        final Set<UserCourseEntity> userCourseEntities = Optional.ofNullable(course.getUsers())
-                .stream()
-                .flatMap(Collection::stream)
-                .map(user -> UserEntity.builder().id(user.getId()).build())
-                .map(userEntity -> new UserCourseEntity(userEntity, courseEntity))
-                .collect(Collectors.toSet());
-        courseEntity.setUsers(userCourseEntities);
+        final CourseEntity courseEntity = mapper.map(course, CourseEntity.class);
         final CourseEntity savedCourse = courseRepository.save(courseEntity);
         return mapper.map(savedCourse, Course.class);
     }
@@ -75,11 +66,58 @@ public class CourseServiceImpl implements CourseService {
         );
     }
 
+    @Override
+    public Set<Course> getAllByCodes(final Collection<Long> codes) {
+        return courseRepository.findAllByCodeIn(codes).stream()
+                .map(courseEntity -> mapper.map(courseEntity, Course.class))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Course> getAllActiveByUserId(final Long userId) {
+        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserCourseIdUserEntityId(userId);
+        return courseEntities.stream()
+                .filter(courseEntity -> activeByUserId(courseEntity, userId))
+                .map(courseEntity -> mapper.map(courseEntity, Course.class))
+                .collect(Collectors.toSet());
+    }
+
+    private static boolean activeByUserId(final CourseEntity courseEntity, final Long userId) {
+        return Optional.ofNullable(courseEntity.getUsers())
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(userCourseEntity -> Objects.equals(userCourseEntity.getUserEntity().getId(), userId))
+                .noneMatch(UserCourseEntity::isFinished);
+    }
+
+    @Override
+    public Set<CourseDto> getAllByUserId(final Long userId) {
+        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserCourseIdUserEntityId(userId);
+        return courseEntities.stream()
+                .map(courseEntity -> new CourseDto(courseEntity, activeByUserId(courseEntity, userId)))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Course> addStudentToCourses(final User student, final Collection<Course> courses) {
+        for (final Course course : courses) {
+            final Set<User> users = course.getUsers();
+            users.add(student);
+        }
+        final Set<CourseEntity> courseEntities = courses.stream()
+                .map(course -> mapper.map(course, CourseEntity.class))
+                .collect(Collectors.toSet());
+        final List<CourseEntity> savedCourseEntities = courseRepository.saveAll(courseEntities);
+        return savedCourseEntities.stream()
+                .map(courseEntity -> mapper.map(courseEntity, Course.class))
+                .collect(Collectors.toSet());
+    }
+
     private void validateInstructorAssignment(final User potentialInstructor) {
         potentialInstructor.getRoles().stream()
                 .filter(role -> role.equals(Role.INSTRUCTOR))
                 .findAny()
-                .orElseThrow(() -> new SystemException("Cannot assign user with id " + potentialInstructor.getId() +
+                .orElseThrow(() -> new SystemException("Cannot assign user with userId " + potentialInstructor.getId() +
                         " to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST));
     }
 

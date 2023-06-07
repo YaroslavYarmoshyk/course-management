@@ -16,6 +16,8 @@ import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,14 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final ModelMapper userMapper;
+
+    @Override
+    public User resolveCurrentUser() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .map(this::getByEmail)
+                .orElseThrow(() -> new SystemException("Cannot resolve current user, the user is unauthorized", SystemErrorCode.UNAUTHORIZED));
+    }
 
     @Override
     public User getByEmail(final String email) {

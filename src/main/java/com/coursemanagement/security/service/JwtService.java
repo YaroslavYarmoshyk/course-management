@@ -1,11 +1,7 @@
 package com.coursemanagement.security.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 
 public interface JwtService {
-    String extractUsername(final String token);
-
-    String generateToken(final UserDetails user);
-
-    boolean isTokenValid(final String token);
+    String generateJwt(final Authentication authentication);
 }

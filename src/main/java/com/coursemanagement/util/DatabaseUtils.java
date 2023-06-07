@@ -5,7 +5,7 @@ import com.coursemanagement.enumeration.converter.DatabaseEnum;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class DatabaseUtil {
+public final class DatabaseUtils {
 
     public static <T extends DatabaseEnum> T resolveEnum(final Class<T> clazz, final Object dbValue) {
         return Arrays.stream(clazz.getEnumConstants())

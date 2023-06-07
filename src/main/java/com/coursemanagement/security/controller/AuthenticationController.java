@@ -28,9 +28,9 @@ public class AuthenticationController {
         return authenticationService.register(authenticationRequest);
     }
 
-    @PostMapping(value = "/verify")
-    public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
-        return authenticationService.verify(authenticationRequest);
+    @PostMapping(value = "/login")
+    public AuthenticationResponse login(@RequestBody AuthenticationRequest authenticationRequest) {
+        return authenticationService.login(authenticationRequest);
     }
 
     @GetMapping(value = EMAIL_CONFIRMATION_ENDPOINT)

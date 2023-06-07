@@ -1,82 +1,45 @@
 package com.coursemanagement.security.service.impl;
 
 import com.coursemanagement.security.service.JwtService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.Map;
-import java.util.function.Function;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
+
+import static com.coursemanagement.util.Constants.ROLES_CLAIM;
+import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
-    @Value("${token.jwt.security-key}")
-    private String secretKey;
+    private final JwtEncoder jwtEncoder;
     @Value("${token.jwt.expiration-time}")
     private int expirationTime;
 
     @Override
-    public String extractUsername(final String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    private <T> T extractClaim(final String token, final Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(final String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    @Override
-    public String generateToken(final UserDetails userDetails) {
-        return generateToken(Map.of("roles", userDetails.getAuthorities()), userDetails);
-    }
-
-    private String generateToken(final Map<String, Object> extraClaims, final UserDetails userDetails) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    @Override
-    public boolean isTokenValid(final String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-            return true;
-        } catch (ExpiredJwtException | IllegalArgumentException | MalformedJwtException | UnsupportedJwtException ex) {
-            log.warn(ex.getMessage(), ex);
-        }
-        return false;
+    public String generateJwt(final Authentication authentication) {
+        final String scope = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+        final Instant now = Instant.now(Clock.system(DEFAULT_ZONE_ID));
+        final JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plus(expirationTime, ChronoUnit.HOURS))
+                .subject(authentication.getName())
+                .claim(ROLES_CLAIM, scope)
+                .build();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 }

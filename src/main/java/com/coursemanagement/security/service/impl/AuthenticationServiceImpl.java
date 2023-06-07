@@ -52,17 +52,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(savedUser);
         emailService.sendEmailConfirmation(user, emailConfirmationToken.getToken());
 
-        final String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        return getAuthenticationResponse(authenticationRequest);
     }
 
     @Override
-    public AuthenticationResponse verify(final AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse login(final AuthenticationRequest authenticationRequest) {
         validateAuthenticationRequest(authenticationRequest);
-        var authenticationToken = getAuthenticationToken(authenticationRequest);
-        var authentication = authenticationManager.authenticate(authenticationToken);
-        var user = (User) authentication.getPrincipal();
-        var token = jwtService.generateToken(user);
+        return getAuthenticationResponse(authenticationRequest);
+    }
+
+    @Override
+    public AuthenticationResponse getAuthenticationResponse(final AuthenticationRequest authenticationRequest) {
+        var authentication = authenticationManager.authenticate(getAuthenticationToken(authenticationRequest));
+        final String token = jwtService.generateJwt(authentication);
         return new AuthenticationResponse(token);
     }
 

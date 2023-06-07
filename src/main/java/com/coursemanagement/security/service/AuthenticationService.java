@@ -5,7 +5,9 @@ import com.coursemanagement.security.model.AuthenticationResponse;
 
 public interface AuthenticationService {
 
-    AuthenticationResponse register(AuthenticationRequest authenticationRequest);
+    AuthenticationResponse register(final AuthenticationRequest authenticationRequest);
 
-    AuthenticationResponse verify(AuthenticationRequest authenticationRequest);
+    AuthenticationResponse login(final AuthenticationRequest authenticationRequest);
+
+    AuthenticationResponse getAuthenticationResponse(final AuthenticationRequest authenticationRequest);
 }

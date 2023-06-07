@@ -6,7 +6,7 @@ import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
-import com.coursemanagement.security.service.JwtService;
+import com.coursemanagement.security.service.AuthenticationService;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.ResetPasswordService;
@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ResetPasswordServiceImpl implements ResetPasswordService {
     private final ConfirmationTokenService confirmationTokenService;
+    private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final UserService userService;
-    private final JwtService jwtService;
 
     @Override
     public void sendResetConfirmation(final String email) {
@@ -41,9 +41,8 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         if (Strings.isNotBlank(email)) {
             final User user = userService.getByEmail(authenticationRequest.email());
             user.setPassword(passwordEncoder.encode(authenticationRequest.password()));
-            final User savedUser = userService.save(user);
-            final String token = jwtService.generateToken(savedUser);
-            return new AuthenticationResponse(token);
+            userService.save(user);
+            return authenticationService.getAuthenticationResponse(authenticationRequest);
         }
         throw new SystemException("Email cannot be empty", SystemErrorCode.INTERNAL_SERVER_ERROR);
     }

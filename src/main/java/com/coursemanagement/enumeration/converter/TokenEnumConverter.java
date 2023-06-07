@@ -1,7 +1,7 @@
 package com.coursemanagement.enumeration.converter;
 
 import com.coursemanagement.enumeration.TokenType;
-import com.coursemanagement.util.DatabaseUtil;
+import com.coursemanagement.util.DatabaseUtils;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -15,6 +15,6 @@ public class TokenEnumConverter implements AttributeConverter<TokenType, Integer
 
     @Override
     public TokenType convertToEntityAttribute(final Integer dbData) {
-        return DatabaseUtil.resolveEnum(TokenType.class, dbData);
+        return DatabaseUtils.resolveEnum(TokenType.class, dbData);
     }
 }

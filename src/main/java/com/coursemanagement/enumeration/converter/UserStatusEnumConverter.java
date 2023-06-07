@@ -1,7 +1,7 @@
 package com.coursemanagement.enumeration.converter;
 
 import com.coursemanagement.enumeration.UserStatus;
-import com.coursemanagement.util.DatabaseUtil;
+import com.coursemanagement.util.DatabaseUtils;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -15,6 +15,6 @@ public class UserStatusEnumConverter implements AttributeConverter<UserStatus, S
 
     @Override
     public UserStatus convertToEntityAttribute(final String dbData) {
-        return DatabaseUtil.resolveEnum(UserStatus.class, dbData);
+        return DatabaseUtils.resolveEnum(UserStatus.class, dbData);
     }
 }

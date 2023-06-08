@@ -29,7 +29,6 @@ public class RoleEntity {
             sequenceName = "role_id_seq",
             allocationSize = 1
     )
-
     @Column(name = "id")
     private Long id;
 

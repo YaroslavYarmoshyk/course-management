@@ -73,15 +73,14 @@ public class MapperConfiguration {
         };
         final Converter<Course, CourseEntity> courseToEntityMapping = context -> {
             final Course course = context.getSource();
-            final CourseEntity courseEntity = CourseEntity.builder()
-                    .code(course.getCode())
-                    .title(course.getTitle())
-                    .description(course.getDescription())
-                    .build();
+            final CourseEntity courseEntity = new CourseEntity()
+                    .setCode(course.getCode())
+                    .setTitle(course.getTitle())
+                    .setDescription(course.getDescription());
             final Set<UserCourseEntity> userCourseEntities = Optional.ofNullable(course.getUsers())
                     .stream()
                     .flatMap(Collection::stream)
-                    .map(user -> UserEntity.builder().id(user.getId()).build())
+                    .map(user -> new UserEntity().setId(user.getId()))
                     .map(userEntity -> new UserCourseEntity(userEntity, courseEntity))
                     .collect(Collectors.toSet());
             courseEntity.setUsers(userCourseEntities);

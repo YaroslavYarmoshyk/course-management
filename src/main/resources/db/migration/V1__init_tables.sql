@@ -54,30 +54,29 @@ CREATE TABLE IF NOT EXISTS user_role
 
 CREATE TABLE IF NOT EXISTS user_course
 (
-    user_id     BIGINT  NOT NULL,
-    course_code BIGINT  NOT NULL,
-    active      BOOLEAN NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     BIGINT NOT NULL,
+    course_code BIGINT NOT NULL,
+    status      TEXT,
     FOREIGN KEY (user_id) REFERENCES "user" (id),
-    FOREIGN KEY (course_code) REFERENCES course (code),
-    PRIMARY KEY (user_id, course_code)
+    FOREIGN KEY (course_code) REFERENCES course (code)
 );
 
 CREATE TABLE IF NOT EXISTS course_feedback
 (
-    id            BIGSERIAL PRIMARY KEY,
-    feedback      TEXT,
-    instructor_id BIGINT,
-    "date"        TIMESTAMP,
-    user_id       BIGINT NOT NULL,
-    course_code   BIGINT NOT NULL,
-    FOREIGN KEY (user_id, course_code) REFERENCES user_course (user_id, course_code)
+    id             BIGSERIAL PRIMARY KEY,
+    feedback       TEXT,
+    instructor_id  BIGINT,
+    "date"         TIMESTAMP,
+    user_course_id BIGINT NOT NULL,
+    FOREIGN KEY (user_course_id) REFERENCES user_course (id)
 );
 
-CREATE TABLE IF NOT EXISTS user_mark
+CREATE TABLE IF NOT EXISTS user_lesson
 (
     user_id   BIGINT NOT NULL,
     lesson_id BIGINT NOT NULL,
-    mark      INT CHECK (user_mark.mark >= 0 AND user_mark.mark <= 5),
+    mark      NUMERIC(38, 2) CHECK (user_lesson.mark >= 0 AND user_lesson.mark <= 5),
     PRIMARY KEY (user_id, lesson_id),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (lesson_id) REFERENCES lesson (id)

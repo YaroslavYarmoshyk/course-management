@@ -1,22 +1,23 @@
 package com.coursemanagement.repository.entity;
 
+import com.coursemanagement.enumeration.UserCourseStatus;
+import com.coursemanagement.enumeration.converter.UserCourseStatusEnumConverter;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -26,26 +27,35 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_course")
 public class UserCourseEntity {
-    @EmbeddedId
-    private UserCourseId userCourseId;
+    @Id
+    @GeneratedValue(generator = "user_course_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "user_course_id_seq",
+            sequenceName = "user_course_id_seq",
+            allocationSize = 1
+    )
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userEntityId")
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("courseEntityCode")
     @JoinColumn(name = "course_code")
     private CourseEntity courseEntity;
 
-    @Column(name = "active")
-    private boolean active;
+    @Convert(converter = UserCourseStatusEnumConverter.class)
+    @Column(name = "status")
+    private UserCourseStatus status = UserCourseStatus.STARTED;
 
     public UserCourseEntity(final UserEntity userEntity, final CourseEntity courseEntity) {
         this.userEntity = userEntity;
         this.courseEntity = courseEntity;
-        this.userCourseId = new UserCourseId(userEntity.getId(), courseEntity.getCode());
+    }
+
+    public UserCourseEntity(final Long userId, final Long courseCode) {
+        this.userEntity = new UserEntity().setId(userId);
+        this.courseEntity = new CourseEntity().setCode(courseCode);
     }
 
     @Override
@@ -56,22 +66,12 @@ public class UserCourseEntity {
         if (!(o instanceof final UserCourseEntity other)) {
             return false;
         }
-        return userCourseId != null && Objects.equals(userCourseId, other.userCourseId);
+        return Objects.equals(userEntity.getId(), other.getUserEntity().getId())
+                && Objects.equals(courseEntity.getCode(), other.getCourseEntity().getCode());
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    @Getter
-    @Setter
-    @EqualsAndHashCode
-    @Embeddable
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class UserCourseId implements Serializable {
-        private Long userEntityId;
-        private Long courseEntityCode;
     }
 }

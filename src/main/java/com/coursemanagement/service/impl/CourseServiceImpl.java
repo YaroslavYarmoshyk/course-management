@@ -2,10 +2,12 @@ package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.CourseRepository;
+import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
+    private final UserCourseRepository userCourseRepository;
     private final UserService userService;
     private final ModelMapper mapper;
 
@@ -52,15 +55,20 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
-        final User user = userService.getById(courseAssignmentRequestDto.userId());
-        validateInstructorAssignment(user);
-        final Course course = getByCode(courseAssignmentRequestDto.courseCode());
-        course.getUsers().add(user);
-        final Course savedCourse = save(course);
-        final Map<Role, Set<UserCourseDto>> usersByRole = getGroupedUsersByRole(savedCourse);
+        final Long userId = courseAssignmentRequestDto.userId();
+        final Long courseCode = courseAssignmentRequestDto.courseCode();
+        final User potentialInstructor = userService.getById(userId);
+        validateInstructorAssignment(potentialInstructor);
+        var userCourseEntity = userCourseRepository.findByUserEntityIdAndCourseEntityCode(userId, courseCode)
+                .orElse(new UserCourseEntity(userId, courseCode));
+        userCourseEntity.setStatus(UserCourseStatus.STARTED);
+        userCourseRepository.save(userCourseEntity);
+
+        final Course course = getByCode(courseCode);
+        final Map<Role, Set<UserCourseDto>> usersByRole = getGroupedUsersByRole(course);
         return new CourseAssignmentResponseDto(
-                savedCourse.getCode(),
-                savedCourse.getTitle(),
+                course.getCode(),
+                course.getTitle(),
                 usersByRole.getOrDefault(Role.INSTRUCTOR, Set.of()),
                 usersByRole.getOrDefault(Role.STUDENT, Set.of())
         );
@@ -75,7 +83,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Set<Course> getAllActiveByUserId(final Long userId) {
-        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserCourseIdUserEntityId(userId);
+        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserEntityId(userId);
         return courseEntities.stream()
                 .filter(courseEntity -> activeByUserId(courseEntity, userId))
                 .map(courseEntity -> mapper.map(courseEntity, Course.class))
@@ -87,12 +95,12 @@ public class CourseServiceImpl implements CourseService {
                 .stream()
                 .flatMap(Collection::stream)
                 .filter(userCourseEntity -> Objects.equals(userCourseEntity.getUserEntity().getId(), userId))
-                .allMatch(UserCourseEntity::isActive);
+                .allMatch(userCourseEntity -> Objects.equals(userCourseEntity.getStatus(), UserCourseStatus.STARTED));
     }
 
     @Override
     public Set<CourseDto> getAllByUserId(final Long userId) {
-        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserCourseIdUserEntityId(userId);
+        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserEntityId(userId);
         return courseEntities.stream()
                 .map(courseEntity -> new CourseDto(courseEntity, activeByUserId(courseEntity, userId)))
                 .collect(Collectors.toSet());
@@ -104,6 +112,7 @@ public class CourseServiceImpl implements CourseService {
             final Set<User> users = course.getUsers();
             users.add(student);
         }
+
         final Set<CourseEntity> courseEntities = courses.stream()
                 .map(course -> mapper.map(course, CourseEntity.class))
                 .collect(Collectors.toSet());

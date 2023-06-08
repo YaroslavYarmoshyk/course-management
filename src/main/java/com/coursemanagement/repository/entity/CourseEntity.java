@@ -7,11 +7,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Builder
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "users")

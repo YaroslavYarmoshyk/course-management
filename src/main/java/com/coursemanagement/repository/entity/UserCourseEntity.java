@@ -39,8 +39,8 @@ public class UserCourseEntity {
     @JoinColumn(name = "course_code")
     private CourseEntity courseEntity;
 
-    @Column(name = "finished")
-    private boolean finished;
+    @Column(name = "active")
+    private boolean active;
 
     public UserCourseEntity(final UserEntity userEntity, final CourseEntity courseEntity) {
         this.userEntity = userEntity;

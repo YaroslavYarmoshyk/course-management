@@ -4,14 +4,23 @@ VALUES ('ADMIN'),
        ('STUDENT');
 
 INSERT INTO "user" (first_name, last_name, email, "password", phone, status)
-VALUES ('John', 'Smith', 'john-smith@gmail.com', '$2a$10$2DXHDU2uYMrlIiRHVb2CletM6kMjhLmvHzgyfOHQlV2SrLzE17hSK', '+380974309331', 'A'),
-       ('Marry', 'Poppins', 'poppins@yahoo.com', '$2a$10$Zd/kQRuvnJ2br8dN5OyWt.LskBDAHL1UpZoRdbdOz7QcmNPJYJdYe', '+380971668744', 'A'),
-       ('Tyrion', 'Lannister', 'goldlannister@gmail.com', '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m', '+380971205151', 'A');
+VALUES ('John', 'Smith', 'john-smith@gmail.com', '$2a$10$2DXHDU2uYMrlIiRHVb2CletM6kMjhLmvHzgyfOHQlV2SrLzE17hSK',
+        '+380974309331', 'A'),
+       ('Marry', 'Poppins', 'poppins@yahoo.com', '$2a$10$Zd/kQRuvnJ2br8dN5OyWt.LskBDAHL1UpZoRdbdOz7QcmNPJYJdYe',
+        '+380971668744', 'A'),
+       ('Maria', 'Montessori', 'maria-montesory@gmail.com',
+        '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m', '+380973305151', 'A'),
+       ('Vivian', 'Paley', 'vivian-paley@yahoo.com', '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m',
+        '+3809733445451', 'A'),
+       ('Tyrion', 'Lannister', 'goldlannister@gmail.com',
+        '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m', '+380971205151', 'A');
 
 INSERT INTO user_role (user_id, role_id)
 VALUES (1, 1),
        (2, 2),
-       (3, 3);
+       (3, 2),
+       (4, 2),
+       (5, 3);
 
 INSERT INTO course (code, title, description)
 VALUES (22324, 'Mathematics', 'Introductory course on mathematics'),
@@ -19,6 +28,13 @@ VALUES (22324, 'Mathematics', 'Introductory course on mathematics'),
        (99831, 'Literature', 'Study of classical literature'),
        (56548, 'Physics', 'Fundamentals of physics'),
        (76552, 'Computer Science', 'Introduction to computer programming');
+
+INSERT INTO user_course (user_id, course_code, active)
+VALUES (2, 22324, true),
+       (3, 34432, true),
+       (4, 99831, true),
+       (3, 56548, true),
+       (2, 76552, true);
 
 INSERT INTO lesson (course_code, title, description, credits)
 VALUES (22324, 'Introduction to Algebra', 'Basic concepts and operations in algebra', 3),

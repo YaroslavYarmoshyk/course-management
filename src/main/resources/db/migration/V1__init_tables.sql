@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS user_role
 
 CREATE TABLE IF NOT EXISTS user_course
 (
-    user_id     BIGINT NOT NULL,
-    course_code BIGINT NOT NULL,
-    finished    BOOLEAN,
+    user_id     BIGINT  NOT NULL,
+    course_code BIGINT  NOT NULL,
+    active      BOOLEAN NOT NULL,
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (course_code) REFERENCES course (code),
     PRIMARY KEY (user_id, course_code)

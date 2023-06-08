@@ -87,7 +87,7 @@ public class CourseServiceImpl implements CourseService {
                 .stream()
                 .flatMap(Collection::stream)
                 .filter(userCourseEntity -> Objects.equals(userCourseEntity.getUserEntity().getId(), userId))
-                .noneMatch(UserCourseEntity::isFinished);
+                .allMatch(UserCourseEntity::isActive);
     }
 
     @Override

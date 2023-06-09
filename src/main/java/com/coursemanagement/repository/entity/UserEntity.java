@@ -2,7 +2,6 @@ package com.coursemanagement.repository.entity;
 
 import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.enumeration.converter.UserStatusEnumConverter;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -12,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,7 +29,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"roles", "courses"})
+@ToString(exclude = "roles")
 @Entity
 @Table(name = "\"user\"")
 public class UserEntity {
@@ -71,13 +69,6 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<RoleEntity> roles = new HashSet<>();
-
-    @OneToMany(
-            mappedBy = "userEntity",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<UserCourseEntity> courses = new HashSet<>();
 
     @Override
     public boolean equals(final Object o) {

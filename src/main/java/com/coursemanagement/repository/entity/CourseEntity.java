@@ -22,7 +22,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "users")
+@ToString(exclude = "userCourses")
 @Entity
 @Table(name = "course")
 public class CourseEntity {
@@ -41,7 +41,7 @@ public class CourseEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<UserCourseEntity> users = new HashSet<>();
+    private Set<UserCourseEntity> userCourses = new HashSet<>();
 
     @Override
     public boolean equals(final Object o) {

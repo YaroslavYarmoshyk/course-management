@@ -4,11 +4,13 @@ import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import org.hibernate.jpa.internal.util.PersistenceUtilHelper;
 import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -31,6 +33,13 @@ public class MapperConfiguration {
         addRoleMapping(modelMapper);
         addCourseMapping(modelMapper);
 
+        Converter<Object, Object> lazyConverter = context -> {
+            if (context.getSource() != null && PersistenceUtilHelper.isLoaded(context.getSource()).name().equals("LOADED")) {
+                return context.getSource();
+            }
+            return null;
+        };
+        modelMapper.addConverter(lazyConverter);
         modelMapper.getConfiguration()
                 .setPropertyCondition(Conditions.isNotNull());
         return modelMapper;
@@ -59,32 +68,33 @@ public class MapperConfiguration {
     private static void addCourseMapping(final ModelMapper modelMapper) {
         final Converter<CourseEntity, Course> entityToCourseMapping = context -> {
             final CourseEntity entity = context.getSource();
-            final Set<User> users = entity.getUsers().stream()
-                    .map(UserCourseEntity::getUserEntity)
-                    .map(en -> modelMapper.map(en, User.class))
+            final Set<UserCourse> userCourses = entity.getUserCourses().stream()
+                    .map(userCourseEntity -> new UserCourse(
+                            userCourseEntity.getId(),
+                            modelMapper.map(userCourseEntity.getUserEntity(), User.class),
+                            new Course(entity.getCode(), entity.getTitle(), entity.getDescription(), Set.of()),
+                            userCourseEntity.getStatus()
+                    ))
                     .collect(Collectors.toSet());
-            final Course course = Course.builder()
+            return Course.builder()
                     .code(entity.getCode())
                     .title(entity.getTitle())
                     .description(entity.getDescription())
+                    .userCourses(userCourses)
                     .build();
-            course.setUsers(users);
-            return course;
         };
         final Converter<Course, CourseEntity> courseToEntityMapping = context -> {
             final Course course = context.getSource();
-            final CourseEntity courseEntity = new CourseEntity()
-                    .setCode(course.getCode())
-                    .setTitle(course.getTitle())
-                    .setDescription(course.getDescription());
-            final Set<UserCourseEntity> userCourseEntities = Optional.ofNullable(course.getUsers())
+            final Set<UserCourseEntity> userCourseEntities = Optional.ofNullable(course.getUserCourses())
                     .stream()
                     .flatMap(Collection::stream)
-                    .map(user -> new UserEntity().setId(user.getId()))
-                    .map(userEntity -> new UserCourseEntity(userEntity, courseEntity))
+                    .map(userCourse -> new UserCourseEntity(userCourse.getUser().getId(), userCourse.getCourse().getCode()))
                     .collect(Collectors.toSet());
-            courseEntity.setUsers(userCourseEntities);
-            return courseEntity;
+            return new CourseEntity()
+                    .setCode(course.getCode())
+                    .setTitle(course.getTitle())
+                    .setDescription(course.getDescription())
+                    .setUserCourses(userCourseEntities);
         };
 
         modelMapper.createTypeMap(CourseEntity.class, Course.class)

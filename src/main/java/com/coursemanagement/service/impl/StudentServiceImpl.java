@@ -2,9 +2,11 @@ package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,14 +35,23 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
-        final User student = userService.getById(studentEnrollInCourseRequestDto.studentId());
+        final Long studentId = studentEnrollInCourseRequestDto.studentId();
+        final User student = userService.getById(studentId);
         final Set<Course> requestedCourses = courseService.getAllByCodes(studentEnrollInCourseRequestDto.courseCodes());
         final Set<Course> alreadyTakenCourses = courseService.getAllActiveByUserId(student.getId());
         validateCourseEnrollment(student, requestedCourses, alreadyTakenCourses);
 
-        final Set<Course> updatedCourses = courseService.addStudentToCourses(student, requestedCourses);
-        final Set<CourseDto> studentCourses = updatedCourses.stream()
-                .map(course -> new CourseDto(course.getCode(), course.getTitle(), course.getDescription(), true))
+        courseService.addUserToCourses(student, requestedCourses);
+        final Set<Course> allActiveCourses = courseService.getAllActiveByUserId(studentId);
+        final UserCourseStatus userCourseStatus = allActiveCourses.stream()
+                .map(Course::getUserCourses)
+                .flatMap(Collection::stream)
+                .filter(userCourse -> Objects.equals(userCourse.getUser().getId(), studentId))
+                .map(UserCourse::getUserCourseStatus)
+                .findFirst()
+                .orElse(null);
+        final Set<CourseDto> studentCourses = allActiveCourses.stream()
+                .map(course -> new CourseDto(course.getCode(), course.getTitle(), course.getDescription(), userCourseStatus))
                 .collect(Collectors.toSet());
         return new StudentEnrollInCourseResponseDto(student.getId(), studentCourses);
     }

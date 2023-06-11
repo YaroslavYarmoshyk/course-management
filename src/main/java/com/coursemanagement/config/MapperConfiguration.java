@@ -9,6 +9,9 @@ import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import org.hibernate.collection.spi.LazyInitializable;
+import org.hibernate.jpa.internal.util.PersistenceUtilHelper;
+import org.modelmapper.Condition;
 import org.modelmapper.Conditions;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class MapperConfiguration {
+    private final static Set<String> ALLOWED_PERSISTENCE_LOADING_STATES = Set.of("LOADED", "UNKNOWN");
 
     @Bean
     public ModelMapper modelMapper() {
@@ -32,8 +36,20 @@ public class MapperConfiguration {
         addCourseMapping(modelMapper);
 
         modelMapper.getConfiguration()
-                .setPropertyCondition(Conditions.isNotNull());
+                .setPropertyCondition(Conditions.isNotNull())
+                .setPropertyCondition(lazyInitializationCondition())
+                .setPreferNestedProperties(false);
         return modelMapper;
+    }
+
+    private static Condition<Object, Object> lazyInitializationCondition() {
+        return mappingContext -> {
+            final Object source = mappingContext.getSource();
+            if (source instanceof LazyInitializable) {
+                return isLoaded(source);
+            }
+            return true;
+        };
     }
 
     private static void addConfirmationTokenMapping(final ModelMapper modelMapper) {
@@ -59,38 +75,33 @@ public class MapperConfiguration {
     private static void addCourseMapping(final ModelMapper modelMapper) {
         final Converter<CourseEntity, Course> entityToCourseMapping = context -> {
             final CourseEntity entity = context.getSource();
-            final Set<User> users = entity.getUsers().stream()
+            if (!isLoaded(entity)) {
+                return null;
+            }
+
+            final Set<User> users = Optional.ofNullable(entity.getUserCourses())
+                    .filter(MapperConfiguration::isLoaded)
+                    .stream()
+                    .flatMap(Collection::stream)
                     .map(UserCourseEntity::getUserEntity)
-                    .map(en -> modelMapper.map(en, User.class))
+                    .filter(MapperConfiguration::isLoaded)
+                    .map(userEntity -> modelMapper.map(userEntity, User.class))
                     .collect(Collectors.toSet());
-            final Course course = Course.builder()
+
+            return Course.builder()
                     .code(entity.getCode())
                     .title(entity.getTitle())
                     .description(entity.getDescription())
+                    .users(users)
                     .build();
-            course.setUsers(users);
-            return course;
-        };
-        final Converter<Course, CourseEntity> courseToEntityMapping = context -> {
-            final Course course = context.getSource();
-            final CourseEntity courseEntity = CourseEntity.builder()
-                    .code(course.getCode())
-                    .title(course.getTitle())
-                    .description(course.getDescription())
-                    .build();
-            final Set<UserCourseEntity> userCourseEntities = Optional.ofNullable(course.getUsers())
-                    .stream()
-                    .flatMap(Collection::stream)
-                    .map(user -> UserEntity.builder().id(user.getId()).build())
-                    .map(userEntity -> new UserCourseEntity(userEntity, courseEntity))
-                    .collect(Collectors.toSet());
-            courseEntity.setUsers(userCourseEntities);
-            return courseEntity;
         };
 
         modelMapper.createTypeMap(CourseEntity.class, Course.class)
                 .setConverter(entityToCourseMapping);
-        modelMapper.createTypeMap(Course.class, CourseEntity.class)
-                .setConverter(courseToEntityMapping);
+    }
+
+    private static <T> boolean isLoaded(final T object) {
+        final String loadedState = PersistenceUtilHelper.isLoaded(object).name();
+        return ALLOWED_PERSISTENCE_LOADING_STATES.contains(loadedState);
     }
 }

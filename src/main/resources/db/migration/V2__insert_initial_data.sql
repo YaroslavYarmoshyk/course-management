@@ -29,12 +29,12 @@ VALUES (22324, 'Mathematics', 'Introductory course on mathematics'),
        (56548, 'Physics', 'Fundamentals of physics'),
        (76552, 'Computer Science', 'Introduction to computer programming');
 
-INSERT INTO user_course (user_id, course_code, active)
-VALUES (2, 22324, true),
-       (3, 34432, true),
-       (4, 99831, true),
-       (3, 56548, true),
-       (2, 76552, true);
+INSERT INTO user_course (user_id, course_code, status)
+VALUES (2, 22324, 'S'),
+       (3, 34432, 'S'),
+       (4, 99831, 'S'),
+       (3, 56548, 'S'),
+       (2, 76552, 'S');
 
 INSERT INTO lesson (course_code, title, description, credits)
 VALUES (22324, 'Introduction to Algebra', 'Basic concepts and operations in algebra', 3),

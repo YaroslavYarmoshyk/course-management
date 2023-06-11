@@ -5,11 +5,13 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.StudentService;
+import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final CourseService courseService;
+    private final UserCourseService userCourseService;
     private final UserService userService;
     @Value("${course-management.student.course-limit:5}")
     private int courseLimit;
@@ -31,14 +34,17 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
-        final User student = userService.getById(studentEnrollInCourseRequestDto.studentId());
+        final Long studentId = studentEnrollInCourseRequestDto.studentId();
+        final User student = userService.getById(studentId);
         final Set<Course> requestedCourses = courseService.getAllByCodes(studentEnrollInCourseRequestDto.courseCodes());
         final Set<Course> alreadyTakenCourses = courseService.getAllActiveByUserId(student.getId());
         validateCourseEnrollment(student, requestedCourses, alreadyTakenCourses);
 
-        final Set<Course> updatedCourses = courseService.addStudentToCourses(student, requestedCourses);
-        final Set<CourseDto> studentCourses = updatedCourses.stream()
-                .map(course -> new CourseDto(course.getCode(), course.getTitle(), course.getDescription(), true))
+        courseService.addUserToCourses(student, requestedCourses);
+        final Set<UserCourse> userCourses = userCourseService.getAllByUserId(studentId);
+
+        final Set<CourseDto> studentCourses = userCourses.stream()
+                .map(CourseDto::new)
                 .collect(Collectors.toSet());
         return new StudentEnrollInCourseResponseDto(student.getId(), studentCourses);
     }

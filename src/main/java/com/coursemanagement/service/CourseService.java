@@ -23,5 +23,5 @@ public interface CourseService {
 
     CourseAssignmentResponseDto assignInstructor(CourseAssignmentRequestDto courseAssignmentRequestDto);
 
-    Set<Course> addStudentToCourses(final User student, final Collection<Course> courses);
+    void addUserToCourses(final User student, final Collection<Course> courses);
 }

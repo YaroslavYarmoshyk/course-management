@@ -2,6 +2,7 @@ package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
@@ -21,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.AbstractMap;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -52,15 +52,21 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
-        final User user = userService.getById(courseAssignmentRequestDto.userId());
-        validateInstructorAssignment(user);
-        final Course course = getByCode(courseAssignmentRequestDto.courseCode());
-        course.getUsers().add(user);
-        final Course savedCourse = save(course);
-        final Map<Role, Set<UserCourseDto>> usersByRole = getGroupedUsersByRole(savedCourse);
+        final Long userId = courseAssignmentRequestDto.userId();
+        final Long courseCode = courseAssignmentRequestDto.courseCode();
+        final User potentialInstructor = userService.getById(userId);
+        validateInstructorAssignment(potentialInstructor);
+
+        final CourseEntity courseEntity = courseRepository.findByCode(courseCode)
+                .orElseThrow(() -> new SystemException("Course with code " + courseCode + " not found", SystemErrorCode.BAD_REQUEST));
+        courseEntity.getUserCourses().add(new UserCourseEntity(userId, courseCode));
+        courseRepository.save(courseEntity);
+
+        final Course course = getByCode(courseCode);
+        final Map<Role, Set<UserCourseDto>> usersByRole = getGroupedUsersByRole(course);
         return new CourseAssignmentResponseDto(
-                savedCourse.getCode(),
-                savedCourse.getTitle(),
+                course.getCode(),
+                course.getTitle(),
                 usersByRole.getOrDefault(Role.INSTRUCTOR, Set.of()),
                 usersByRole.getOrDefault(Role.STUDENT, Set.of())
         );
@@ -75,42 +81,46 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Set<Course> getAllActiveByUserId(final Long userId) {
-        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserCourseIdUserEntityId(userId);
+        final Set<CourseEntity> courseEntities = courseRepository.findByUserCoursesUserEntityId(userId);
         return courseEntities.stream()
-                .filter(courseEntity -> activeByUserId(courseEntity, userId))
+                .filter(courseEntity -> Objects.equals(
+                        getUserCourseStatus(courseEntity, userId),
+                        UserCourseStatus.STARTED)
+                )
                 .map(courseEntity -> mapper.map(courseEntity, Course.class))
                 .collect(Collectors.toSet());
     }
 
-    private static boolean activeByUserId(final CourseEntity courseEntity, final Long userId) {
-        return Optional.ofNullable(courseEntity.getUsers())
+    private static UserCourseStatus getUserCourseStatus(final CourseEntity courseEntity, final Long userId) {
+        return Optional.ofNullable(courseEntity.getUserCourses())
                 .stream()
                 .flatMap(Collection::stream)
                 .filter(userCourseEntity -> Objects.equals(userCourseEntity.getUserEntity().getId(), userId))
-                .allMatch(UserCourseEntity::isActive);
+                .findFirst()
+                .map(UserCourseEntity::getStatus)
+                .orElse(null);
     }
 
     @Override
     public Set<CourseDto> getAllByUserId(final Long userId) {
-        final Set<CourseEntity> courseEntities = courseRepository.findByUsersUserCourseIdUserEntityId(userId);
+        final Set<CourseEntity> courseEntities = courseRepository.findByUserCoursesUserEntityId(userId);
         return courseEntities.stream()
-                .map(courseEntity -> new CourseDto(courseEntity, activeByUserId(courseEntity, userId)))
+                .map(courseEntity -> new CourseDto(courseEntity, getUserCourseStatus(courseEntity, userId)))
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<Course> addStudentToCourses(final User student, final Collection<Course> courses) {
-        for (final Course course : courses) {
-            final Set<User> users = course.getUsers();
-            users.add(student);
+    public void addUserToCourses(final User user, final Collection<Course> courses) {
+        final Set<Long> courseCodes = courses.stream()
+                .map(Course::getCode)
+                .collect(Collectors.toSet());
+        final Set<CourseEntity> courseEntities = courseRepository.findAllByCodeIn(courseCodes);
+        for (final CourseEntity courseEntity : courseEntities) {
+            final Set<UserCourseEntity> userCourseEntities = courseEntity.getUserCourses();
+            userCourseEntities.add(new UserCourseEntity(user.getId(), courseEntity.getCode()));
+            userCourseEntities.forEach(userCourseEntity -> userCourseEntity.setStatus(UserCourseStatus.STARTED));
         }
-        final Set<CourseEntity> courseEntities = courses.stream()
-                .map(course -> mapper.map(course, CourseEntity.class))
-                .collect(Collectors.toSet());
-        final List<CourseEntity> savedCourseEntities = courseRepository.saveAll(courseEntities);
-        return savedCourseEntities.stream()
-                .map(courseEntity -> mapper.map(courseEntity, Course.class))
-                .collect(Collectors.toSet());
+        courseRepository.saveAll(courseEntities);
     }
 
     private void validateInstructorAssignment(final User potentialInstructor) {
@@ -122,8 +132,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     private Map<Role, Set<UserCourseDto>> getGroupedUsersByRole(final Course course) {
-        final Set<User> users = course.getUsers();
-        return users.stream()
+        return course.getUsers().stream()
                 .flatMap(user -> user.getRoles().stream().map(
                         role -> new AbstractMap.SimpleEntry<>(role, new UserCourseDto(user)))
                 )

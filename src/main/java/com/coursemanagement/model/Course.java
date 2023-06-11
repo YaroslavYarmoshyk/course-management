@@ -15,5 +15,5 @@ public class Course {
     private Long code;
     private String title;
     private String description;
-    private Set<UserCourse> userCourses;
+    private Set<User> users;
 }

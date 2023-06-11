@@ -6,7 +6,6 @@ import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
-import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
@@ -133,10 +132,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     private Map<Role, Set<UserCourseDto>> getGroupedUsersByRole(final Course course) {
-        final Set<User> users = course.getUserCourses().stream()
-                .map(UserCourse::getUser)
-                .collect(Collectors.toSet());
-        return users.stream()
+        return course.getUsers().stream()
                 .flatMap(user -> user.getRoles().stream().map(
                         role -> new AbstractMap.SimpleEntry<>(role, new UserCourseDto(user)))
                 )

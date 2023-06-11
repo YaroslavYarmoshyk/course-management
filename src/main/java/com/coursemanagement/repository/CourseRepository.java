@@ -16,9 +16,9 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
     @EntityGraph(attributePaths = {"userCourses", "userCourses.userEntity", "userCourses.userEntity.roles"})
     Optional<CourseEntity> findByCode(@NonNull final Long code);
 
-    @EntityGraph(attributePaths = {"userCourses", "userCourses.userEntity", "userCourses.userEntity.roles"})
+    @EntityGraph(attributePaths = {"userCourses"})
     Set<CourseEntity> findAllByCodeIn(final Collection<Long> codes);
 
-    @EntityGraph(attributePaths = {"userCourses", "userCourses.userEntity"})
+    @EntityGraph(value = "course-userCourse-user-graph")
     Set<CourseEntity> findByUserCoursesUserEntityId(final Long userId);
 }

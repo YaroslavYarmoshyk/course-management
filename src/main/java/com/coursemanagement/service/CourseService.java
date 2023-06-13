@@ -13,15 +13,9 @@ public interface CourseService {
 
     Course getByCode(final Long code);
 
-    Set<Course> getAllByCodes(final Collection<Long> codes);
-
-    Set<Course> getAllActiveByUserId(final Long userId);
-
     Set<CourseDto> getAllByUserId(final Long userId);
-
-    Course save(final Course course);
 
     CourseAssignmentResponseDto assignInstructor(CourseAssignmentRequestDto courseAssignmentRequestDto);
 
-    void addUserToCourses(final User student, final Collection<Course> courses);
+    void addUserToCourses(final User student, final Collection<Long> courses);
 }

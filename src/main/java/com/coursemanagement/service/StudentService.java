@@ -10,5 +10,5 @@ public interface StudentService {
 
     StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto);
 
-    Set<CourseDto> getAllCourses();
+    Set<CourseDto> getAllCoursesByStudentId(final Long userId);
 }

@@ -36,32 +36,34 @@ public class StudentServiceImpl implements StudentService {
     public StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
         final Long studentId = studentEnrollInCourseRequestDto.studentId();
         final User student = userService.getById(studentId);
-        final Set<Course> requestedCourses = courseService.getAllByCodes(studentEnrollInCourseRequestDto.courseCodes());
-        final Set<Course> alreadyTakenCourses = courseService.getAllActiveByUserId(student.getId());
-        validateCourseEnrollment(student, requestedCourses, alreadyTakenCourses);
+        validateStudentRole(student);
 
-        courseService.addUserToCourses(student, requestedCourses);
-        final Set<UserCourse> userCourses = userCourseService.getAllByUserId(studentId);
+        final Set<UserCourse> alreadyTakenUserCourses = userCourseService.getAllByUserId(studentId);
+        final Set<Long> alreadyTakenCourseCodes = alreadyTakenUserCourses.stream()
+                .map(UserCourse::getCourse)
+                .map(Course::getCode)
+                .collect(Collectors.toSet());
+        final Set<Long> requestedCourseCodes = studentEnrollInCourseRequestDto.courseCodes();
+        validateCourseEnrollment(student, requestedCourseCodes, alreadyTakenCourseCodes);
 
-        final Set<CourseDto> studentCourses = userCourses.stream()
+        courseService.addUserToCourses(student, requestedCourseCodes);
+
+        final Set<UserCourse> updatedUserCourses = userCourseService.getAllByUserId(studentId);
+        final Set<CourseDto> studentCourses = updatedUserCourses.stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());
         return new StudentEnrollInCourseResponseDto(student.getId(), studentCourses);
     }
 
     @Override
-    public Set<CourseDto> getAllCourses() {
-        final User user = userService.resolveCurrentUser();
-        return courseService.getAllByUserId(user.getId());
+    public Set<CourseDto> getAllCoursesByStudentId(final Long userId) {
+        return courseService.getAllByUserId(userId);
     }
 
-    private void validateCourseEnrollment(final User student, final Set<Course> requestedCourses, final Set<Course> alreadyTakenCourses) {
-        validateStudentRole(student);
-        final Set<Long> alreadyTakenCourseCodes = alreadyTakenCourses.stream()
-                .map(Course::getCode)
-                .collect(Collectors.toSet());
-        final Set<Long> requestedNewCourseCodes = requestedCourses.stream()
-                .map(Course::getCode)
+    private void validateCourseEnrollment(final User student,
+                                          final Set<Long> requestedCourseCodes,
+                                          final Set<Long> alreadyTakenCourseCodes) {
+        final Set<Long> requestedNewCourseCodes = requestedCourseCodes.stream()
                 .filter(code -> !alreadyTakenCourseCodes.contains(code))
                 .collect(Collectors.toSet());
         final int alreadyTakenCoursesCount = alreadyTakenCourseCodes.size();

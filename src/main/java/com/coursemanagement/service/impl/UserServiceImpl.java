@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public User getById(final Long id) {
         return userRepository.findById(id)
                 .map(entity -> userMapper.map(entity, User.class))
-                .orElseThrow(() -> new SystemException("User by id " + id + " not found", SystemErrorCode.BAD_REQUEST));
+                .orElseThrow(() -> new SystemException("User not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         final ConfirmationToken confirmationToken = confirmationTokenService.confirmToken(encodedToken, TokenType.EMAIL_CONFIRMATION);
         final Long userId = confirmationToken.getUserId();
         final UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new SystemException("Cannot find user by id: " + userId, SystemErrorCode.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new SystemException("Cannot find user", SystemErrorCode.INTERNAL_SERVER_ERROR));
         userEntity.setStatus(UserStatus.ACTIVE);
         userRepository.save(userEntity);
     }

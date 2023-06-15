@@ -11,6 +11,7 @@ import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDto;
@@ -82,9 +83,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void addUserToCourses(final User user, final Collection<Long> courseCodes) {
         final Set<CourseEntity> courseEntities = courseRepository.findAllByCodeIn(courseCodes);
+        final UserEntity userEntity = mapper.map(user, UserEntity.class);
         for (final CourseEntity courseEntity : courseEntities) {
             final Set<UserCourseEntity> userCourseEntities = courseEntity.getUserCourses();
-            userCourseEntities.add(new UserCourseEntity(user.getId(), courseEntity.getCode()));
+            userCourseEntities.add(new UserCourseEntity(userEntity, courseEntity));
             userCourseEntities.forEach(userCourseEntity -> userCourseEntity.setStatus(UserCourseStatus.STARTED));
         }
         courseRepository.saveAll(courseEntities);

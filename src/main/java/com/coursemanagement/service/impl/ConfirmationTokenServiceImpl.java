@@ -1,6 +1,7 @@
 package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
@@ -66,7 +67,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private void invalidateToken(final ConfirmationToken token) {
         final ConfirmationTokenEntity tokenEntity = mapper.map(token, ConfirmationTokenEntity.class);
-        tokenEntity.setActivated(Boolean.TRUE);
+        tokenEntity.setStatus(TokenStatus.ACTIVATED);
         tokenRepository.save(tokenEntity);
     }
 
@@ -79,6 +80,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                 .setUserId(user.getId())
                 .setType(type)
                 .setToken(getEncryptedToken(user))
+                .setStatus(TokenStatus.NOT_ACTIVATED)
                 .setExpirationDate(LocalDateTime.now(DEFAULT_ZONE_ID).plus(expirationTime, expirationTimeUnit));
         final ConfirmationTokenEntity confirmationTokenEntity = mapper.map(newToken, ConfirmationTokenEntity.class);
         final ConfirmationTokenEntity savedToken = tokenRepository.save(confirmationTokenEntity);
@@ -88,7 +90,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private void invalidateOldTokens(final User user, final TokenType tokenType) {
         final UserEntity userEntity = mapper.map(user, UserEntity.class);
         var oldTokens = tokenRepository.findAllByUserEntityAndType(userEntity, tokenType);
-        oldTokens.forEach(token -> token.setActivated(Boolean.TRUE));
+        oldTokens.forEach(token -> token.setStatus(TokenStatus.ACTIVATED));
         tokenRepository.saveAll(oldTokens);
     }
 
@@ -99,6 +101,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private static boolean isTokenValid(final ConfirmationToken token) {
         return token.getExpirationDate().isAfter(LocalDateTime.now(DEFAULT_ZONE_ID))
-                && Objects.equals(token.isActivated(), Boolean.FALSE);
+                && Objects.equals(token.getStatus(), TokenStatus.NOT_ACTIVATED);
     }
 }

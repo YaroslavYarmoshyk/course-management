@@ -4,22 +4,21 @@ import com.coursemanagement.enumeration.Mark;
 import com.coursemanagement.enumeration.converter.MarkEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -29,8 +28,14 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_lesson")
 public class UserLessonEntity {
-    @EmbeddedId
-    private UserLessonId userLessonId;
+    @Id
+    @GeneratedValue(generator = "user_lesson_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "user_lesson_id_seq",
+            sequenceName = "user_lesson_id_seq",
+            allocationSize = 1
+    )
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userEntityId")
@@ -49,7 +54,6 @@ public class UserLessonEntity {
     public UserLessonEntity(final UserEntity userEntity, final LessonEntity lessonEntity) {
         this.userEntity = userEntity;
         this.lessonEntity = lessonEntity;
-        this.userLessonId = new UserLessonId(userEntity.getId(), lessonEntity.getId());
     }
 
     @Override
@@ -60,22 +64,12 @@ public class UserLessonEntity {
         if (!(o instanceof final UserLessonEntity other)) {
             return false;
         }
-        return userLessonId != null && Objects.equals(userLessonId, other.userLessonId);
+        return Objects.equals(userEntity.getId(), other.getUserEntity().getId())
+                && Objects.equals(lessonEntity.getId(), other.lessonEntity.getId());
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    @Getter
-    @Setter
-    @EqualsAndHashCode
-    @Embeddable
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class UserLessonId implements Serializable {
-        private Long userEntityId;
-        private Long lessonEntityId;
     }
 }

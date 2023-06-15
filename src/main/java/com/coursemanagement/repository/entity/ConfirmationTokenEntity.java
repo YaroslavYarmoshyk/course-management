@@ -1,7 +1,9 @@
 package com.coursemanagement.repository.entity;
 
+import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.enumeration.converter.TokenEnumConverter;
+import com.coursemanagement.enumeration.converter.TokenStatusEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -51,8 +53,9 @@ public class ConfirmationTokenEntity {
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
-    @Column(name = "activated")
-    private Boolean activated;
+    @Column(name = "status")
+    @Convert(converter = TokenStatusEnumConverter.class)
+    private TokenStatus status = TokenStatus.NOT_ACTIVATED;
 
     @Override
     public boolean equals(final Object o) {

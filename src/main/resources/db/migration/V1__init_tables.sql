@@ -12,17 +12,17 @@ CREATE TABLE IF NOT EXISTS "user"
     email      TEXT UNIQUE NOT NULL,
     "password" TEXT,
     phone      TEXT,
-    status     TEXT CHECK (status = 'A' OR status = 'I')
+    status     TEXT NOT NULL CHECK (status = 'A' OR status = 'I')
 );
 
 CREATE TABLE IF NOT EXISTS confirmation_token
 (
     id              BIGSERIAL PRIMARY KEY,
-    user_id         BIGINT  NOT NULL,
+    user_id         BIGINT NOT NULL,
     "type"          INT,
     token           TEXT,
     expiration_date TIMESTAMP,
-    activated       BOOLEAN NOT NULL,
+    status          TEXT NOT NULL CHECK (status = 'A' OR status = 'N'),
     FOREIGN KEY (user_id) REFERENCES "user" (id)
 );
 
@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS lesson
     title       TEXT NOT NULL,
     description TEXT,
     credits     NUMERIC,
-    homework    BYTEA
+    homework    BYTEA,
+    FOREIGN KEY (course_code) REFERENCES course (code)
 );
 
 CREATE TABLE IF NOT EXISTS user_role
@@ -65,19 +66,30 @@ CREATE TABLE IF NOT EXISTS user_course
 CREATE TABLE IF NOT EXISTS course_feedback
 (
     id             BIGSERIAL PRIMARY KEY,
-    feedback       TEXT,
-    instructor_id  BIGINT,
-    "date"         TIMESTAMP,
     user_course_id BIGINT NOT NULL,
-    FOREIGN KEY (user_course_id) REFERENCES user_course (id)
+    feedback       TEXT,
+    "date"         TIMESTAMP,
+    instructor_id  BIGINT,
+    FOREIGN KEY (user_course_id) REFERENCES user_course (id),
+    FOREIGN KEY (instructor_id) REFERENCES "user" (id)
 );
 
 CREATE TABLE IF NOT EXISTS user_lesson
 (
+    id        BIGSERIAL PRIMARY KEY,
     user_id   BIGINT NOT NULL,
     lesson_id BIGINT NOT NULL,
     mark      NUMERIC(38, 2) CHECK (user_lesson.mark >= 0 AND user_lesson.mark <= 5),
-    PRIMARY KEY (user_id, lesson_id),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (lesson_id) REFERENCES lesson (id)
+);
+
+CREATE TABLE IF NOT EXISTS homework_submission
+(
+    id             BIGSERIAL PRIMARY KEY,
+    user_lesson_id BIGINT NOT NULL,
+    file_name      TEXT,
+    uploaded_date  TIMESTAMP,
+    homework       BYTEA,
+    FOREIGN KEY (user_lesson_id) REFERENCES user_lesson (id)
 );

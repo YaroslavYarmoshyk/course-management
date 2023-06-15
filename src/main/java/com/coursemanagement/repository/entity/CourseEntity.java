@@ -4,9 +4,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,20 +17,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@NamedEntityGraph(
-        name = "course-userCourse-user-graph",
-        attributeNodes = {
-                @NamedAttributeNode(value = "userCourses", subgraph = "user-subgraph"),
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "user-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("userEntity")
-                        }
-                )
-        }
-)
 @Getter
 @Setter
 @Accessors(chain = true)

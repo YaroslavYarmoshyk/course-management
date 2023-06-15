@@ -1,5 +1,6 @@
 package com.coursemanagement.model;
 
+import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -14,5 +15,5 @@ public class ConfirmationToken {
     private TokenType type;
     private String token;
     private LocalDateTime expirationDate;
-    private boolean activated;
+    private TokenStatus status;
 }

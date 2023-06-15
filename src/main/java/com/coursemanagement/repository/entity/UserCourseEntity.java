@@ -53,11 +53,6 @@ public class UserCourseEntity {
         this.courseEntity = courseEntity;
     }
 
-    public UserCourseEntity(final Long userId, final Long courseCode) {
-        this.userEntity = new UserEntity().setId(userId);
-        this.courseEntity = new CourseEntity().setCode(courseCode);
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

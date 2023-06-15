@@ -11,7 +11,6 @@ import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.StudentService;
-import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final CourseService courseService;
-    private final UserCourseService userCourseService;
     private final UserService userService;
     @Value("${course-management.student.course-limit:5}")
     private int courseLimit;
@@ -38,17 +36,17 @@ public class StudentServiceImpl implements StudentService {
         final User student = userService.getById(studentId);
         validateStudentRole(student);
 
-        final Set<UserCourse> alreadyTakenUserCourses = userCourseService.getAllByUserId(studentId);
+        final Set<UserCourse> alreadyTakenUserCourses = courseService.getAllUserCoursesByUserId(studentId);
         final Set<Long> alreadyTakenCourseCodes = alreadyTakenUserCourses.stream()
                 .map(UserCourse::getCourse)
                 .map(Course::getCode)
                 .collect(Collectors.toSet());
         final Set<Long> requestedCourseCodes = studentEnrollInCourseRequestDto.courseCodes();
-        validateCourseEnrollment(student, requestedCourseCodes, alreadyTakenCourseCodes);
+        validateCourseEnrollment(requestedCourseCodes, alreadyTakenCourseCodes);
 
         courseService.addUserToCourses(student, requestedCourseCodes);
 
-        final Set<UserCourse> updatedUserCourses = userCourseService.getAllByUserId(studentId);
+        final Set<UserCourse> updatedUserCourses = courseService.getAllUserCoursesByUserId(studentId);
         final Set<CourseDto> studentCourses = updatedUserCourses.stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());
@@ -60,8 +58,7 @@ public class StudentServiceImpl implements StudentService {
         return courseService.getAllByUserId(userId);
     }
 
-    private void validateCourseEnrollment(final User student,
-                                          final Set<Long> requestedCourseCodes,
+    private void validateCourseEnrollment(final Set<Long> requestedCourseCodes,
                                           final Set<Long> alreadyTakenCourseCodes) {
         final Set<Long> requestedNewCourseCodes = requestedCourseCodes.stream()
                 .filter(code -> !alreadyTakenCourseCodes.contains(code))
@@ -72,9 +69,8 @@ public class StudentServiceImpl implements StudentService {
 
         if (reachedCourseLimit) {
             final String exceptionMessage = String.format(
-                    "Course enrollment limit reached for student with userId: %d. "
-                            + "Student is already enrolled in %d courses and cannot enroll in %d additional",
-                    student.getId(),
+                    "Course enrollment limit reached for student. " +
+                            "Student is already enrolled in %d courses and cannot enroll in %d additional",
                     alreadyTakenCoursesCount,
                     requestedCoursesCount
             );

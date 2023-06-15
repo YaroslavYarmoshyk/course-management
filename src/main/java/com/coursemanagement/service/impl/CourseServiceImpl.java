@@ -6,15 +6,17 @@ import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseRepository;
+import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.service.CourseService;
-import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
-    private final UserCourseService userCourseService;
+    private final UserCourseRepository userCourseRepository;
     private final UserService userService;
     private final ModelMapper mapper;
 
@@ -44,8 +47,16 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Set<CourseDto> getAllByUserId(final Long userId) {
-        return userCourseService.getAllByUserId(userId).stream()
+        return getAllUserCoursesByUserId(userId).stream()
                 .map(CourseDto::new)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<UserCourse> getAllUserCoursesByUserId(final Long userId) {
+        final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserEntityId(userId);
+        return userCourseEntities.stream()
+                .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
                 .collect(Collectors.toSet());
     }
 
@@ -72,9 +83,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void addUserToCourses(final User user, final Collection<Long> courseCodes) {
         final Set<CourseEntity> courseEntities = courseRepository.findAllByCodeIn(courseCodes);
+        final UserEntity userEntity = mapper.map(user, UserEntity.class);
         for (final CourseEntity courseEntity : courseEntities) {
             final Set<UserCourseEntity> userCourseEntities = courseEntity.getUserCourses();
-            userCourseEntities.add(new UserCourseEntity(user.getId(), courseEntity.getCode()));
+            userCourseEntities.add(new UserCourseEntity(userEntity, courseEntity));
             userCourseEntities.forEach(userCourseEntity -> userCourseEntity.setStatus(UserCourseStatus.STARTED));
         }
         courseRepository.saveAll(courseEntities);
@@ -84,8 +96,7 @@ public class CourseServiceImpl implements CourseService {
         potentialInstructor.getRoles().stream()
                 .filter(role -> role.equals(Role.INSTRUCTOR))
                 .findAny()
-                .orElseThrow(() -> new SystemException("Cannot assign user with userId " + potentialInstructor.getId() +
-                        " to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST));
+                .orElseThrow(() -> new SystemException("Cannot assign user to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST));
     }
 
     private Map<Role, Set<UserCourseDto>> getGroupedUsersByRole(final Course course) {

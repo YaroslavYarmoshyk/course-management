@@ -2,7 +2,7 @@ package com.coursemanagement.service;
 
 import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 
 public interface UserService {
 
@@ -16,5 +16,5 @@ public interface UserService {
 
     User save(final User user);
 
-    UserDto assignRole(RoleAssignmentDto roleAssignmentDto);
+    UserInfoDto assignRole(RoleAssignmentDto roleAssignmentDto);
 }

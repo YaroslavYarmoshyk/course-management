@@ -11,7 +11,7 @@ import com.coursemanagement.repository.UserRepository;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -82,10 +82,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto assignRole(final RoleAssignmentDto roleAssignmentDto) {
+    public UserInfoDto assignRole(final RoleAssignmentDto roleAssignmentDto) {
         final User user = getById(roleAssignmentDto.userId());
         user.getRoles().addAll(roleAssignmentDto.roles());
         final User savedUser = save(user);
-        return userMapper.map(savedUser, UserDto.class);
+        return userMapper.map(savedUser, UserInfoDto.class);
     }
 }

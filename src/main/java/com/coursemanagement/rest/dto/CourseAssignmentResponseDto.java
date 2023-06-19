@@ -5,7 +5,7 @@ import java.util.Set;
 public record CourseAssignmentResponseDto(
         Long code,
         String title,
-        Set<UserCourseDto> instructors,
-        Set<UserCourseDto> students
+        Set<UserDto> instructors,
+        Set<UserDto> students
 ) {
 }

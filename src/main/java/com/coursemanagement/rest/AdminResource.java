@@ -2,7 +2,7 @@ package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.AdminAccessLevel;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class AdminResource {
     private final UserService userService;
 
     @PostMapping(value = "/assign-role")
-    public UserDto assignRole(@RequestBody RoleAssignmentDto roleAssignmentDto) {
+    public UserInfoDto assignRole(@RequestBody RoleAssignmentDto roleAssignmentDto) {
         return userService.assignRole(roleAssignmentDto);
     }
 }

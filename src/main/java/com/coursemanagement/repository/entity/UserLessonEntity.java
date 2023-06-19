@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -38,12 +37,10 @@ public class UserLessonEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userEntityId")
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("lessonEntityId")
     @JoinColumn(name = "lesson_id")
     private LessonEntity lessonEntity;
 
@@ -65,11 +62,11 @@ public class UserLessonEntity {
             return false;
         }
         return Objects.equals(userEntity.getId(), other.getUserEntity().getId())
-                && Objects.equals(lessonEntity.getId(), other.lessonEntity.getId());
+                && Objects.equals(lessonEntity.getId(), other.getLessonEntity().getId());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(userEntity.getId(), lessonEntity.getId());
     }
 }

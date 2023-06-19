@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "user"
     email      TEXT UNIQUE NOT NULL,
     "password" TEXT,
     phone      TEXT,
-    status     TEXT NOT NULL CHECK (status = 'A' OR status = 'I')
+    status     TEXT        NOT NULL CHECK (status = 'A' OR status = 'I')
 );
 
 CREATE TABLE IF NOT EXISTS confirmation_token
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS confirmation_token
     "type"          INT,
     token           TEXT,
     expiration_date TIMESTAMP,
-    status          TEXT NOT NULL CHECK (status = 'A' OR status = 'N'),
+    status          TEXT   NOT NULL CHECK (status = 'A' OR status = 'N'),
     FOREIGN KEY (user_id) REFERENCES "user" (id)
 );
 
@@ -81,7 +81,8 @@ CREATE TABLE IF NOT EXISTS user_lesson
     lesson_id BIGINT NOT NULL,
     mark      NUMERIC(38, 2) CHECK (user_lesson.mark >= 0 AND user_lesson.mark <= 5),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
-    FOREIGN KEY (lesson_id) REFERENCES lesson (id)
+    FOREIGN KEY (lesson_id) REFERENCES lesson (id),
+    UNIQUE (user_id, lesson_id)
 );
 
 CREATE TABLE IF NOT EXISTS homework_submission

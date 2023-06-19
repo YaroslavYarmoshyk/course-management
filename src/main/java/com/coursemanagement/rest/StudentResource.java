@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -23,6 +25,13 @@ public class StudentResource {
     @PostMapping(value = "/course/enrollments")
     public StudentEnrollInCourseResponseDto enrollInCourse(@RequestBody StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
         return studentService.enrollStudentInCourses(studentEnrollInCourseRequestDto);
+    }
+
+    @PostMapping("/homework/upload")
+    public void uploadHomework(@RequestParam("user-id") final Long userId,
+                               @RequestParam("lesson-id") final Long lessonId,
+                               @RequestParam("file") MultipartFile homework) {
+        studentService.uploadHomework(userId, lessonId, homework);
     }
 
     @GetMapping(value = "{studentId}/courses")

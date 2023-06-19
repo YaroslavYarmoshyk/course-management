@@ -108,7 +108,8 @@ public class MapperConfiguration {
 
     private static void addUserLessonMapping(final ModelMapper modelMapper) {
         modelMapper.createTypeMap(UserLesson.class, UserLessonEntity.class)
-                .addMapping(UserLesson::getUser, UserLessonEntity::setUserEntity)
+                .addMapping(UserLesson::getStudent, UserLessonEntity::setStudentEntity)
+                .addMapping(UserLesson::getInstructor, UserLessonEntity::setInstructorEntity)
                 .addMapping(UserLesson::getLesson, UserLessonEntity::setLessonEntity);
     }
 

@@ -1,5 +1,6 @@
 package com.coursemanagement.security.service;
 
+import com.coursemanagement.security.ApplicationUserDetails;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,6 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        return userService.getByEmail(username);
+        return new ApplicationUserDetails(userService.getByEmail(username));
     }
 }

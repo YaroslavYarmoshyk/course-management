@@ -3,19 +3,18 @@ package com.coursemanagement.model;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
-public class User implements UserDetails {
+public class User {
     private Long id;
     private String firstName;
     private String lastName;
@@ -26,42 +25,14 @@ public class User implements UserDetails {
     private UserStatus status;
     private Set<Role> roles;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Optional.ofNullable(roles)
-                .stream()
-                .flatMap(Collection::stream)
-                .map(roleName -> new SimpleGrantedAuthority(roleName.name()))
-                .toList();
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public User(final User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.phone = user.getPhone();
+        this.status = user.getStatus();
+        this.roles = user.getRoles();
     }
 }

@@ -3,12 +3,16 @@ package com.coursemanagement.config;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.Course;
+import com.coursemanagement.model.HomeworkSubmission;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserLesson;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
 import com.coursemanagement.repository.entity.CourseEntity;
+import com.coursemanagement.repository.entity.HomeworkSubmissionEntity;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import com.coursemanagement.repository.entity.UserLessonEntity;
 import org.hibernate.collection.spi.LazyInitializable;
 import org.hibernate.jpa.internal.util.PersistenceUtilHelper;
 import org.modelmapper.Condition;
@@ -34,6 +38,8 @@ public class MapperConfiguration {
         addConfirmationTokenMapping(modelMapper);
         addRoleMapping(modelMapper);
         addCourseMapping(modelMapper);
+        addUserLessonMapping(modelMapper);
+        addHomeworkMapping(modelMapper);
 
         modelMapper.getConfiguration()
                 .setPropertyCondition(Conditions.isNotNull())
@@ -98,6 +104,17 @@ public class MapperConfiguration {
 
         modelMapper.createTypeMap(CourseEntity.class, Course.class)
                 .setConverter(entityToCourseMapping);
+    }
+
+    private static void addUserLessonMapping(final ModelMapper modelMapper) {
+        modelMapper.createTypeMap(UserLesson.class, UserLessonEntity.class)
+                .addMapping(UserLesson::getUser, UserLessonEntity::setUserEntity)
+                .addMapping(UserLesson::getLesson, UserLessonEntity::setLessonEntity);
+    }
+
+    private static void addHomeworkMapping(final ModelMapper modelMapper) {
+        modelMapper.createTypeMap(HomeworkSubmission.class, HomeworkSubmissionEntity.class)
+                .addMapping(HomeworkSubmission::getUserLesson, HomeworkSubmissionEntity::setUserLessonEntity);
     }
 
     private static <T> boolean isLoaded(final T object) {

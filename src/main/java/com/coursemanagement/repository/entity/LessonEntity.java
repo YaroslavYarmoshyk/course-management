@@ -1,5 +1,6 @@
 package com.coursemanagement.repository.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -16,12 +18,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "course")
+@ToString(exclude = {"course", "userLessons"})
 @Entity
 @Table(name = "lesson")
 public class LessonEntity {
@@ -52,6 +56,13 @@ public class LessonEntity {
 
     @Column(name = "homework")
     private byte[] homework;
+
+    @OneToMany(
+            mappedBy = "lessonEntity",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<UserLessonEntity> userLessons = new HashSet<>();
 
     @Override
     public boolean equals(final Object o) {

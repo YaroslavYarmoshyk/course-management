@@ -10,7 +10,7 @@ public interface UserService {
 
     User getByEmail(final String email);
 
-    User getById(final Long id);
+    User getById(final Long userId);
 
     void confirmUserByEmailToken(final String token);
 

@@ -6,12 +6,15 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Converter(autoApply = true)
 public class MarkEnumConverter implements AttributeConverter<Mark, BigDecimal> {
     @Override
     public BigDecimal convertToDatabaseColumn(final Mark attribute) {
-        return attribute.toDbValue();
+        return Optional.ofNullable(attribute)
+                .map(Mark::toDbValue)
+                .orElse(null);
     }
 
     @Override

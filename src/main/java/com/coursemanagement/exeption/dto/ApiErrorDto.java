@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
-import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
+import static com.coursemanagement.util.DateTimeUtils.ERROR_DATE_FORMAT_PATTERN;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Data
 public class ApiErrorDto {
-    @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
+    @JsonFormat(pattern = ERROR_DATE_FORMAT_PATTERN)
     private Date timestamp;
     private int status;
     private String error;

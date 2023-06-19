@@ -3,6 +3,7 @@ package com.coursemanagement.service;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserLesson;
+import com.coursemanagement.rest.dto.UserLessonMarkRequestDto;
 
 import java.util.Collection;
 import java.util.Set;
@@ -14,4 +15,6 @@ public interface LessonService {
     void addUserToLessons(final User user, final Collection<Lesson> lessons);
 
     UserLesson getUserLesson(final Long userId, final Long lessonId);
+
+    UserLesson markLesson(UserLessonMarkRequestDto userLessonMarkRequestDto);
 }

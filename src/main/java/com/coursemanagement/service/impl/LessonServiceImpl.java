@@ -1,5 +1,6 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.enumeration.Mark;
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Lesson;
@@ -10,6 +11,7 @@ import com.coursemanagement.repository.UserLessonRepository;
 import com.coursemanagement.repository.entity.LessonEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.repository.entity.UserLessonEntity;
+import com.coursemanagement.rest.dto.UserLessonMarkRequestDto;
 import com.coursemanagement.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -41,6 +43,17 @@ public class LessonServiceImpl implements LessonService {
                         "Cannot find lesson with id: " + lessonId + " assigned to user: " + userId,
                         SystemErrorCode.BAD_REQUEST)
                 );
+    }
+
+    @Override
+    public UserLesson markLesson(final UserLessonMarkRequestDto userLessonMarkRequestDto) {
+        final Long studentId = userLessonMarkRequestDto.studentId();
+        final Long lessonId = userLessonMarkRequestDto.lessonId();
+        final Mark mark = userLessonMarkRequestDto.mark();
+        final UserLesson userLesson = getUserLesson(studentId, lessonId);
+        userLesson.setMark(mark);
+        userLessonRepository.save(mapper.map(userLesson, UserLessonEntity.class));
+        return getUserLesson(studentId, lessonId);
     }
 
     @Override

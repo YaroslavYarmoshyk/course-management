@@ -21,4 +21,6 @@ public final class Constants {
     public static final String RESET_PASSWORD_CONFIRMATION_URL = RESET_PASSWORD_ENDPOINT + RESET_PASSWORD_CONFIRMATION_ENDPOINT + "?" + TOKEN_CONFIRMATION_ENDPOINT_PARAMETER + "=";
 
     public static final String EMAIL_SENDER = "course-administration";
+
+    public static final int MARK_CONVERTER_SCALE = 0;
 }

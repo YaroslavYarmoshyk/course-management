@@ -22,6 +22,8 @@ public class MarkEnumConverter implements AttributeConverter<Mark, BigDecimal> {
 
     @Override
     public Mark convertToEntityAttribute(final BigDecimal dbData) {
-        return DatabaseUtils.resolveEnum(Mark.class, dbData.setScale(MARK_CONVERTER_SCALE, RoundingMode.CEILING));
+        return Optional.ofNullable(dbData)
+                .map(value -> DatabaseUtils.resolveEnum(Mark.class, value.setScale(MARK_CONVERTER_SCALE, RoundingMode.CEILING)))
+                .orElse(null);
     }
 }

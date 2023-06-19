@@ -4,5 +4,8 @@ import com.coursemanagement.enumeration.Role;
 
 import java.util.Set;
 
-public record RoleAssignmentDto(Long userId, Set<Role> roles) {
+public record RoleAssignmentDto(
+        Long userId,
+        Set<Role> roles
+) {
 }

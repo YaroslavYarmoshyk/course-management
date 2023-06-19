@@ -18,6 +18,7 @@ import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.StudentService;
 import com.coursemanagement.service.UserService;
+import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
         final Long studentId = studentEnrollInCourseRequestDto.studentId();
         final User student = userService.getById(studentId);
-        validateStudentRole(student);
+        validateStudent(student);
 
         final Set<UserCourse> alreadyTakenUserCourses = courseService.getAllUserCoursesByUserId(studentId);
         final Set<Long> alreadyTakenCourseCodes = alreadyTakenUserCourses.stream()
@@ -121,7 +122,12 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    private static void validateStudentRole(final User potentialStudent) {
+    private void validateStudent(final User potentialStudent) {
+        final User currentUser = userService.resolveCurrentUser();
+        final boolean isDifferentUser = !Objects.equals(potentialStudent.getId(), currentUser.getId());
+        if (isDifferentUser && !AuthorizationUtil.isAdmin(currentUser)) {
+            throw new SystemException("Access denied", SystemErrorCode.FORBIDDEN);
+        }
         Optional.ofNullable(potentialStudent.getRoles())
                 .filter(roles -> roles.contains(Role.STUDENT))
                 .orElseThrow(() -> new SystemException("Only students can enroll courses", SystemErrorCode.BAD_REQUEST));

@@ -1,5 +1,7 @@
 package com.coursemanagement.rest;
 
+import com.coursemanagement.annotation.CurrentUser;
+import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
@@ -28,10 +30,10 @@ public class StudentResource {
     }
 
     @PostMapping("/homework/upload")
-    public void uploadHomework(@RequestParam("user-id") final Long userId,
+    public void uploadHomework(@CurrentUser User user,
                                @RequestParam("lesson-id") final Long lessonId,
                                @RequestParam("file") MultipartFile homework) {
-        studentService.uploadHomework(userId, lessonId, homework);
+        studentService.uploadHomework(user.getId(), lessonId, homework);
     }
 
     @GetMapping(value = "{studentId}/courses")

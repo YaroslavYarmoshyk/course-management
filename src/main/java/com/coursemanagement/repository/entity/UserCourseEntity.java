@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -47,6 +48,13 @@ public class UserCourseEntity {
     @Convert(converter = UserCourseStatusEnumConverter.class)
     @Column(name = "status")
     private UserCourseStatus status = UserCourseStatus.STARTED;
+
+    @Column(name = "enrollment_date")
+    private LocalDateTime enrollment_date;
+
+    @Column(name = "accomplishment_date")
+    private LocalDateTime accomplishment_date;
+
 
     public UserCourseEntity(final UserEntity userEntity, final CourseEntity courseEntity) {
         this.userEntity = userEntity;

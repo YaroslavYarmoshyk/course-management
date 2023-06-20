@@ -30,8 +30,8 @@ public class CourseEntity {
     @Column(name = "code")
     private Long code;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "subject")
+    private String subject;
 
     @Column(name = "description")
     private String description;

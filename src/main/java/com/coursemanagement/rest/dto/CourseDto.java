@@ -5,14 +5,14 @@ import com.coursemanagement.model.UserCourse;
 
 public record CourseDto(
         Long code,
-        String title,
+        String subject,
         String description,
         UserCourseStatus status
 ) {
     public CourseDto(final UserCourse userCourse) {
         this(
                 userCourse.getCourse().getCode(),
-                userCourse.getCourse().getTitle(),
+                userCourse.getCourse().getSubject(),
                 userCourse.getCourse().getDescription(),
                 userCourse.getStatus()
         );

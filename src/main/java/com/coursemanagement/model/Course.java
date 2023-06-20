@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 public class Course {
     private Long code;
-    private String title;
+    private String subject;
     private String description;
     private Set<User> users;
 }

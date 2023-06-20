@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS confirmation_token
 CREATE TABLE IF NOT EXISTS course
 (
     code        BIGINT PRIMARY KEY,
-    title       TEXT NOT NULL,
+    subject     TEXT NOT NULL,
     description TEXT
 );
 
@@ -55,10 +55,12 @@ CREATE TABLE IF NOT EXISTS user_role
 
 CREATE TABLE IF NOT EXISTS user_course
 (
-    id          BIGSERIAL PRIMARY KEY,
-    user_id     BIGINT NOT NULL,
-    course_code BIGINT NOT NULL,
-    status      TEXT,
+    id                  BIGSERIAL PRIMARY KEY,
+    user_id             BIGINT NOT NULL,
+    course_code         BIGINT NOT NULL,
+    status              TEXT,
+    enrollment_date     TIMESTAMP,
+    accomplishment_date TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (course_code) REFERENCES course (code)
 );

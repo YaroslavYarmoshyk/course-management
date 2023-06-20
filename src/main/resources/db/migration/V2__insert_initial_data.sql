@@ -22,7 +22,7 @@ VALUES (1, 1),
        (4, 2),
        (5, 3);
 
-INSERT INTO course (code, title, description)
+INSERT INTO course (code, subject, description)
 VALUES (22324, 'Mathematics', 'Introductory course on mathematics'),
        (34432, 'History', 'Overview of world history'),
        (99831, 'Literature', 'Study of classical literature'),

@@ -74,7 +74,7 @@ public class CourseServiceImpl implements CourseService {
         final Map<Role, Set<UserDto>> usersByRole = getGroupedUsersByRole(course);
         return new CourseAssignmentResponseDto(
                 course.getCode(),
-                course.getTitle(),
+                course.getSubject(),
                 usersByRole.getOrDefault(Role.INSTRUCTOR, Set.of()),
                 usersByRole.getOrDefault(Role.STUDENT, Set.of())
         );

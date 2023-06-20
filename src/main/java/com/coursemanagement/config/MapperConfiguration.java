@@ -96,7 +96,7 @@ public class MapperConfiguration {
 
             return Course.builder()
                     .code(entity.getCode())
-                    .title(entity.getTitle())
+                    .subject(entity.getSubject())
                     .description(entity.getDescription())
                     .users(users)
                     .build();

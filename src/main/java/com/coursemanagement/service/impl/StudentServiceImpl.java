@@ -6,7 +6,6 @@ import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.HomeworkSubmission;
-import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.model.UserLesson;
@@ -63,21 +62,10 @@ public class StudentServiceImpl implements StudentService {
         courseService.addUserToCourses(student, requestedCourseCodes);
 
         final Set<UserCourse> updatedUserCourses = courseService.getAllUserCoursesByUserId(studentId);
-
-        addUserToCourseLessons(student, updatedUserCourses);
         final Set<CourseDto> studentCourses = updatedUserCourses.stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());
         return new StudentEnrollInCourseResponseDto(student.getId(), studentCourses);
-    }
-
-    private void addUserToCourseLessons(final User student, final Set<UserCourse> updatedUserCourses) {
-        final Set<Long> courseCodes = updatedUserCourses.stream()
-                .map(UserCourse::getCourse)
-                .map(Course::getCode)
-                .collect(Collectors.toSet());
-        final Set<Lesson> lessons = lessonService.getAllByCourseCodes(courseCodes);
-        lessonService.addUserToLessons(student, lessons);
     }
 
     @Override
@@ -90,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
                                final Long lessonId,
                                final MultipartFile homework) {
         try {
-            final UserLesson userLesson = lessonService.getUserLesson(studentId, lessonId);
+            final UserLesson userLesson = lessonService.createUserLesson(studentId, lessonId);
             final HomeworkSubmission homeworkSubmission = new HomeworkSubmission()
                     .setFileName(homework.getOriginalFilename())
                     .setUploadedDate(LocalDateTime.now(DEFAULT_ZONE_ID))

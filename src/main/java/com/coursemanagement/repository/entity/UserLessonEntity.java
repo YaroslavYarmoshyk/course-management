@@ -18,12 +18,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"userEntity", "lessonEntity"})
+@ToString(exclude = {"studentEntity", "lessonEntity", "instructorEntity"})
 @Entity
 @Table(name = "user_lesson")
 public class UserLessonEntity {
@@ -37,19 +38,26 @@ public class UserLessonEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    @JoinColumn(name = "student_id")
+    private UserEntity studentEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     private LessonEntity lessonEntity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id")
+    private UserEntity instructorEntity;
+
     @Column(name = "mark")
     @Convert(converter = MarkEnumConverter.class)
     private Mark mark;
 
-    public UserLessonEntity(final UserEntity userEntity, final LessonEntity lessonEntity) {
-        this.userEntity = userEntity;
+    @Column(name = "mark_applied_at")
+    private LocalDateTime markAppliedAt;
+
+    public UserLessonEntity(final UserEntity studentEntity, final LessonEntity lessonEntity) {
+        this.studentEntity = studentEntity;
         this.lessonEntity = lessonEntity;
     }
 
@@ -61,12 +69,12 @@ public class UserLessonEntity {
         if (!(o instanceof final UserLessonEntity other)) {
             return false;
         }
-        return Objects.equals(userEntity.getId(), other.getUserEntity().getId())
+        return Objects.equals(studentEntity.getId(), other.getStudentEntity().getId())
                 && Objects.equals(lessonEntity.getId(), other.getLessonEntity().getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userEntity.getId(), lessonEntity.getId());
+        return Objects.hash(studentEntity.getId(), lessonEntity.getId());
     }
 }

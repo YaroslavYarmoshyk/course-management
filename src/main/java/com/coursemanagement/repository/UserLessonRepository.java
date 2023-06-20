@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserLessonRepository extends JpaRepository<UserLessonEntity, Long> {
 
-    @EntityGraph(attributePaths = {"userEntity", "lessonEntity"})
-    Optional<UserLessonEntity> findUserLessonEntityByUserEntityIdAndLessonEntityId(final Long userId, final Long lessonId);
+    @EntityGraph(attributePaths = {"studentEntity", "lessonEntity", "instructorEntity"})
+    Optional<UserLessonEntity> findUserLessonEntityByStudentEntityIdAndLessonEntityId(final Long studentId, final Long lessonId);
 }

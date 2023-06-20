@@ -10,6 +10,12 @@ public record UserDto(
         String phone
 ) {
     public UserDto(final User user) {
-        this(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone());
+        this(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone()
+        );
     }
 }

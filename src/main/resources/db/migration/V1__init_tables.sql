@@ -76,13 +76,16 @@ CREATE TABLE IF NOT EXISTS course_feedback
 
 CREATE TABLE IF NOT EXISTS user_lesson
 (
-    id        BIGSERIAL PRIMARY KEY,
-    user_id   BIGINT NOT NULL,
-    lesson_id BIGINT NOT NULL,
-    mark      NUMERIC(38, 2) CHECK (user_lesson.mark >= 0 AND user_lesson.mark <= 5),
-    FOREIGN KEY (user_id) REFERENCES "user" (id),
+    id              BIGSERIAL PRIMARY KEY,
+    student_id      BIGINT NOT NULL,
+    lesson_id       BIGINT NOT NULL,
+    instructor_id   BIGINT,
+    mark            NUMERIC(38, 2) CHECK (user_lesson.mark >= 0 AND user_lesson.mark <= 5),
+    mark_applied_at TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES "user" (id),
     FOREIGN KEY (lesson_id) REFERENCES lesson (id),
-    UNIQUE (user_id, lesson_id)
+    FOREIGN KEY (instructor_id) REFERENCES "user" (id),
+    UNIQUE (student_id, lesson_id)
 );
 
 CREATE TABLE IF NOT EXISTS homework_submission

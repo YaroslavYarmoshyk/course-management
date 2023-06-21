@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -45,10 +47,10 @@ public class UserCourseEntity {
     private UserCourseStatus status = UserCourseStatus.STARTED;
 
     @Column(name = "enrollment_date")
-    private LocalDateTime enrollment_date;
+    private LocalDateTime enrollmentDate = LocalDateTime.now(DEFAULT_ZONE_ID);
 
     @Column(name = "accomplishment_date")
-    private LocalDateTime accomplishment_date;
+    private LocalDateTime accomplishmentDate;
 
 
     public UserCourseEntity(final UserEntity user, final CourseEntity course) {

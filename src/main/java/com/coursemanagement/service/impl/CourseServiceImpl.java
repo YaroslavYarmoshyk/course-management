@@ -23,12 +23,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -87,9 +91,20 @@ public class CourseServiceImpl implements CourseService {
         for (final CourseEntity courseEntity : courseEntities) {
             final Set<UserCourseEntity> userCourseEntities = courseEntity.getUserCourses();
             userCourseEntities.add(new UserCourseEntity(userEntity, courseEntity));
-            userCourseEntities.forEach(userCourseEntity -> userCourseEntity.setStatus(UserCourseStatus.STARTED));
+            reEnrollFinishedCourses(userCourseEntities);
         }
         courseRepository.saveAll(courseEntities);
+    }
+
+    private static void reEnrollFinishedCourses(final Set<UserCourseEntity> userCourseEntities) {
+        for (final UserCourseEntity userCourseEntity : userCourseEntities) {
+            final UserCourseStatus status = userCourseEntity.getStatus();
+            if (Objects.equals(status, UserCourseStatus.FINISHED)) {
+                userCourseEntity.setStatus(UserCourseStatus.STARTED);
+                userCourseEntity.setEnrollmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
+                userCourseEntity.setAccomplishmentDate(null);
+            }
+        }
     }
 
     private void validateInstructorAssignment(final User potentialInstructor) {

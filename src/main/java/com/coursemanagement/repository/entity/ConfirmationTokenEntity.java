@@ -7,18 +7,14 @@ import com.coursemanagement.enumeration.converter.TokenStatusEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -26,7 +22,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "userEntity")
 @Entity
 @Table(name = "confirmation_token")
 public class ConfirmationTokenEntity {
@@ -39,9 +34,8 @@ public class ConfirmationTokenEntity {
     )
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Convert(converter = TokenEnumConverter.class)
     @Column(name = "type")

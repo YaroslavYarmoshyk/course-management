@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface UserCourseRepository extends JpaRepository<UserCourseEntity, Long> {
 
-    @EntityGraph(attributePaths = {"userEntity" , "courseEntity"})
-    List<UserCourseEntity> findByUserEntityId(final Long userId);
+    @EntityGraph(attributePaths = {"user" , "course"})
+    List<UserCourseEntity> findByUserId(final Long userId);
 }

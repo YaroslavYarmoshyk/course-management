@@ -4,46 +4,41 @@ import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.enumeration.converter.UserCourseStatusEnumConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"userEntity", "courseEntity"})
+@ToString(exclude = {"user", "course"})
 @Entity
 @Table(name = "user_course")
 public class UserCourseEntity {
-    @Id
-    @GeneratedValue(generator = "user_course_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-            name = "user_course_id_seq",
-            sequenceName = "user_course_id_seq",
-            allocationSize = 1
-    )
-    private Long id;
+    @EmbeddedId
+    private UserCourseEntityId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    @MapsId(value = "userId")
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_code")
-    private CourseEntity courseEntity;
+    @MapsId(value = "courseCode")
+    private CourseEntity course;
 
     @Convert(converter = UserCourseStatusEnumConverter.class)
     @Column(name = "status")
@@ -56,9 +51,10 @@ public class UserCourseEntity {
     private LocalDateTime accomplishment_date;
 
 
-    public UserCourseEntity(final UserEntity userEntity, final CourseEntity courseEntity) {
-        this.userEntity = userEntity;
-        this.courseEntity = courseEntity;
+    public UserCourseEntity(final UserEntity user, final CourseEntity course) {
+        this.user = user;
+        this.course = course;
+        this.id = new UserCourseEntityId(user.getId(), course.getCode());
     }
 
     @Override
@@ -69,12 +65,24 @@ public class UserCourseEntity {
         if (!(o instanceof final UserCourseEntity other)) {
             return false;
         }
-        return Objects.equals(userEntity.getId(), other.getUserEntity().getId())
-                && Objects.equals(courseEntity.getCode(), other.getCourseEntity().getCode());
+        return Objects.equals(user.getId(), other.getUser().getId())
+                && Objects.equals(course.getCode(), other.getCourse().getCode());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(user, course);
+    }
+
+    @Embeddable
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @EqualsAndHashCode
+    public static class UserCourseEntityId implements Serializable {
+        @Column(name = "user_id")
+        private Long userId;
+
+        @Column(name = "course_code")
+        private Long courseCode;
     }
 }

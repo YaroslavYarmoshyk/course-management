@@ -14,7 +14,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTER
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserCourse {
-    private Long id;
     private User user;
     private Course course;
     private UserCourseStatus status;

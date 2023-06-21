@@ -1,6 +1,9 @@
 package com.coursemanagement.repository.entity;
 
+import com.coursemanagement.enumeration.Mark;
+import com.coursemanagement.enumeration.converter.MarkEnumConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,26 +19,24 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "homework_submission")
-public class HomeworkSubmissionEntity {
+@Table(name = "grade")
+public class GradeEntity {
     @Id
-    @GeneratedValue(generator = "homework_submission_id_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "grade_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
-            name = "homework_submission_id_seq",
-            sequenceName = "homework_submission_id_seq",
+            name = "grade_id_seq",
+            sequenceName = "grade_id_seq",
             allocationSize = 1
     )
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "file_name")
-    private String fileName;
+    @Column(name = "mark")
+    @Convert(converter = MarkEnumConverter.class)
+    private Mark mark;
 
-    @Column(name = "uploaded_date")
-    private LocalDateTime uploadedDate;
-
-    @Column(name = "homework")
-    private byte[] homework;
+    @Column(name = "mark_submission_date")
+    private LocalDateTime markSubmissionDate;
 
     @Column(name = "lesson_id")
     private Long lessonId;
@@ -43,12 +44,15 @@ public class HomeworkSubmissionEntity {
     @Column(name = "student_id")
     private Long studentId;
 
+    @Column(name = "instructor_id")
+    private Long instructorId;
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final HomeworkSubmissionEntity other)) {
+        if (!(o instanceof final GradeEntity other)) {
             return false;
         }
         return id != null && Objects.equals(id, other.id);

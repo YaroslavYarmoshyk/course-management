@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS "user"
 CREATE TABLE IF NOT EXISTS confirmation_token
 (
     id              BIGSERIAL PRIMARY KEY,
-    user_id         BIGINT NOT NULL,
     "type"          INT,
     token           TEXT,
-    expiration_date TIMESTAMP,
+    expiration_date TIMESTAMP(0),
     status          TEXT   NOT NULL CHECK (status = 'A' OR status = 'N'),
+    user_id         BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES "user" (id)
 );
 
@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS course
 CREATE TABLE IF NOT EXISTS lesson
 (
     id          BIGSERIAL PRIMARY KEY,
-    course_code BIGINT,
-    title       TEXT NOT NULL,
+    title       TEXT   NOT NULL,
     description TEXT,
     credits     NUMERIC,
+    course_code BIGINT NOT NULL,
     homework    BYTEA,
     FOREIGN KEY (course_code) REFERENCES course (code)
 );
@@ -55,47 +55,52 @@ CREATE TABLE IF NOT EXISTS user_role
 
 CREATE TABLE IF NOT EXISTS user_course
 (
-    id                  BIGSERIAL PRIMARY KEY,
     user_id             BIGINT NOT NULL,
     course_code         BIGINT NOT NULL,
     status              TEXT,
-    enrollment_date     TIMESTAMP,
-    accomplishment_date TIMESTAMP,
+    enrollment_date     TIMESTAMP(0),
+    accomplishment_date TIMESTAMP(0),
+    PRIMARY KEY (user_id, course_code),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
-    FOREIGN KEY (course_code) REFERENCES course (code)
+    FOREIGN KEY (course_code) REFERENCES course (code),
+    UNIQUE (user_id, course_code)
 );
 
 CREATE TABLE IF NOT EXISTS course_feedback
 (
-    id             BIGSERIAL PRIMARY KEY,
-    user_course_id BIGINT NOT NULL,
-    feedback       TEXT,
-    "date"         TIMESTAMP,
-    instructor_id  BIGINT,
-    FOREIGN KEY (user_course_id) REFERENCES user_course (id),
+    id            BIGSERIAL PRIMARY KEY,
+    feedback      TEXT,
+    feedback_date TIMESTAMP(0),
+    course_code   BIGINT NOT NULL,
+    student_id    BIGINT NOT NULL,
+    instructor_id BIGINT NOT NULL,
+    FOREIGN KEY (course_code) REFERENCES course (code),
+    FOREIGN KEY (student_id) REFERENCES "user" (id),
     FOREIGN KEY (instructor_id) REFERENCES "user" (id)
 );
 
-CREATE TABLE IF NOT EXISTS user_lesson
+CREATE TABLE IF NOT EXISTS grade
 (
-    id              BIGSERIAL PRIMARY KEY,
-    student_id      BIGINT NOT NULL,
-    lesson_id       BIGINT NOT NULL,
-    instructor_id   BIGINT,
-    mark            NUMERIC(38, 2) CHECK (user_lesson.mark >= 0 AND user_lesson.mark <= 5),
-    mark_applied_at TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES "user" (id),
+    id                   BIGSERIAL PRIMARY KEY,
+    mark                 NUMERIC(38, 2) CHECK (grade.mark >= 0 AND grade.mark <= 5),
+    mark_submission_date TIMESTAMP(0),
+    lesson_id            BIGINT NOT NULL,
+    student_id           BIGINT NOT NULL,
+    instructor_id        BIGINT NOT NULL,
     FOREIGN KEY (lesson_id) REFERENCES lesson (id),
+    FOREIGN KEY (student_id) REFERENCES "user" (id),
     FOREIGN KEY (instructor_id) REFERENCES "user" (id),
     UNIQUE (student_id, lesson_id)
 );
 
 CREATE TABLE IF NOT EXISTS homework_submission
 (
-    id             BIGSERIAL PRIMARY KEY,
-    user_lesson_id BIGINT NOT NULL,
-    file_name      TEXT,
-    uploaded_date  TIMESTAMP,
-    homework       BYTEA,
-    FOREIGN KEY (user_lesson_id) REFERENCES user_lesson (id)
+    id            BIGSERIAL PRIMARY KEY,
+    file_name     TEXT,
+    uploaded_date TIMESTAMP(0),
+    lesson_id     BIGINT NOT NULL,
+    student_id    BIGINT NOT NULL,
+    homework      BYTEA,
+    FOREIGN KEY (lesson_id) REFERENCES lesson (id),
+    FOREIGN KEY (student_id) REFERENCES "user" (id)
 );

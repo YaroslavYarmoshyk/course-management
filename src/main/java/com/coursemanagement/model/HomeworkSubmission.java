@@ -14,5 +14,6 @@ public class HomeworkSubmission {
     private String fileName;
     private LocalDateTime uploadedDate;
     private byte[] homework;
-    private UserLesson userLesson;
+    private Long lessonId;
+    private Long studentId;
 }

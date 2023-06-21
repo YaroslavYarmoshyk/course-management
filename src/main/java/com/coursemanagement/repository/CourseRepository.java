@@ -13,7 +13,7 @@ import java.util.Set;
 @Repository
 public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
 
-    @EntityGraph(attributePaths = {"userCourses", "userCourses.userEntity", "userCourses.userEntity.roles"})
+    @EntityGraph(attributePaths = {"userCourses", "userCourses.user", "userCourses.user.roles"})
     Optional<CourseEntity> findByCode(@NonNull final Long code);
 
     @EntityGraph(attributePaths = {"userCourses"})

@@ -8,13 +8,11 @@ import com.coursemanagement.model.Course;
 import com.coursemanagement.model.HomeworkSubmission;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
-import com.coursemanagement.model.UserLesson;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.HomeworkService;
-import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.StudentService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.util.AuthorizationUtil;
@@ -38,7 +36,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class StudentServiceImpl implements StudentService {
     private final UserService userService;
     private final CourseService courseService;
-    private final LessonService lessonService;
     private final HomeworkService homeworkService;
     @Value("${course-management.student.course-limit:5}")
     private int courseLimit;
@@ -78,11 +75,11 @@ public class StudentServiceImpl implements StudentService {
                                final Long lessonId,
                                final MultipartFile homework) {
         try {
-            final UserLesson userLesson = lessonService.createUserLesson(studentId, lessonId);
             final HomeworkSubmission homeworkSubmission = new HomeworkSubmission()
+                    .setStudentId(studentId)
+                    .setLessonId(lessonId)
                     .setFileName(homework.getOriginalFilename())
                     .setUploadedDate(LocalDateTime.now(DEFAULT_ZONE_ID))
-                    .setUserLesson(userLesson)
                     .setHomework(homework.getBytes());
             homeworkService.save(homeworkSubmission);
         } catch (IOException e) {

@@ -54,7 +54,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Set<UserCourse> getAllUserCoursesByUserId(final Long userId) {
-        final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserEntityId(userId);
+        final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserId(userId);
         return userCourseEntities.stream()
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
                 .collect(Collectors.toSet());

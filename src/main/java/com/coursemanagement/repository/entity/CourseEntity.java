@@ -37,7 +37,7 @@ public class CourseEntity {
     private String description;
 
     @OneToMany(
-            mappedBy = "courseEntity",
+            mappedBy = "course",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

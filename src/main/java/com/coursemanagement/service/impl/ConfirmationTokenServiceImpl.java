@@ -8,7 +8,6 @@ import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
-import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EncryptionService;
 import lombok.RequiredArgsConstructor;
@@ -88,8 +87,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     private void invalidateOldTokens(final User user, final TokenType tokenType) {
-        final UserEntity userEntity = mapper.map(user, UserEntity.class);
-        var oldTokens = tokenRepository.findAllByUserEntityAndType(userEntity, tokenType);
+        var oldTokens = tokenRepository.findAllByUserIdAndType(user.getId(), tokenType);
         oldTokens.forEach(token -> token.setStatus(TokenStatus.ACTIVATED));
         tokenRepository.saveAll(oldTokens);
     }

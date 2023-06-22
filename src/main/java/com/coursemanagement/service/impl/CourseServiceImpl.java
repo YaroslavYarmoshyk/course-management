@@ -15,7 +15,7 @@ import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,7 @@ public class CourseServiceImpl implements CourseService {
         addUserToCourses(potentialInstructor, Set.of(courseCode));
 
         final Course course = getByCode(courseCode);
-        final Map<Role, Set<UserDto>> usersByRole = getGroupedUsersByRole(course);
+        final Map<Role, Set<UserInfoDto>> usersByRole = getGroupedUsersByRole(course);
         return new CourseAssignmentResponseDto(
                 course.getCode(),
                 course.getSubject(),
@@ -114,10 +114,10 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new SystemException("Cannot assign user to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST));
     }
 
-    private Map<Role, Set<UserDto>> getGroupedUsersByRole(final Course course) {
+    private Map<Role, Set<UserInfoDto>> getGroupedUsersByRole(final Course course) {
         return course.getUsers().stream()
                 .flatMap(user -> user.getRoles().stream().map(
-                        role -> new AbstractMap.SimpleEntry<>(role, new UserDto(user)))
+                        role -> new AbstractMap.SimpleEntry<>(role, new UserInfoDto(user)))
                 )
                 .collect(
                         Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,

@@ -5,14 +5,12 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
-import com.coursemanagement.model.HomeworkSubmission;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.service.CourseService;
-import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.StudentService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.util.AuthorizationUtil;
@@ -20,23 +18,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final UserService userService;
     private final CourseService courseService;
-    private final HomeworkService homeworkService;
     @Value("${course-management.student.course-limit:5}")
     private int courseLimit;
 
@@ -63,28 +55,6 @@ public class StudentServiceImpl implements StudentService {
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());
         return new StudentEnrollInCourseResponseDto(student.getId(), studentCourses);
-    }
-
-    @Override
-    public Set<CourseDto> getAllCoursesByStudentId(final Long userId) {
-        return courseService.getAllByUserId(userId);
-    }
-
-    @Override
-    public void uploadHomework(final Long studentId,
-                               final Long lessonId,
-                               final MultipartFile homework) {
-        try {
-            final HomeworkSubmission homeworkSubmission = new HomeworkSubmission()
-                    .setStudentId(studentId)
-                    .setLessonId(lessonId)
-                    .setFileName(homework.getOriginalFilename())
-                    .setUploadedDate(LocalDateTime.now(DEFAULT_ZONE_ID))
-                    .setHomework(homework.getBytes());
-            homeworkService.save(homeworkSubmission);
-        } catch (IOException e) {
-            throw new SystemException("Cannot upload homework", SystemErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 
     private void validateCourseEnrollment(final Set<Long> requestedCourseCodes,

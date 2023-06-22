@@ -1,9 +1,10 @@
 package com.coursemanagement.security.controller;
 
-import com.coursemanagement.security.service.AuthenticationService;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
-import com.coursemanagement.service.UserService;
+import com.coursemanagement.security.service.AuthenticationService;
+import com.coursemanagement.service.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ import static com.coursemanagement.util.Constants.TOKEN_CONFIRMATION_ENDPOINT_PA
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final UserService userService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     @PostMapping(value = "/register")
     public AuthenticationResponse register(@RequestBody AuthenticationRequest authenticationRequest) {
@@ -34,7 +35,7 @@ public class AuthenticationController {
     }
 
     @GetMapping(value = EMAIL_CONFIRMATION_ENDPOINT)
-    public void confirmEmail(@RequestParam(value = TOKEN_CONFIRMATION_ENDPOINT_PARAMETER) final String token) {
-        userService.confirmUserByEmailToken(token);
+    public UserDto confirmEmail(@RequestParam(value = TOKEN_CONFIRMATION_ENDPOINT_PARAMETER) final String token) {
+        return confirmationTokenService.confirmUserByEmailToken(token);
     }
 }

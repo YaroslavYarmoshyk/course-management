@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS lesson
     description TEXT,
     credits     NUMERIC,
     course_code BIGINT NOT NULL,
-    homework    BYTEA,
     FOREIGN KEY (course_code) REFERENCES course (code)
 );
 
@@ -93,14 +92,32 @@ CREATE TABLE IF NOT EXISTS grade
     UNIQUE (student_id, lesson_id)
 );
 
+CREATE TABLE IF NOT EXISTS file
+(
+    id           BIGSERIAL PRIMARY KEY,
+    file_name    TEXT  NOT NULL,
+    file_type    INT   NOT NULL,
+    file_content BYTEA NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS homework_submission
 (
     id            BIGSERIAL PRIMARY KEY,
-    file_name     TEXT,
     uploaded_date TIMESTAMP(0),
+    file_id       BIGINT NOT NULL,
     lesson_id     BIGINT NOT NULL,
     student_id    BIGINT NOT NULL,
-    homework      BYTEA,
+    FOREIGN KEY (file_id) REFERENCES file (id),
     FOREIGN KEY (lesson_id) REFERENCES lesson (id),
     FOREIGN KEY (student_id) REFERENCES "user" (id)
+);
+
+CREATE TABLE IF NOT EXISTS lesson_content
+(
+    id          BIGSERIAL PRIMARY KEY,
+    lesson_part INT,
+    file_id     BIGINT NOT NULL,
+    lesson_id   BIGINT NOT NULL,
+    FOREIGN KEY (file_id) REFERENCES file (id),
+    FOREIGN KEY (lesson_id) REFERENCES lesson (id)
 );

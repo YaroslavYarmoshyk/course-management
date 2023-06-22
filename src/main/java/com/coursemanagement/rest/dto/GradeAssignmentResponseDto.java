@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
 
 public record GradeAssignmentResponseDto(
-        UserDto student,
+        UserInfoDto student,
         LessonDto lesson,
-        UserDto instructor,
+        UserInfoDto instructor,
         Mark mark,
         @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN) LocalDateTime mark_submission_date
 ) {

@@ -1,5 +1,5 @@
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Introduction to Algebra', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Introduction to Algebra"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to solve each problem carefully and show your work for full credit.
 
@@ -21,11 +21,10 @@ c) Five less than the product of a number and 3.
 Evaluate the following expressions for the given values of the variables:
 a) 3x^2 - 2y, when x = 4 and y = 6
 b) 2a + b^2, when a = 5 and b = 2
-c) 4(x + y) - 3z, when x = 2, y = 3, and z = 1'
-WHERE title = 'Introduction to Algebra';
+c) 4(x + y) - 3z, when x = 2, y = 3, and z = 1');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Geometry Fundamentals', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Geometry Fundamentals"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to solve each problem carefully and show your work for full credit.
 
@@ -50,11 +49,10 @@ b) A cylindrical tank has a radius of 4 units and a height of 10 units. Determin
 
 Remember to show all your steps and provide clear explanations where necessary. Please submit your completed homework at the beginning of our next class.
 
-If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!'
-WHERE title = 'Geometry Fundamentals';
+If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Calculus Basics', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Calculus Basics"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to solve each problem carefully and show your work for full credit.
 
@@ -79,11 +77,10 @@ b) A rectangular box with a square base and an open top is to be constructed wit
 
 Remember to show all your steps and provide clear explanations where necessary. Please submit your completed homework at the beginning of our next class.
 
-If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!'
-WHERE title = 'Calculus Basics';
+If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Statistics Fundamentals', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Statistics Fundamentals"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to solve each problem carefully and show your work for full credit.
 
@@ -118,11 +115,10 @@ b) An experiment is conducted to test the effectiveness of a new medication. The
 
 Remember to show all your steps and provide clear explanations where necessary. Please submit your completed homework at the beginning of our next class.
 
-If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!'
-WHERE title = 'Statistics Fundamentals';
+If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Probability Theory', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Probability Theory"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to solve each problem carefully and show your work for full credit.
 
@@ -146,11 +142,10 @@ b) In a bag, there are 5 red marbles and 7 green marbles. Two marbles are random
 
 Remember to show all your steps and provide clear explanations where necessary. Please submit your completed homework at the beginning of our next class.
 
-If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!'
-WHERE title = 'Probability Theory';
+If you have any questions or need assistance, don''t hesitate to reach out to me. Good luck, and keep up the great work!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Ancient Civilizations', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Ancient Civilizations"! To reinforce your understanding of the topics we covered, please complete the following homework assignment. Take your time to research and answer each question thoroughly.
 
@@ -178,11 +173,10 @@ Remember to provide detailed and accurate information for each question. You are
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck, and enjoy your exploration of Ancient Civilizations!'
-WHERE title = 'Ancient Civilizations';
+Good luck, and enjoy your exploration of Ancient Civilizations!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Middle Ages and Renaissance', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Middle Ages and Renaissance"! To reinforce your understanding of the topics we covered, please complete the following homework assignment. Take your time to research and answer each question thoroughly.
 
@@ -210,11 +204,10 @@ Remember to provide detailed and accurate information for each question. You are
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck, and enjoy your exploration of the Middle Ages and Renaissance!'
-WHERE title = 'Middle Ages and Renaissance';
+Good luck, and enjoy your exploration of the Middle Ages and Renaissance!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Age of Exploration', 1, 'Dear Students,
 
 Congratulations on completing our lesson on the "Age of Exploration"! To reinforce your understanding of the topics we covered, please complete the following homework assignment. Take your time to research and answer each question thoroughly.
 
@@ -242,11 +235,10 @@ Remember to provide detailed and accurate information for each question. You are
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck, and enjoy your exploration of the Age of Exploration!'
-WHERE title = 'Age of Exploration';
+Good luck, and enjoy your exploration of the Age of Exploration!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Colonialism and Imperialism', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Colonialism and Imperialism"! To reinforce your understanding of the topics we covered, please complete the following homework assignment. Take your time to research and answer each question thoroughly.
 
@@ -274,11 +266,10 @@ Remember to provide detailed and accurate information for each question. You are
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck, and enjoy your exploration of Colonialism and Imperialism!'
-WHERE title = 'Colonialism and Imperialism';
+Good luck, and enjoy your exploration of Colonialism and Imperialism!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - World Wars and Contemporary History', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "World Wars and Contemporary History"! To reinforce your understanding of the topics we covered, please complete the following homework assignment. Take your time to research and answer each question thoroughly.
 
@@ -306,11 +297,10 @@ Remember to provide detailed and accurate information for each question. You are
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck, and enjoy your exploration of World Wars and Contemporary History!'
-WHERE title = 'World Wars and Contemporary History';
+Good luck, and enjoy your exploration of World Wars and Contemporary History!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Introduction to Poetry', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Introduction to Poetry"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to explore the poems and respond to each question thoughtfully.
 
@@ -341,11 +331,10 @@ Remember to support your responses with specific examples and evidence from the 
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Enjoy the beauty and exploration of poetry!'
-WHERE title = 'Introduction to Poetry';
+Enjoy the beauty and exploration of poetry!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Shakespearean Plays', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Shakespearean Plays"! To reinforce your understanding of Shakespeare''s works, please complete the following homework assignment. Take your time to delve into the plays and respond to each question thoughtfully.
 
@@ -380,11 +369,10 @@ Remember to support your responses with specific examples and quotes from the pl
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Enjoy the exploration of Shakespearean plays!'
-WHERE title = 'Shakespearean Plays';
+Enjoy the exploration of Shakespearean plays!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Modern Literature', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Modern Literature"! To deepen your understanding of this period''s literary works, please complete the following homework assignment. Take your time to explore the texts and respond to each question thoughtfully.
 
@@ -427,11 +415,10 @@ Remember to support your responses with specific examples and quotes from the te
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Enjoy your exploration of modern literature!'
-WHERE title = 'Modern Literature';
+Enjoy your exploration of modern literature!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Literary Criticism', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Literary Criticism"! To enhance your understanding of this field and its approaches, please complete the following homework assignment. Take your time to explore the concepts and respond to each question thoughtfully.
 
@@ -464,11 +451,10 @@ Remember to support your responses with specific examples and quotes from the te
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Enjoy exploring the diverse perspectives of literary criticism!'
-WHERE title = 'Literary Criticism';
+Enjoy exploring the diverse perspectives of literary criticism!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Comparative Literature', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Comparative Literature"! To further explore the connections between literary works from different cultures and traditions, please complete the following homework assignment. Take your time to delve into the texts and respond to each question thoughtfully.
 
@@ -508,11 +494,10 @@ b) Compare the use of symbolism in Nathaniel Hawthorne''s "The Scarlet Letter" a
 Identify and analyze the symbolic elements present in each novel and their significance to the themes and characters.
 Discuss how the symbols contribute to the overall meaning and atmosphere of the two works.
 Reflect on the effectiveness of symbolism as a literary device and its ability to convey complex ideas and emotions.
-Remember to support your responses with specific examples and quotes from the texts. Feel free to consult literary resources, academic journals, or reliable websites for additional analysis and insights.'
-WHERE title = 'Comparative Literature';
+Remember to support your responses with specific examples and quotes from the texts. Feel free to consult literary resources, academic journals, or reliable websites for additional analysis and insights.');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Mechanics', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Mechanics"! To reinforce your understanding of the principles and concepts of mechanics, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -540,11 +525,10 @@ Please show all your work and provide step-by-step solutions for each problem. R
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your mechanics problems!'
-WHERE title = 'Mechanics';
+Good luck with your mechanics problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Thermodynamics', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Thermodynamics"! To reinforce your understanding of the principles and concepts of thermodynamics, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -572,11 +556,10 @@ Please show all your work and provide step-by-step solutions for each problem. R
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your thermodynamics problems!'
-WHERE title = 'Thermodynamics';
+Good luck with your thermodynamics problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Electromagnetism', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Electromagnetism"! To further solidify your understanding of the principles and concepts of electromagnetism, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -604,11 +587,10 @@ Please show all your work and provide step-by-step solutions for each problem. R
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your electromagnetism problems!'
-WHERE title = 'Electromagnetism';
+Good luck with your electromagnetism problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Optics', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Optics"! To reinforce your understanding of the principles and concepts of optics, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -636,11 +618,10 @@ Please show all your work and provide step-by-step solutions for each problem. R
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your optics problems!'
-WHERE title = 'Optics';
+Good luck with your optics problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Quantum Mechanics', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Quantum Mechanics"! To deepen your understanding of the principles and concepts of quantum mechanics, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -668,11 +649,10 @@ Please show all your work and provide step-by-step solutions for each problem. R
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your quantum mechanics problems!'
-WHERE title = 'Quantum Mechanics';
+Good luck with your quantum mechanics problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Relativity Theory', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Relativity Theory"! To reinforce your understanding of the principles and concepts of relativity, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -700,11 +680,10 @@ Please show all your work and provide step-by-step solutions for each problem. R
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your relativity theory problems!'
-WHERE title = 'Relativity Theory';
+Good luck with your relativity theory problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Artificial Intelligence', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Artificial Intelligence"! To reinforce your understanding of the principles and concepts of artificial intelligence, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -732,11 +711,10 @@ Please provide code implementations, analysis, and explanations for the programm
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your artificial intelligence problems!'
-WHERE title = 'Artificial Intelligence';
+Good luck with your artificial intelligence problems!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Web Development', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Web Development"! To reinforce your understanding of web development principles and concepts, please complete the following homework assignment. Take your time to work through the tasks and provide clear and concise solutions.
 
@@ -764,11 +742,10 @@ Please provide your HTML, CSS, JavaScript, and server-side code files as part of
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your web development tasks!'
-WHERE title = 'Web Development';
+Good luck with your web development tasks!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Database Systems', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Database Systems"! To reinforce your understanding of database principles and concepts, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -796,11 +773,10 @@ Please provide your ERD diagrams, SQL queries, and any relevant scripts or docum
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your database systems tasks!'
-WHERE title = 'Database Systems';
+Good luck with your database systems tasks!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Cybersecurity', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Cybersecurity"! To reinforce your understanding of cybersecurity principles and practices, please complete the following homework assignment. Take your time to work through the tasks and provide clear and concise solutions.
 
@@ -828,11 +804,10 @@ Please provide your analysis, documentation, and any relevant reports as part of
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your cybersecurity tasks!'
-WHERE title = 'Cyber-security';
+Good luck with your cybersecurity tasks!');
 
-UPDATE lesson
-SET homework = 'Dear Students,
+INSERT INTO file (file_name, file_type, file_content)
+VALUES ('Lesson - Data Structures and Algorithms', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Data Structures and Algorithms"! To reinforce your understanding of data structures and algorithmic concepts, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -860,5 +835,4 @@ Please provide your code implementations, analysis, and explanations for the pro
 
 Please submit your completed homework at the beginning of our next class. If you have any questions or need assistance, don''t hesitate to reach out to me.
 
-Good luck with your data structures and algorithms tasks!'
-WHERE title = 'Data Structures and Algorithms';
+Good luck with your data structures and algorithms tasks!');

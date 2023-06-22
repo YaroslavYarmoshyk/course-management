@@ -1,19 +1,20 @@
 package com.coursemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
+
 @Data
-@Accessors(chain = true)
 @NoArgsConstructor
 public class HomeworkSubmission {
     private Long id;
-    private String fileName;
+    @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
     private LocalDateTime uploadedDate;
-    private byte[] homework;
+    private Long fileId;
     private Long lessonId;
     private Long studentId;
 }

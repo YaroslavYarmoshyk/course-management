@@ -1,8 +1,11 @@
 package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.AdminAccessLevel;
+import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
+import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
-import com.coursemanagement.rest.dto.UserInfoDto;
+import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminResource {
     private final UserService userService;
+    private final CourseService courseService;
 
     @PostMapping(value = "/assign-role")
-    public UserInfoDto assignRole(@RequestBody RoleAssignmentDto roleAssignmentDto) {
+    public UserDto assignRole(@RequestBody RoleAssignmentDto roleAssignmentDto) {
         return userService.assignRole(roleAssignmentDto);
+    }
+
+    @PostMapping(value = "/assign-instructor")
+    public CourseAssignmentResponseDto assignInstructor(@RequestBody CourseAssignmentRequestDto courseAssignmentRequestDto) {
+        return courseService.assignInstructor(courseAssignmentRequestDto);
     }
 }

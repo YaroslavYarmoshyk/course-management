@@ -33,7 +33,7 @@ public class EncryptionServiceImpl implements EncryptionService {
     private String encryptionKey;
 
     @Override
-    public String encrypt(final String string) {
+    public String encryptUrlToken(final String string) {
         try {
             final Cipher cipher = Cipher.getInstance(AES_CBC_PKCS5PADDING, SUN_JSE);
             final SecretKeySpec key = new SecretKeySpec(getBytes(encryptionKey), AES);
@@ -53,7 +53,7 @@ public class EncryptionServiceImpl implements EncryptionService {
     }
 
     @Override
-    public String decrypt(final String string) {
+    public String decryptUrlToken(final String string) {
         try {
             final Cipher cipher = Cipher.getInstance(AES_CBC_PKCS5PADDING, SUN_JSE);
             final SecretKeySpec key = new SecretKeySpec(getBytes(encryptionKey), AES);

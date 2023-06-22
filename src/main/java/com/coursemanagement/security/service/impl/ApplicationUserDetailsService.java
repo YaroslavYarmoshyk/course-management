@@ -1,4 +1,4 @@
-package com.coursemanagement.security.service;
+package com.coursemanagement.security.service.impl;
 
 import com.coursemanagement.security.ApplicationUserDetails;
 import com.coursemanagement.service.UserService;

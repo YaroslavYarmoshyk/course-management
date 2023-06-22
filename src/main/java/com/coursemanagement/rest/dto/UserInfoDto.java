@@ -1,18 +1,21 @@
 package com.coursemanagement.rest.dto;
 
-import com.coursemanagement.enumeration.Role;
-import com.coursemanagement.enumeration.UserStatus;
-import lombok.Data;
+import com.coursemanagement.model.User;
 
-import java.util.Set;
-
-@Data
-public class UserInfoDto {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-    private UserStatus status;
-    private Set<Role> roles;
+public record UserInfoDto(
+        Long id,
+        String firstName,
+        String lastName,
+        String email,
+        String phone
+) {
+    public UserInfoDto(final User user) {
+        this(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone()
+        );
+    }
 }

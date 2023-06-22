@@ -4,13 +4,14 @@ import com.coursemanagement.enumeration.Mark;
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Grade;
+import com.coursemanagement.model.Lesson;
 import com.coursemanagement.repository.GradeRepository;
 import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.repository.entity.GradeEntity;
 import com.coursemanagement.rest.dto.GradeAssigmentRequestDto;
 import com.coursemanagement.rest.dto.GradeAssignmentResponseDto;
 import com.coursemanagement.rest.dto.LessonDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,9 @@ public class LessonServiceImpl implements LessonService {
     private final ModelMapper mapper;
 
     @Override
-    public LessonDto getById(final Long lessonId) {
+    public Lesson getById(final Long lessonId) {
         return lessonRepository.findById(lessonId)
-                .map(LessonDto::new)
+                .map(lessonEntity -> mapper.map(lessonEntity, Lesson.class))
                 .orElseThrow(() -> new SystemException("Cannot find lesson with id: " + lessonId, SystemErrorCode.BAD_REQUEST));
     }
 
@@ -53,9 +54,9 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private GradeAssignmentResponseDto gerGradeAssignmentResponseDto(final Grade grade) {
-        final UserDto student = new UserDto(userService.getById(grade.getStudentId()));
-        final UserDto instructor = new UserDto(userService.getById(grade.getInstructorId()));
-        final LessonDto lesson = getById(grade.getLessonId());
+        final UserInfoDto student = new UserInfoDto(userService.getById(grade.getStudentId()));
+        final UserInfoDto instructor = new UserInfoDto(userService.getById(grade.getInstructorId()));
+        final LessonDto lesson = new LessonDto(getById(grade.getLessonId()));
         return new GradeAssignmentResponseDto(
                 student,
                 lesson,

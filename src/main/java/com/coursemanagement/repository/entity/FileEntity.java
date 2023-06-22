@@ -1,6 +1,9 @@
 package com.coursemanagement.repository.entity;
 
+import com.coursemanagement.enumeration.FileType;
+import com.coursemanagement.enumeration.converter.FileTypeEnumConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,45 +12,39 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
-@Accessors(chain = true)
 @Entity
-@Table(name = "homework_submission")
-public class HomeworkSubmissionEntity {
+@Table(name = "file")
+public class FileEntity {
     @Id
-    @GeneratedValue(generator = "homework_submission_id_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "file_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
-            name = "homework_submission_id_seq",
-            sequenceName = "homework_submission_id_seq",
+            name = "file_id_seq",
+            sequenceName = "file_id_seq",
             allocationSize = 1
     )
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "uploaded_date")
-    private LocalDateTime uploadedDate;
+    @Column(name = "file_name")
+    private String fileName;
 
-    @Column(name = "file_id")
-    private Long fileId;
+    @Column(name = "file_type")
+    @Convert(converter = FileTypeEnumConverter.class)
+    private FileType fileType;
 
-    @Column(name = "lesson_id")
-    private Long lessonId;
-
-    @Column(name = "student_id")
-    private Long studentId;
+    @Column(name = "file_content")
+    private byte[] fileContent;
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final HomeworkSubmissionEntity other)) {
+        if (!(o instanceof final FileEntity other)) {
             return false;
         }
         return id != null && Objects.equals(id, other.getId());
@@ -57,4 +54,5 @@ public class HomeworkSubmissionEntity {
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }

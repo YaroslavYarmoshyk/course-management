@@ -1,4 +1,4 @@
-package com.coursemanagement.rest;
+package com.coursemanagement.security.controller;
 
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.security.model.AuthenticationRequest;
@@ -22,7 +22,7 @@ import static com.coursemanagement.util.Constants.TOKEN_CONFIRMATION_ENDPOINT_PA
 @RestController
 @RequestMapping(value = "/api/reset-password")
 @RequiredArgsConstructor
-public class ResetPasswordResource {
+public class ResetPasswordController {
     private final ResetPasswordService resetPasswordService;
     private final ConfirmationTokenService confirmationTokenService;
 

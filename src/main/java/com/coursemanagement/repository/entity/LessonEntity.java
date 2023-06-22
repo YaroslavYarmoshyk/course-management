@@ -50,9 +50,6 @@ public class LessonEntity {
     @Column(name = "credits")
     private BigDecimal credits;
 
-    @Column(name = "homework")
-    private byte[] homework;
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

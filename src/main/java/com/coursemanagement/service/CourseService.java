@@ -18,7 +18,7 @@ public interface CourseService {
 
     Set<UserCourse> getAllUserCoursesByUserId(final Long userId);
 
-    CourseAssignmentResponseDto assignInstructor(CourseAssignmentRequestDto courseAssignmentRequestDto);
+    CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto);
 
     void addUserToCourses(final User student, final Collection<Long> courses);
 }

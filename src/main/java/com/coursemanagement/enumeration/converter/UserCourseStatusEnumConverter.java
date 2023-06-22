@@ -5,12 +5,16 @@ import com.coursemanagement.util.DatabaseUtils;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+import java.util.Optional;
+
 @Converter(autoApply = true)
 public class UserCourseStatusEnumConverter implements AttributeConverter<UserCourseStatus, String> {
 
     @Override
     public String convertToDatabaseColumn(final UserCourseStatus attribute) {
-        return attribute.toDbValue();
+        return Optional.ofNullable(attribute)
+                .map(UserCourseStatus::toDbValue)
+                .orElse(null);
     }
 
     @Override

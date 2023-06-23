@@ -10,7 +10,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTER
 
 @Data
 @NoArgsConstructor
-public class HomeworkSubmission {
+public class Homework {
     private Long id;
     @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
     private LocalDateTime uploadedDate;

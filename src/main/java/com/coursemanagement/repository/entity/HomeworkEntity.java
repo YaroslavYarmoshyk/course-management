@@ -18,13 +18,13 @@ import java.util.Objects;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "homework_submission")
-public class HomeworkSubmissionEntity {
+@Table(name = "homework")
+public class HomeworkEntity {
     @Id
-    @GeneratedValue(generator = "homework_submission_id_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "homework_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
-            name = "homework_submission_id_seq",
-            sequenceName = "homework_submission_id_seq",
+            name = "homework_id_seq",
+            sequenceName = "homework_id_seq",
             allocationSize = 1
     )
     @Column(name = "id")
@@ -47,7 +47,7 @@ public class HomeworkSubmissionEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final HomeworkSubmissionEntity other)) {
+        if (!(o instanceof final HomeworkEntity other)) {
             return false;
         }
         return id != null && Objects.equals(id, other.getId());

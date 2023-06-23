@@ -65,6 +65,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public Set<UserCourse> getAllActiveUserCoursesByUserId(final Long userId) {
+        final Set<UserCourse> allUserCourses = getAllUserCoursesByUserId(userId);
+        return allUserCourses.stream()
+                .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     @Transactional
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
         final Long userId = courseAssignmentRequestDto.userId();

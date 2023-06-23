@@ -11,5 +11,4 @@ public class Lesson {
     private String title;
     private String description;
     private BigDecimal credits;
-    private byte[] homework;
 }

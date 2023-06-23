@@ -53,6 +53,11 @@ public class LessonServiceImpl implements LessonService {
         return gerGradeAssignmentResponseDto(mapper.map(savedGrade, Grade.class));
     }
 
+    @Override
+    public boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId) {
+        return lessonRepository.isUserAssociatedWithLesson(userId, lessonId);
+    }
+
     private GradeAssignmentResponseDto gerGradeAssignmentResponseDto(final Grade grade) {
         final UserInfoDto student = new UserInfoDto(userService.getUserById(grade.getStudentId()));
         final UserInfoDto instructor = new UserInfoDto(userService.getUserById(grade.getInstructorId()));

@@ -9,4 +9,6 @@ public interface LessonService {
     Lesson getLessonById(final Long lessonId);
 
     GradeAssignmentResponseDto assignGradeToUserLesson(final GradeAssigmentRequestDto gradeAssigmentRequestDto);
+
+    boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId);
 }

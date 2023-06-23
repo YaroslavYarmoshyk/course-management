@@ -88,8 +88,7 @@ CREATE TABLE IF NOT EXISTS grade
     instructor_id        BIGINT NOT NULL,
     FOREIGN KEY (lesson_id) REFERENCES lesson (id),
     FOREIGN KEY (student_id) REFERENCES "user" (id),
-    FOREIGN KEY (instructor_id) REFERENCES "user" (id),
-    UNIQUE (student_id, lesson_id)
+    FOREIGN KEY (instructor_id) REFERENCES "user" (id)
 );
 
 CREATE TABLE IF NOT EXISTS file
@@ -100,7 +99,7 @@ CREATE TABLE IF NOT EXISTS file
     file_content BYTEA NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS homework_submission
+CREATE TABLE IF NOT EXISTS homework
 (
     id            BIGSERIAL PRIMARY KEY,
     uploaded_date TIMESTAMP(0),

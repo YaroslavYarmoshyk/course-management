@@ -43,14 +43,14 @@ public class CourseServiceImpl implements CourseService {
     private final ModelMapper mapper;
 
     @Override
-    public Course getByCode(final Long code) {
+    public Course getCourseByCode(final Long code) {
         return courseRepository.findByCode(code)
                 .map(entity -> mapper.map(entity, Course.class))
                 .orElseThrow(() -> new SystemException("Course with code " + code + " not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
-    public Set<CourseDto> getAllByUserId(final Long userId) {
+    public Set<CourseDto> getAllCoursesByUserId(final Long userId) {
         return getAllUserCoursesByUserId(userId).stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());
@@ -69,12 +69,12 @@ public class CourseServiceImpl implements CourseService {
     public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
         final Long userId = courseAssignmentRequestDto.userId();
         final Long courseCode = courseAssignmentRequestDto.courseCode();
-        final User potentialInstructor = userService.getById(userId);
+        final User potentialInstructor = userService.getUserById(userId);
         validateInstructorAssignment(potentialInstructor);
 
         addUserToCourses(potentialInstructor, Set.of(courseCode));
 
-        final Course course = getByCode(courseCode);
+        final Course course = getCourseByCode(courseCode);
         final Map<Role, Set<UserInfoDto>> usersByRole = getGroupedUsersByRole(course);
         return new CourseAssignmentResponseDto(
                 course.getCode(),

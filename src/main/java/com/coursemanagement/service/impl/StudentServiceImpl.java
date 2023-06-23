@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
         final Long studentId = studentEnrollInCourseRequestDto.studentId();
-        final User student = userService.getById(studentId);
+        final User student = userService.getUserById(studentId);
         validateStudent(student);
 
         final Set<UserCourse> alreadyTakenUserCourses = courseService.getAllUserCoursesByUserId(studentId);

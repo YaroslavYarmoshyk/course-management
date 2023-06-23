@@ -8,11 +8,11 @@ public interface UserService {
 
     User resolveCurrentUser();
 
-    User getByEmail(final String email);
+    User getUserByEmail(final String email);
 
-    User getById(final Long userId);
+    User getUserById(final Long userId);
 
     User save(final User user);
 
-    UserDto assignRole(RoleAssignmentDto roleAssignmentDto);
+    UserDto assignRoleToUser(RoleAssignmentDto roleAssignmentDto);
 }

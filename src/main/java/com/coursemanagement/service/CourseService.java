@@ -12,9 +12,9 @@ import java.util.Set;
 
 public interface CourseService {
 
-    Course getByCode(final Long code);
+    Course getCourseByCode(final Long code);
 
-    Set<CourseDto> getAllByUserId(final Long userId);
+    Set<CourseDto> getAllCoursesByUserId(final Long userId);
 
     Set<UserCourse> getAllUserCoursesByUserId(final Long userId);
 

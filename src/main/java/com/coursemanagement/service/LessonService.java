@@ -6,7 +6,7 @@ import com.coursemanagement.rest.dto.GradeAssignmentResponseDto;
 
 public interface LessonService {
 
-    Lesson getById(final Long lessonId);
+    Lesson getLessonById(final Long lessonId);
 
     GradeAssignmentResponseDto assignGradeToUserLesson(final GradeAssigmentRequestDto gradeAssigmentRequestDto);
 }

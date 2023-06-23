@@ -76,7 +76,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
         final ConfirmationToken confirmationToken = confirmToken(encodedToken, TokenType.EMAIL_CONFIRMATION);
         final Long userId = confirmationToken.getUserId();
-        final User user = userService.getById(userId);
+        final User user = userService.getUserById(userId);
         user.setStatus(UserStatus.ACTIVE);
         return mapper.map(userService.save(user), UserDto.class);
     }

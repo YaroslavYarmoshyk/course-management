@@ -31,7 +31,7 @@ public class LessonServiceImpl implements LessonService {
     private final ModelMapper mapper;
 
     @Override
-    public Lesson getById(final Long lessonId) {
+    public Lesson getLessonById(final Long lessonId) {
         return lessonRepository.findById(lessonId)
                 .map(lessonEntity -> mapper.map(lessonEntity, Lesson.class))
                 .orElseThrow(() -> new SystemException("Cannot find lesson with id: " + lessonId, SystemErrorCode.BAD_REQUEST));
@@ -54,9 +54,9 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private GradeAssignmentResponseDto gerGradeAssignmentResponseDto(final Grade grade) {
-        final UserInfoDto student = new UserInfoDto(userService.getById(grade.getStudentId()));
-        final UserInfoDto instructor = new UserInfoDto(userService.getById(grade.getInstructorId()));
-        final LessonDto lesson = new LessonDto(getById(grade.getLessonId()));
+        final UserInfoDto student = new UserInfoDto(userService.getUserById(grade.getStudentId()));
+        final UserInfoDto instructor = new UserInfoDto(userService.getUserById(grade.getInstructorId()));
+        final LessonDto lesson = new LessonDto(getLessonById(grade.getLessonId()));
         return new GradeAssignmentResponseDto(
                 student,
                 lesson,

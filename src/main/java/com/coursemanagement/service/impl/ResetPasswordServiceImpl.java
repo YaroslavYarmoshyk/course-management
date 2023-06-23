@@ -30,7 +30,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         if (Strings.isBlank(email)) {
             throw new SystemException("Email cannot be empty", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
-        final User user = userService.getByEmail(email);
+        final User user = userService.getUserByEmail(email);
         final ConfirmationToken resetPasswordToken = confirmationTokenService.createResetPasswordToken(user);
         emailService.sendResetPasswordConfirmation(user, resetPasswordToken.getToken());
     }
@@ -39,7 +39,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     public AuthenticationResponse resetPassword(final AuthenticationRequest authenticationRequest) {
         final String email = authenticationRequest.email();
         if (Strings.isNotBlank(email)) {
-            final User user = userService.getByEmail(authenticationRequest.email());
+            final User user = userService.getUserByEmail(authenticationRequest.email());
             user.setPassword(passwordEncoder.encode(authenticationRequest.password()));
             userService.save(user);
             return authenticationService.getAuthenticationResponse(authenticationRequest);

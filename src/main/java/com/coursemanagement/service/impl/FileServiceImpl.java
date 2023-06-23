@@ -17,7 +17,7 @@ public class FileServiceImpl implements FileService {
     private final ModelMapper mapper;
 
     @Override
-    public File getById(final Long fileId) {
+    public File getFileById(final Long fileId) {
         return fileRepository.findById(fileId)
                 .map(fileEntity -> mapper.map(fileEntity, File.class))
                 .orElseThrow(() -> new SystemException("File with id: " + fileId + " not found", SystemErrorCode.BAD_REQUEST));

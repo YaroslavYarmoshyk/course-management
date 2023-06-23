@@ -24,7 +24,7 @@ public class AdminResource {
 
     @PostMapping(value = "/assign-role")
     public UserDto assignRole(@RequestBody RoleAssignmentDto roleAssignmentDto) {
-        return userService.assignRole(roleAssignmentDto);
+        return userService.assignRoleToUser(roleAssignmentDto);
     }
 
     @PostMapping(value = "/assign-instructor")

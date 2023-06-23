@@ -56,7 +56,7 @@ public class StudentResource {
 
     @GetMapping(value = "{studentId}/courses")
     public Set<CourseDto> getAllCoursesForCurrentUser(@PathVariable(value = "studentId") final Long studentId) {
-        return courseService.getAllByUserId(studentId);
+        return courseService.getAllCoursesByUserId(studentId);
     }
 
     private HttpHeaders createHeaders(final File file) {

@@ -61,6 +61,6 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Override
     public File downloadHomework(final Long fileId) {
-        return fileService.getById(fileId);
+        return fileService.getFileById(fileId);
     }
 }

@@ -32,19 +32,19 @@ public class UserServiceImpl implements UserService {
     public User resolveCurrentUser() {
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getName)
-                .map(this::getByEmail)
+                .map(this::getUserByEmail)
                 .orElseThrow(() -> new SystemException("Cannot resolve current user, the user is unauthorized", SystemErrorCode.UNAUTHORIZED));
     }
 
     @Override
-    public User getByEmail(final String email) {
+    public User getUserByEmail(final String email) {
         return userRepository.findByEmail(email)
                 .map(entity -> mapper.map(entity, User.class))
                 .orElseThrow(() -> new SystemException("User by email " + email + " not found", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
-    public User getById(final Long id) {
+    public User getUserById(final Long id) {
         return userRepository.findById(id)
                 .map(entity -> mapper.map(entity, User.class))
                 .orElseThrow(() -> new SystemException("User not found", SystemErrorCode.BAD_REQUEST));
@@ -63,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto assignRole(final RoleAssignmentDto roleAssignmentDto) {
-        final User user = getById(roleAssignmentDto.userId());
+    public UserDto assignRoleToUser(final RoleAssignmentDto roleAssignmentDto) {
+        final User user = getUserById(roleAssignmentDto.userId());
         user.getRoles().addAll(roleAssignmentDto.roles());
         final User savedUser = save(user);
         return mapper.map(savedUser, UserDto.class);

@@ -15,6 +15,6 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        return new ApplicationUserDetails(userService.getByEmail(username));
+        return new ApplicationUserDetails(userService.getUserByEmail(username));
     }
 }

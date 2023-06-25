@@ -19,13 +19,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "student_mark")
-public class StudentMarkEntity {
+@Table(name = "lesson_mark")
+public class LessonMarkEntity {
     @Id
-    @GeneratedValue(generator = "student_mark_id_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "lesson_mark_id_seq", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(
-            name = "student_mark_id_seq",
-            sequenceName = "student_mark_id_seq",
+            name = "lesson_mark_id_seq",
+            sequenceName = "lesson_mark_id_seq",
             allocationSize = 1
     )
     @Column(name = "id")
@@ -52,7 +52,7 @@ public class StudentMarkEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final StudentMarkEntity other)) {
+        if (!(o instanceof final LessonMarkEntity other)) {
             return false;
         }
         return id != null && Objects.equals(id, other.id);

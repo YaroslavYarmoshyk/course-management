@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS course_feedback
     FOREIGN KEY (instructor_id) REFERENCES "user" (id)
 );
 
-CREATE TABLE IF NOT EXISTS student_mark
+CREATE TABLE IF NOT EXISTS lesson_mark
 (
     id                   BIGSERIAL PRIMARY KEY,
-    mark                 NUMERIC(38, 2) CHECK (student_mark.mark >= 0 AND student_mark.mark <= 5),
+    mark                 NUMERIC(38, 2) CHECK (lesson_mark.mark >= 0 AND lesson_mark.mark <= 5),
     mark_submission_date TIMESTAMP(0),
     lesson_id            BIGINT NOT NULL,
     student_id           BIGINT NOT NULL,

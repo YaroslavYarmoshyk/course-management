@@ -1,17 +1,17 @@
 package com.coursemanagement.rest.dto;
 
-import com.coursemanagement.model.Lesson;
+import com.coursemanagement.repository.entity.LessonEntity;
 
 public record LessonDto(
         Long id,
         String title,
         String description
 ) {
-    public LessonDto(final Lesson lesson) {
+    public LessonDto(final LessonEntity lessonEntity) {
         this(
-                lesson.getId(),
-                lesson.getTitle(),
-                lesson.getDescription()
+                lessonEntity.getId(),
+                lessonEntity.getTitle(),
+                lessonEntity.getDescription()
         );
     }
 }

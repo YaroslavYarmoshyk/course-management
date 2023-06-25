@@ -5,11 +5,13 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.File;
 import com.coursemanagement.model.Homework;
+import com.coursemanagement.model.User;
 import com.coursemanagement.repository.HomeworkRepository;
 import com.coursemanagement.repository.entity.HomeworkEntity;
 import com.coursemanagement.service.FileService;
 import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.LessonService;
+import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -30,6 +32,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkRepository homeworkRepository;
     private final FileService fileService;
+    private final UserService userService;
     private final LessonService lessonService;
     private final ModelMapper mapper;
 
@@ -73,6 +76,11 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Override
     public File downloadHomework(final Long fileId) {
-        return fileService.getFileById(fileId);
+        final User user = userService.resolveCurrentUser();
+        final boolean userAssociatedWithFile = lessonService.isUserAssociatedWithLessonFile(user.getId(), fileId);
+        if (userAssociatedWithFile) {
+            return fileService.getFileById(fileId);
+        }
+        throw new SystemException("User is not allowed to download this file", SystemErrorCode.FORBIDDEN);
     }
 }

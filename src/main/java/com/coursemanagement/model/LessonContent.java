@@ -9,5 +9,6 @@ import lombok.Data;
 public class LessonContent {
     private Long id;
     private LessonPart lessonPart;
+    private Long fileId;
     private Long lessonId;
 }

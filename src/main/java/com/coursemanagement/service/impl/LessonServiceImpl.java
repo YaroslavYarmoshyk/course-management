@@ -5,7 +5,9 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Grade;
 import com.coursemanagement.model.Lesson;
+import com.coursemanagement.model.LessonContent;
 import com.coursemanagement.repository.GradeRepository;
+import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.repository.entity.GradeEntity;
 import com.coursemanagement.rest.dto.GradeAssigmentRequestDto;
@@ -26,6 +28,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
+    private final LessonContentRepository lessonContentRepository;
     private final GradeRepository gradeRepository;
     private final UserService userService;
     private final ModelMapper mapper;
@@ -56,6 +59,13 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId) {
         return lessonRepository.isUserAssociatedWithLesson(userId, lessonId);
+    }
+
+    @Override
+    public boolean isUserAssociatedWithLessonFile(final Long userId, final Long fileId) {
+        final LessonContent lessonContent = lessonContentRepository.findByFileId(fileId);
+        final Long lessonId = lessonContent.getLessonId();
+        return isUserAssociatedWithLesson(userId, lessonId);
     }
 
     private GradeAssignmentResponseDto gerGradeAssignmentResponseDto(final Grade grade) {

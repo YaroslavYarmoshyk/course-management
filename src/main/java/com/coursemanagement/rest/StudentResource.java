@@ -10,7 +10,6 @@ import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.StudentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,26 +43,15 @@ public class StudentResource {
         homeworkService.uploadHomework(user.getId(), lessonId, homework);
     }
 
-    @GetMapping(value = "/homework/download/{file-id}")
+    @GetMapping(value = "/homework/download/{file-id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> uploadHomework(@PathVariable("file-id") final Long fileId) {
-//        TODO: add checking if a student actually allowed to download the file
         final File homework = homeworkService.downloadHomework(fileId);
-        return ResponseEntity.ok()
-                .headers(createHeaders(homework))
-                .body(homework.getFileContent());
+        return ResponseEntity.ok(homework.getFileContent());
 
     }
 
     @GetMapping(value = "{studentId}/courses")
     public Set<CourseDto> getAllCoursesForCurrentUser(@PathVariable(value = "studentId") final Long studentId) {
         return courseService.getAllCoursesByUserId(studentId);
-    }
-
-    private HttpHeaders createHeaders(final File file) {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentLength(file.getFileContent().length);
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFileName() + ".txt");
-        return headers;
     }
 }

@@ -33,6 +33,9 @@ public class LessonContentEntity {
     @Convert(converter = LessonPartEnumConverter.class)
     private LessonPart lessonPart;
 
+    @Column(name = "file_id")
+    private Long fileId;
+
     @Column(name = "lesson_id")
     private Long lessonId;
 

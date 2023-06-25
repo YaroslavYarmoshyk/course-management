@@ -1,8 +1,8 @@
 package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.InstructorAccessLevel;
-import com.coursemanagement.rest.dto.GradeAssigmentRequestDto;
-import com.coursemanagement.rest.dto.GradeAssignmentResponseDto;
+import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class InstructorResource {
     private final LessonService lessonService;
 
-    @PostMapping(value = "/assign-grade")
-    public GradeAssignmentResponseDto markLesson(@RequestBody GradeAssigmentRequestDto gradeAssigmentRequestDto) {
-        return lessonService.assignGradeToUserLesson(gradeAssigmentRequestDto);
+    @PostMapping(value = "/assign-mark")
+    public MarkAssignmentResponseDto markLesson(@RequestBody MarkAssigmentRequestDto markAssigmentRequestDto) {
+        return lessonService.assignMarkToUserLesson(markAssigmentRequestDto);
     }
 }

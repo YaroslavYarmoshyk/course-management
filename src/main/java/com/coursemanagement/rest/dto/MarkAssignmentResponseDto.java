@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
 
-public record GradeAssignmentResponseDto(
+public record MarkAssignmentResponseDto(
         UserInfoDto student,
         LessonDto lesson,
         UserInfoDto instructor,

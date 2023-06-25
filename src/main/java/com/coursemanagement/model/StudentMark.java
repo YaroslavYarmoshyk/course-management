@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class Grade {
+public class StudentMark {
     private Long id;
     private Mark mark;
     private LocalDateTime markSubmissionDate;
@@ -16,7 +16,7 @@ public class Grade {
     private Long studentId;
     private Long instructorId;
 
-    public Grade(final Long studentId, final Long lessonId) {
+    public StudentMark(final Long studentId, final Long lessonId) {
         this.studentId = studentId;
         this.lessonId = lessonId;
     }

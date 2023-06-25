@@ -3,16 +3,16 @@ package com.coursemanagement.service.impl;
 import com.coursemanagement.enumeration.Mark;
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.model.Grade;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.LessonContent;
-import com.coursemanagement.repository.GradeRepository;
+import com.coursemanagement.model.StudentMark;
 import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
-import com.coursemanagement.repository.entity.GradeEntity;
-import com.coursemanagement.rest.dto.GradeAssigmentRequestDto;
-import com.coursemanagement.rest.dto.GradeAssignmentResponseDto;
+import com.coursemanagement.repository.StudentMarkRepository;
+import com.coursemanagement.repository.entity.StudentMarkEntity;
 import com.coursemanagement.rest.dto.LessonDto;
+import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.UserService;
@@ -29,7 +29,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonContentRepository lessonContentRepository;
-    private final GradeRepository gradeRepository;
+    private final StudentMarkRepository studentMarkRepository;
     private final UserService userService;
     private final ModelMapper mapper;
 
@@ -41,19 +41,19 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public GradeAssignmentResponseDto assignGradeToUserLesson(final GradeAssigmentRequestDto gradeAssigmentRequestDto) {
-        final Long studentId = gradeAssigmentRequestDto.studentId();
-        final Long lessonId = gradeAssigmentRequestDto.lessonId();
-        final Grade grade = gradeRepository.findByStudentIdAndLessonId(studentId, lessonId)
-                .map(gradeEntity -> mapper.map(gradeEntity, Grade.class))
-                .orElse(new Grade(studentId, lessonId));
-        final Mark mark = gradeAssigmentRequestDto.mark();
+    public MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        final Long studentId = markAssigmentRequestDto.studentId();
+        final Long lessonId = markAssigmentRequestDto.lessonId();
+        final StudentMark studentMark = studentMarkRepository.findByStudentIdAndLessonId(studentId, lessonId)
+                .map(studentMarkEntity -> mapper.map(studentMarkEntity, StudentMark.class))
+                .orElse(new StudentMark(studentId, lessonId));
+        final Mark mark = markAssigmentRequestDto.mark();
         final Long instructorId = userService.resolveCurrentUser().getId();
-        grade.setMark(mark);
-        grade.setMarkSubmissionDate(LocalDateTime.now(DEFAULT_ZONE_ID));
-        grade.setInstructorId(instructorId);
-        final GradeEntity savedGrade = gradeRepository.save(mapper.map(grade, GradeEntity.class));
-        return gerGradeAssignmentResponseDto(mapper.map(savedGrade, Grade.class));
+        studentMark.setMark(mark);
+        studentMark.setMarkSubmissionDate(LocalDateTime.now(DEFAULT_ZONE_ID));
+        studentMark.setInstructorId(instructorId);
+        final StudentMarkEntity savedStudentMark = studentMarkRepository.save(mapper.map(studentMark, StudentMarkEntity.class));
+        return getMarkAssignmentResponseDto(mapper.map(savedStudentMark, StudentMark.class));
     }
 
     @Override
@@ -68,16 +68,16 @@ public class LessonServiceImpl implements LessonService {
         return isUserAssociatedWithLesson(userId, lessonId);
     }
 
-    private GradeAssignmentResponseDto gerGradeAssignmentResponseDto(final Grade grade) {
-        final UserInfoDto student = new UserInfoDto(userService.getUserById(grade.getStudentId()));
-        final UserInfoDto instructor = new UserInfoDto(userService.getUserById(grade.getInstructorId()));
-        final LessonDto lesson = new LessonDto(getLessonById(grade.getLessonId()));
-        return new GradeAssignmentResponseDto(
+    private MarkAssignmentResponseDto getMarkAssignmentResponseDto(final StudentMark studentMark) {
+        final UserInfoDto student = new UserInfoDto(userService.getUserById(studentMark.getStudentId()));
+        final UserInfoDto instructor = new UserInfoDto(userService.getUserById(studentMark.getInstructorId()));
+        final LessonDto lesson = new LessonDto(getLessonById(studentMark.getLessonId()));
+        return new MarkAssignmentResponseDto(
                 student,
                 lesson,
                 instructor,
-                grade.getMark(),
-                grade.getMarkSubmissionDate()
+                studentMark.getMark(),
+                studentMark.getMarkSubmissionDate()
         );
     }
 }

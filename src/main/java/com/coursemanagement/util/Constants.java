@@ -1,5 +1,7 @@
 package com.coursemanagement.util;
 
+import java.math.RoundingMode;
+
 public final class Constants {
     public static final String ROLES_CLAIM = "roles";
     public static final String AUTHENTICATION_ENDPOINT = "/api/authentication";
@@ -23,4 +25,5 @@ public final class Constants {
     public static final String EMAIL_SENDER = "course-administration";
 
     public static final int MARK_CONVERTER_SCALE = 0;
+    public static final RoundingMode MARK_ROUNDING_MODE = RoundingMode.HALF_UP;
 }

@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
@@ -25,6 +26,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class MarkServiceImpl implements MarkService {
     private final LessonMarkRepository lessonMarkRepository;
     private final ModelMapper mapper;
+    private static final double ZERO_MARK_VALUE = 0.0;
 
     @Override
     public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId,
@@ -52,19 +54,27 @@ public class MarkServiceImpl implements MarkService {
         );
     }
 
-    //    TODO: Provide entire implementation of this method
     @Override
     public CourseMark getStudentCourseMark(final Long studentId, final Long courseCode) {
-        final List<LessonMarkEntity> lessonMarks = lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode);
-        final double courseMark = lessonMarks.stream()
-                .map(LessonMarkEntity::getMark)
-                .map(Mark::getValue)
-                .mapToDouble(BigDecimal::doubleValue)
+        final Map<Long, Double> averageMarkPerLesson = lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
+                .map(lessonMarkEntity -> mapper.map(lessonMarkEntity, LessonMark.class))
+                .filter(lessonMark -> lessonMark.getMark() != null)
+                .collect(Collectors.groupingBy(
+                        LessonMark::getLessonId,
+                        Collectors.averagingDouble(lessonMark -> lessonMark.getMark().getValue().doubleValue())
+                ));
+
+        double average = averageMarkPerLesson.values().stream()
+                .mapToDouble(Double::doubleValue)
                 .average()
-                .orElse(Double.NaN);
-        return new CourseMark().setCourseCode(courseCode)
-                .setStudentId(studentId)
-                .setMarkValue(BigDecimal.valueOf(courseMark))
-                .setMark(null);
+                .orElse(ZERO_MARK_VALUE);
+        final BigDecimal markValue = BigDecimal.valueOf(average);
+
+        return CourseMark.courseMark()
+                .withCourseCode(courseCode)
+                .withStudentId(studentId)
+                .withMarkValue(markValue)
+                .withMark(Mark.of(markValue))
+                .build();
     }
 }

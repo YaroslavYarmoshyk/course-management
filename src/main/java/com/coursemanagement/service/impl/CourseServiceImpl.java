@@ -14,8 +14,7 @@ import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
-import com.coursemanagement.rest.dto.CourseDto;
-import com.coursemanagement.rest.dto.UserInfoDto;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -50,14 +49,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Set<CourseDto> getAllCoursesByUserId(final Long userId) {
-        return getAllUserCoursesByUserId(userId).stream()
-                .map(CourseDto::new)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<UserCourse> getAllUserCoursesByUserId(final Long userId) {
+    public Set<UserCourse> getUserCoursesByUserId(final Long userId) {
         final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserId(userId);
         return userCourseEntities.stream()
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
@@ -65,16 +57,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Set<UserCourse> getAllActiveUserCoursesByUserId(final Long userId) {
-        final Set<UserCourse> allUserCourses = getAllUserCoursesByUserId(userId);
-        return allUserCourses.stream()
-                .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
     @Transactional
-    public CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
+    public CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
         final Long userId = courseAssignmentRequestDto.userId();
         final Long courseCode = courseAssignmentRequestDto.courseCode();
         final User potentialInstructor = userService.getUserById(userId);
@@ -83,7 +67,7 @@ public class CourseServiceImpl implements CourseService {
         addUserToCourses(potentialInstructor, Set.of(courseCode));
 
         final Course course = getCourseByCode(courseCode);
-        final Map<Role, Set<UserInfoDto>> usersByRole = getGroupedUsersByRole(course);
+        final Map<Role, Set<UserDto>> usersByRole = getGroupedUsersByRole(course);
         return new CourseAssignmentResponseDto(
                 course.getCode(),
                 course.getSubject(),
@@ -122,10 +106,10 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new SystemException("Cannot assign user to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST));
     }
 
-    private Map<Role, Set<UserInfoDto>> getGroupedUsersByRole(final Course course) {
+    private Map<Role, Set<UserDto>> getGroupedUsersByRole(final Course course) {
         return course.getUsers().stream()
                 .flatMap(user -> user.getRoles().stream().map(
-                        role -> new AbstractMap.SimpleEntry<>(role, new UserInfoDto(user)))
+                        role -> new AbstractMap.SimpleEntry<>(role, new UserDto(user)))
                 )
                 .collect(
                         Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,

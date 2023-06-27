@@ -5,7 +5,6 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
-import com.coursemanagement.rest.dto.CourseDto;
 
 import java.util.Collection;
 import java.util.Set;
@@ -14,13 +13,9 @@ public interface CourseService {
 
     Course getCourseByCode(final Long code);
 
-    Set<CourseDto> getAllCoursesByUserId(final Long userId);
+    Set<UserCourse> getUserCoursesByUserId(final Long userId);
 
-    Set<UserCourse> getAllUserCoursesByUserId(final Long userId);
-
-    Set<UserCourse> getAllActiveUserCoursesByUserId(final Long userId);
-
-    CourseAssignmentResponseDto assignInstructor(final CourseAssignmentRequestDto courseAssignmentRequestDto);
+    CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto);
 
     void addUserToCourses(final User student, final Collection<Long> courses);
 }

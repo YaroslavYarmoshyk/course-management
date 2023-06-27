@@ -8,7 +8,7 @@ import com.coursemanagement.repository.entity.LessonMarkEntity;
 import com.coursemanagement.rest.dto.LessonDto;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
-import com.coursemanagement.rest.dto.UserInfoDto;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.MarkService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -46,9 +46,9 @@ public class MarkServiceImpl implements MarkService {
 
     private static MarkAssignmentResponseDto getMarkAssignmentResponseDto(final LessonMarkEntity lessonMarkEntity) {
         return new MarkAssignmentResponseDto(
-                new UserInfoDto(lessonMarkEntity.getStudent()),
+                new UserDto(lessonMarkEntity.getStudent()),
                 new LessonDto(lessonMarkEntity.getLesson()),
-                new UserInfoDto(lessonMarkEntity.getInstructor()),
+                new UserDto(lessonMarkEntity.getInstructor()),
                 lessonMarkEntity.getMark(),
                 lessonMarkEntity.getMarkSubmissionDate()
         );

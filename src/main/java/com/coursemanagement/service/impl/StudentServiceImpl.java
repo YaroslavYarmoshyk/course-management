@@ -2,6 +2,7 @@ package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
@@ -38,7 +39,9 @@ public class StudentServiceImpl implements StudentService {
         final User student = userService.getUserById(studentId);
         validateStudent(student);
 
-        final Set<UserCourse> alreadyTakenUserCourses = courseService.getAllActiveUserCoursesByUserId(studentId);
+        final Set<UserCourse> alreadyTakenUserCourses = courseService.getUserCoursesByUserId(studentId).stream()
+                .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
+                .collect(Collectors.toSet());
         final Set<Long> alreadyTakenCourseCodes = alreadyTakenUserCourses.stream()
                 .map(UserCourse::getCourse)
                 .map(Course::getCode)
@@ -48,7 +51,7 @@ public class StudentServiceImpl implements StudentService {
 
         courseService.addUserToCourses(student, requestedCourseCodes);
 
-        final Set<UserCourse> updatedUserCourses = courseService.getAllUserCoursesByUserId(studentId);
+        final Set<UserCourse> updatedUserCourses = courseService.getUserCoursesByUserId(studentId);
         final Set<CourseDto> studentCourses = updatedUserCourses.stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());

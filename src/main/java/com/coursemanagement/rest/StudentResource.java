@@ -6,7 +6,6 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
-import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import java.util.Set;
 @RequestMapping(value = "/api/student")
 @RequiredArgsConstructor
 public class StudentResource {
-    private final CourseService courseService;
     private final StudentService studentService;
     private final HomeworkService homeworkService;
 
@@ -52,6 +50,6 @@ public class StudentResource {
 
     @GetMapping(value = "{studentId}/courses")
     public Set<CourseDto> getAllCoursesForCurrentUser(@PathVariable(value = "studentId") final Long studentId) {
-        return courseService.getAllCoursesByUserId(studentId);
+        return null;
     }
 }

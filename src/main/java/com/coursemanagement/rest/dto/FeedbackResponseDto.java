@@ -1,17 +1,19 @@
 package com.coursemanagement.rest.dto;
 
-import com.coursemanagement.enumeration.Mark;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
 
-public record MarkAssignmentResponseDto(
+@Builder(setterPrefix = "with")
+public record FeedbackResponseDto(
         UserDto student,
-        LessonDto lesson,
+        CourseDto course,
         UserDto instructor,
-        Mark mark,
-        @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN) LocalDateTime mark_submission_date
+        String feedback,
+        @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
+        LocalDateTime feedbackDate
 ) {
 }

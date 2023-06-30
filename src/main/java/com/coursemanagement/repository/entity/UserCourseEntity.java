@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -30,6 +31,10 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @ToString(exclude = {"user", "course"})
 @Entity
 @Table(name = "user_course")
+@NamedQuery(
+        name = "findStudentsByCourseCode",
+        query = "SELECT uc FROM UserCourseEntity uc JOIN FETCH uc.user u JOIN FETCH u.roles ur JOIN FETCH uc.course c WHERE c.code =:courseCode AND ur.role = 'STUDENT'"
+)
 public class UserCourseEntity {
     @EmbeddedId
     private UserCourseEntityId id;

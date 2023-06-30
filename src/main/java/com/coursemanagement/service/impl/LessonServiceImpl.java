@@ -15,7 +15,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId) {
-        return lessonRepository.isUserAssociatedWithLesson(userId, lessonId);
+        return lessonRepository.existsByCourseUserCoursesUserIdAndId(userId, lessonId);
     }
 
     @Override

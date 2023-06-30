@@ -14,6 +14,7 @@ import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.UserService;
@@ -53,6 +54,21 @@ public class CourseServiceImpl implements CourseService {
         final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserId(userId);
         return userCourseEntities.stream()
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<CourseDto> getCoursesByUserId(final Long userId) {
+        return getUserCoursesByUserId(userId).stream()
+                .map(CourseDto::new)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<UserDto> getStudentsByCourseCode(final Long courseCode) {
+        return userCourseRepository.findStudentsByCourseCode(courseCode).stream()
+                .map(UserCourseEntity::getUser)
+                .map(UserDto::new)
                 .collect(Collectors.toSet());
     }
 

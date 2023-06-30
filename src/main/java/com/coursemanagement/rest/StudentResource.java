@@ -35,9 +35,9 @@ public class StudentResource {
     }
 
     @PostMapping(value = "/homework/upload")
-    public void uploadHomework(@CurrentUser User user,
+    public void uploadHomework(@CurrentUser final User user,
                                @RequestParam("lesson-id") final Long lessonId,
-                               @RequestParam("file") MultipartFile homework) {
+                               @RequestParam("file") final MultipartFile homework) {
         homeworkService.uploadHomework(user.getId(), lessonId, homework);
     }
 

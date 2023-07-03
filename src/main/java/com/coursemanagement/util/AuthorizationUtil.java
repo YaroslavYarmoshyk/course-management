@@ -29,4 +29,14 @@ public final class AuthorizationUtil {
                 .flatMap(Collection::stream)
                 .anyMatch(role -> Objects.equals(role, Role.ADMIN));
     }
+
+    public static boolean isAdminOrInstructor() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getAuthorities)
+                .stream()
+                .flatMap(Collection::stream)
+                .map(GrantedAuthority::getAuthority)
+                .map(Role::of)
+                .anyMatch(role -> Objects.equals(role, Role.ADMIN) || Objects.equals(role, Role.INSTRUCTOR));
+    }
 }

@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS lesson
     id          BIGSERIAL PRIMARY KEY,
     title       TEXT   NOT NULL,
     description TEXT,
-    credits     NUMERIC,
     course_code BIGINT NOT NULL,
     FOREIGN KEY (course_code) REFERENCES course (code)
 );
@@ -69,7 +68,7 @@ CREATE TABLE IF NOT EXISTS course_feedback
 (
     id            BIGSERIAL PRIMARY KEY,
     feedback      TEXT,
-    feedback_date TIMESTAMP(0),
+    feedback_submission_date TIMESTAMP(0),
     course_code   BIGINT NOT NULL,
     student_id    BIGINT NOT NULL,
     instructor_id BIGINT NOT NULL,

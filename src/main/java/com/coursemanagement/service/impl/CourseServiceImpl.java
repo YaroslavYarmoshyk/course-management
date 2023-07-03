@@ -1,6 +1,5 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
@@ -12,22 +11,16 @@ import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
-import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
-import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseService;
-import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,7 +32,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final UserCourseRepository userCourseRepository;
-    private final UserService userService;
     private final ModelMapper mapper;
 
     @Override
@@ -73,26 +65,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Transactional
-    public CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
-        final Long userId = courseAssignmentRequestDto.userId();
-        final Long courseCode = courseAssignmentRequestDto.courseCode();
-        final User potentialInstructor = userService.getUserById(userId);
-        validateInstructorAssignment(potentialInstructor);
-
-        addUserToCourses(potentialInstructor, Set.of(courseCode));
-
-        final Course course = getCourseByCode(courseCode);
-        final Map<Role, Set<UserDto>> usersByRole = getGroupedUsersByRole(course);
-        return new CourseAssignmentResponseDto(
-                course.getCode(),
-                course.getSubject(),
-                usersByRole.getOrDefault(Role.INSTRUCTOR, Set.of()),
-                usersByRole.getOrDefault(Role.STUDENT, Set.of())
-        );
-    }
-
-    @Override
     public void addUserToCourses(final User user, final Collection<Long> courseCodes) {
         final Set<CourseEntity> courseEntities = courseRepository.findAllByCodeIn(courseCodes);
         final UserEntity userEntity = mapper.map(user, UserEntity.class);
@@ -104,6 +76,11 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.saveAll(courseEntities);
     }
 
+    @Override
+    public boolean isUserAssociatedWithCourse(final Long userId, final Long courseCode) {
+        return courseRepository.existsByUserCoursesUserIdAndCode(userId, courseCode);
+    }
+
     private static void reEnrollFinishedCourses(final Set<UserCourseEntity> userCourseEntities) {
         for (final UserCourseEntity userCourseEntity : userCourseEntities) {
             final UserCourseStatus status = userCourseEntity.getStatus();
@@ -113,23 +90,5 @@ public class CourseServiceImpl implements CourseService {
                 userCourseEntity.setAccomplishmentDate(null);
             }
         }
-    }
-
-    private void validateInstructorAssignment(final User potentialInstructor) {
-        potentialInstructor.getRoles().stream()
-                .filter(role -> role.equals(Role.INSTRUCTOR))
-                .findAny()
-                .orElseThrow(() -> new SystemException("Cannot assign user to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST));
-    }
-
-    private Map<Role, Set<UserDto>> getGroupedUsersByRole(final Course course) {
-        return course.getUsers().stream()
-                .flatMap(user -> user.getRoles().stream().map(
-                        role -> new AbstractMap.SimpleEntry<>(role, new UserDto(user)))
-                )
-                .collect(
-                        Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,
-                                Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toSet()))
-                );
     }
 }

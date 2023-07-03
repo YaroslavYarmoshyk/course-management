@@ -18,4 +18,6 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
 
     @EntityGraph(attributePaths = {"userCourses"})
     Set<CourseEntity> findAllByCodeIn(final Collection<Long> codes);
+
+    boolean existsByUserCoursesUserIdAndCode(final Long userId, final Long courseCode);
 }

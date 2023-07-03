@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
@@ -46,9 +45,6 @@ public class LessonEntity {
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "credits")
-    private BigDecimal credits;
 
     @Override
     public boolean equals(final Object o) {

@@ -14,6 +14,6 @@ public record FeedbackResponseDto(
         UserDto instructor,
         String feedback,
         @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
-        LocalDateTime feedbackDate
+        LocalDateTime feedbackSubmissionDate
 ) {
 }

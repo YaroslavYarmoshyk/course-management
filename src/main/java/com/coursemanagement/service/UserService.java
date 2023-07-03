@@ -1,7 +1,6 @@
 package com.coursemanagement.service;
 
 import com.coursemanagement.model.User;
-import com.coursemanagement.rest.dto.RoleAssignmentDto;
 
 public interface UserService {
 
@@ -12,6 +11,4 @@ public interface UserService {
     User getUserById(final Long userId);
 
     User save(final User user);
-
-    User assignRoleToUser(RoleAssignmentDto roleAssignmentDto);
 }

@@ -5,7 +5,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.LessonMark;
 import com.coursemanagement.repository.LessonMarkRepository;
 import com.coursemanagement.repository.entity.LessonMarkEntity;
-import com.coursemanagement.rest.dto.LessonDto;
+import com.coursemanagement.rest.dto.LessonInfoDto;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
@@ -33,6 +33,7 @@ public class MarkServiceImpl implements MarkService {
                                                             final MarkAssigmentRequestDto markAssigmentRequestDto) {
         final Long studentId = markAssigmentRequestDto.studentId();
         final Long lessonId = markAssigmentRequestDto.lessonId();
+
         final Mark mark = markAssigmentRequestDto.mark();
         final LessonMark lessonMark = new LessonMark().setStudentId(studentId)
                 .setLessonId(lessonId)
@@ -47,7 +48,7 @@ public class MarkServiceImpl implements MarkService {
     private static MarkAssignmentResponseDto getMarkAssignmentResponseDto(final LessonMarkEntity lessonMarkEntity) {
         return new MarkAssignmentResponseDto(
                 new UserDto(lessonMarkEntity.getStudent()),
-                new LessonDto(lessonMarkEntity.getLesson()),
+                new LessonInfoDto(lessonMarkEntity.getLesson()),
                 new UserDto(lessonMarkEntity.getInstructor()),
                 lessonMarkEntity.getMark(),
                 lessonMarkEntity.getMarkSubmissionDate()

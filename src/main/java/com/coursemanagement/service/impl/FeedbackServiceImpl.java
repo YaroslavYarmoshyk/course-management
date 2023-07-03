@@ -57,7 +57,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .withCourse(new CourseDto(studentCourse))
                 .withInstructor(new UserDto(instructor))
                 .withFeedback(savedEntity.getFeedback())
-                .withFeedbackDate(savedEntity.getFeedbackDate())
+                .withFeedbackSubmissionDate(savedEntity.getFeedbackSubmissionDate())
                 .build();
     }
 }

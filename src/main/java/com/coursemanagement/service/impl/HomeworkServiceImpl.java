@@ -5,13 +5,10 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.File;
 import com.coursemanagement.model.Homework;
-import com.coursemanagement.model.User;
 import com.coursemanagement.repository.HomeworkRepository;
 import com.coursemanagement.repository.entity.HomeworkEntity;
 import com.coursemanagement.service.FileService;
 import com.coursemanagement.service.HomeworkService;
-import com.coursemanagement.service.LessonService;
-import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -32,8 +29,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkRepository homeworkRepository;
     private final FileService fileService;
-    private final UserService userService;
-    private final LessonService lessonService;
     private final ModelMapper mapper;
 
     @Override
@@ -41,7 +36,6 @@ public class HomeworkServiceImpl implements HomeworkService {
     public Homework uploadHomework(final Long studentId,
                                    final Long lessonId,
                                    final MultipartFile multipartFile) {
-        validateHomeworkUploading(studentId, lessonId);
         final File file = createFile(multipartFile);
         final HomeworkEntity homeworkEntity = new HomeworkEntity()
                 .setFileId(file.getId())
@@ -50,12 +44,6 @@ public class HomeworkServiceImpl implements HomeworkService {
                 .setUploadedDate(LocalDateTime.now(DEFAULT_ZONE_ID));
         final HomeworkEntity savedHomework = homeworkRepository.save(homeworkEntity);
         return mapper.map(savedHomework, Homework.class);
-    }
-
-    private void validateHomeworkUploading(final Long studentId, final Long lessonId) {
-        if (!lessonService.isUserAssociatedWithLesson(studentId, lessonId)) {
-            throw new SystemException("Access to the homework uploading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
-        }
     }
 
     private File createFile(final MultipartFile multipartFile) {
@@ -76,11 +64,6 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Override
     public File downloadHomework(final Long fileId) {
-        final User user = userService.resolveCurrentUser();
-        final boolean userAssociatedWithFile = lessonService.isUserAssociatedWithLessonFile(user.getId(), fileId);
-        if (userAssociatedWithFile) {
-            return fileService.getFileById(fileId);
-        }
-        throw new SystemException("User is not allowed to download this file", SystemErrorCode.FORBIDDEN);
+        return fileService.getFileById(fileId);
     }
 }

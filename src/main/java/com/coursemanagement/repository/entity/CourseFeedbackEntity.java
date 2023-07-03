@@ -42,8 +42,8 @@ public class CourseFeedbackEntity {
     @Column(name = "feedback")
     private String feedback;
 
-    @Column(name = "feedback_date")
-    private LocalDateTime feedbackDate;
+    @Column(name = "feedback_submission_date")
+    private LocalDateTime feedbackSubmissionDate;
 
     @Override
     public boolean equals(final Object o) {

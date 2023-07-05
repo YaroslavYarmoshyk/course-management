@@ -10,5 +10,5 @@ public interface LessonService {
 
     boolean isUserAssociatedWithLessonFile(final Long userId, final Long fileId);
 
-    Set<LessonDto> getLessonsPerCourse(final Long courseCode, final Long userId);
+    Set<LessonDto> getLessonsWithContentPerCourse(final Long userId, final Long courseCode);
 }

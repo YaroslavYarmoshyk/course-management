@@ -1,15 +1,11 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.enumeration.SystemErrorCode;
-import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.LessonContent;
 import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.repository.entity.LessonEntity;
 import com.coursemanagement.rest.dto.LessonDto;
-import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
-import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +18,6 @@ import java.util.stream.Collectors;
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonContentRepository lessonContentRepository;
-    private final CourseService courseService;
 
     @Override
     public boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId) {
@@ -37,8 +32,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Set<LessonDto> getLessonsPerCourse(final Long courseCode, final Long userId) {
-        checkUserAccessToCourse(userId, courseCode);
+    public Set<LessonDto> getLessonsWithContentPerCourse(final Long userId, final Long courseCode) {
         final Set<LessonEntity> lessonEntities = lessonRepository.findAllByCourseCode(courseCode);
         final Set<Long> lessonIds = lessonEntities.stream()
                 .map(LessonEntity::getId)
@@ -55,15 +49,5 @@ public class LessonServiceImpl implements LessonService {
                         lessonContents.get(lessonEntity.getId())))
                 .collect(Collectors.toSet());
 
-    }
-
-    private void checkUserAccessToCourse(Long userId, Long courseCode) {
-        if (AuthorizationUtil.isAdminOrInstructor()) {
-            return;
-        }
-
-        if (!courseService.isUserAssociatedWithCourse(userId, courseCode)) {
-            throw new SystemException("Access to the lesson is limited to associated students only", SystemErrorCode.FORBIDDEN);
-        }
     }
 }

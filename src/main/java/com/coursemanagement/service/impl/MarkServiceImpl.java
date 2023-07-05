@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.coursemanagement.util.Constants.ZERO_MARK_VALUE;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
@@ -26,7 +28,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class MarkServiceImpl implements MarkService {
     private final LessonMarkRepository lessonMarkRepository;
     private final ModelMapper mapper;
-    private static final double ZERO_MARK_VALUE = 0.0;
 
     @Override
     public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId,
@@ -71,11 +72,25 @@ public class MarkServiceImpl implements MarkService {
                 .orElse(ZERO_MARK_VALUE);
         final BigDecimal markValue = BigDecimal.valueOf(average);
 
+        final Map<Long, BigDecimal> lessonMarks = averageMarkPerLesson.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> BigDecimal.valueOf(entry.getValue()))
+                );
+
         return CourseMark.courseMark()
                 .withCourseCode(courseCode)
                 .withStudentId(studentId)
+                .withLessonMarks(lessonMarks)
                 .withMarkValue(markValue)
                 .withMark(Mark.of(markValue))
                 .build();
+    }
+
+    @Override
+    public Set<LessonMark> getStudentLessonMarksByCourseCode(final Long studentId, final Long courseCode) {
+        return lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
+                .map(lessonMarkEntity -> mapper.map(lessonMarkEntity, LessonMark.class))
+                .collect(Collectors.toSet());
     }
 }

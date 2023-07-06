@@ -5,7 +5,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.LessonMark;
 import com.coursemanagement.repository.LessonMarkRepository;
 import com.coursemanagement.repository.entity.LessonMarkEntity;
-import com.coursemanagement.rest.dto.LessonInfoDto;
+import com.coursemanagement.rest.dto.LessonDto;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.coursemanagement.util.Constants.ZERO_MARK_VALUE;
@@ -49,7 +48,7 @@ public class MarkServiceImpl implements MarkService {
     private static MarkAssignmentResponseDto getMarkAssignmentResponseDto(final LessonMarkEntity lessonMarkEntity) {
         return new MarkAssignmentResponseDto(
                 new UserDto(lessonMarkEntity.getStudent()),
-                new LessonInfoDto(lessonMarkEntity.getLesson()),
+                new LessonDto(lessonMarkEntity.getLesson()),
                 new UserDto(lessonMarkEntity.getInstructor()),
                 lessonMarkEntity.getMark(),
                 lessonMarkEntity.getMarkSubmissionDate()
@@ -57,40 +56,38 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public CourseMark getStudentCourseMark(final Long studentId, final Long courseCode) {
-        final Map<Long, Double> averageMarkPerLesson = lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
+    public Map<Long, BigDecimal> getAverageLessonMarksForStudentPerCourse(final Long studentId, final Long courseCode) {
+        return lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
                 .map(lessonMarkEntity -> mapper.map(lessonMarkEntity, LessonMark.class))
-                .filter(lessonMark -> lessonMark.getMark() != null)
                 .collect(Collectors.groupingBy(
                         LessonMark::getLessonId,
-                        Collectors.averagingDouble(lessonMark -> lessonMark.getMark().getValue().doubleValue())
+                        Collectors.collectingAndThen(
+                                Collectors.averagingDouble(mark -> mark.getMark().getValue().doubleValue()),
+                                BigDecimal::valueOf
+                        )
                 ));
+    }
 
-        double average = averageMarkPerLesson.values().stream()
-                .mapToDouble(Double::doubleValue)
-                .average()
-                .orElse(ZERO_MARK_VALUE);
-        final BigDecimal markValue = BigDecimal.valueOf(average);
-
-        final Map<Long, BigDecimal> lessonMarks = averageMarkPerLesson.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> BigDecimal.valueOf(entry.getValue()))
-                );
+    @Override
+    public CourseMark getStudentCourseMark(final Long studentId, final Long courseCode) {
+        final Map<Long, BigDecimal> averageLessonMarks = getAverageLessonMarksForStudentPerCourse(studentId, courseCode);
+        final BigDecimal courseMarkValue = getCourseMarkValue(averageLessonMarks);
+        final Mark courseMark = Mark.of(courseMarkValue);
 
         return CourseMark.courseMark()
                 .withCourseCode(courseCode)
                 .withStudentId(studentId)
-                .withLessonMarks(lessonMarks)
-                .withMarkValue(markValue)
-                .withMark(Mark.of(markValue))
+                .withLessonMarks(averageLessonMarks)
+                .withMarkValue(courseMarkValue)
+                .withMark(courseMark)
                 .build();
     }
 
-    @Override
-    public Set<LessonMark> getStudentLessonMarksByCourseCode(final Long studentId, final Long courseCode) {
-        return lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
-                .map(lessonMarkEntity -> mapper.map(lessonMarkEntity, LessonMark.class))
-                .collect(Collectors.toSet());
+    private static BigDecimal getCourseMarkValue(final Map<Long, BigDecimal> averageLessonMarks) {
+        final double finalMarkValue = averageLessonMarks.values().stream()
+                .mapToDouble(BigDecimal::doubleValue)
+                .average()
+                .orElse(ZERO_MARK_VALUE);
+        return BigDecimal.valueOf(finalMarkValue);
     }
 }

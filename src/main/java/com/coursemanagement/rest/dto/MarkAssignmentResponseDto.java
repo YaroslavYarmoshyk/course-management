@@ -9,7 +9,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTER
 
 public record MarkAssignmentResponseDto(
         UserDto student,
-        LessonInfoDto lesson,
+        LessonDto lesson,
         UserDto instructor,
         Mark mark,
         @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN) LocalDateTime markSubmissionDate

@@ -1,6 +1,9 @@
 package com.coursemanagement.service;
 
-import com.coursemanagement.rest.dto.LessonDto;
+import com.coursemanagement.model.Lesson;
+import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
+import com.coursemanagement.rest.dto.StudentLessonDto;
 
 import java.util.Set;
 
@@ -10,5 +13,9 @@ public interface LessonService {
 
     boolean isUserAssociatedWithLessonFile(final Long userId, final Long fileId);
 
-    Set<LessonDto> getLessonsWithContentPerCourse(final Long userId, final Long courseCode);
+    Set<Lesson> getLessonsPerCourse(final Long courseCode);
+
+    Set<StudentLessonDto> getStudentLessonsWithContentPerCourse(final Long studentId, final Long courseCode);
+
+    MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId, final MarkAssigmentRequestDto markAssigmentRequestDto);
 }

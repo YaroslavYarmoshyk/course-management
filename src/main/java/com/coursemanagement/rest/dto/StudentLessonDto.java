@@ -1,6 +1,7 @@
 package com.coursemanagement.rest.dto;
 
 import com.coursemanagement.enumeration.Mark;
+import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.LessonContent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -13,27 +14,20 @@ public record StudentLessonDto(
         String description,
         @JsonIgnoreProperties(value = "lessonId")
         Set<LessonContent> lessonContent,
-        @JsonIgnoreProperties(value = {"lessonId", "studentId"})
         BigDecimal averageMark,
         Mark finalMark
 ) {
-    public StudentLessonDto(final LessonDto lessonDto) {
-        this(
-                lessonDto.id(),
-                lessonDto.title(),
-                lessonDto.description(),
-                lessonDto.lessonContent(),
-                null,
-                null
-        );
-    }
 
-    public StudentLessonDto(final LessonDto lessonDto, final BigDecimal averageMark) {
+    public StudentLessonDto(
+            final Lesson lesson,
+            final Set<LessonContent> lessonContent,
+            final BigDecimal averageMark
+    ) {
         this(
-                lessonDto.id(),
-                lessonDto.title(),
-                lessonDto.description(),
-                lessonDto.lessonContent(),
+                lesson.getId(),
+                lesson.getTitle(),
+                lesson.getDescription(),
+                lessonContent,
                 averageMark,
                 Mark.of(averageMark)
         );

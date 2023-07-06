@@ -37,6 +37,8 @@ public class FeedbackServiceImpl implements FeedbackService {
                                                            final FeedbackRequestDto feedbackRequestDto) {
         final Long studentId = feedbackRequestDto.studentId();
         final Long courseCode = feedbackRequestDto.courseCode();
+        validateUserCourseAccess(studentId, courseCode);
+
         final UserCourse studentCourse = courseService.getUserCoursesByUserId(studentId).stream()
                 .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
                 .filter(userCourse -> Objects.equals(userCourse.getCourse().getCode(), courseCode))
@@ -48,7 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .withCourseCode(courseCode)
                 .withInstructorId(instructor.getId())
                 .withFeedback(feedbackRequestDto.feedback())
-                .withFeedbackDate(LocalDateTime.now(DEFAULT_ZONE_ID))
+                .withFeedbackSubmissionDate(LocalDateTime.now(DEFAULT_ZONE_ID))
                 .build();
         final CourseFeedbackEntity savedEntity = feedbackRepository.save(mapper.map(courseFeedback, CourseFeedbackEntity.class));
 
@@ -59,5 +61,11 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .withFeedback(savedEntity.getFeedback())
                 .withFeedbackSubmissionDate(savedEntity.getFeedbackSubmissionDate())
                 .build();
+    }
+
+    private void validateUserCourseAccess(final Long studentId, final Long courseCode) {
+        if (!courseService.isUserAssociatedWithCourse(studentId, courseCode)) {
+            throw new SystemException("Student is not associated with course", SystemErrorCode.BAD_REQUEST);
+        }
     }
 }

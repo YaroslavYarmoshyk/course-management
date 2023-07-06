@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum UserCourseStatus implements DatabaseEnum {
-    STARTED("S"), FINISHED("F");
+    STARTED("S"), COMPLETED("C");
 
     private final String dbAlias;
 

@@ -13,5 +13,5 @@ public class CourseFeedback {
     private Long studentId;
     private Long instructorId;
     private String feedback;
-    private LocalDateTime feedbackDate;
+    private LocalDateTime feedbackSubmissionDate;
 }

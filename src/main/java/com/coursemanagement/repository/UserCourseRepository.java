@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserCourseRepository extends JpaRepository<UserCourseEntity, Long> {
@@ -16,4 +17,7 @@ public interface UserCourseRepository extends JpaRepository<UserCourseEntity, Lo
 
     @Query(name = "findStudentsByCourseCode")
     List<UserCourseEntity> findStudentsByCourseCode(final Long courseCode);
+
+    @EntityGraph(attributePaths = {"user", "course"})
+    Optional<UserCourseEntity> findByUserIdAndCourseCode(final Long userId, final Long courseCode);
 }

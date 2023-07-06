@@ -1,7 +1,7 @@
 package com.coursemanagement.rest.dto;
 
 public record CourseAssignmentRequestDto(
-        Long userId,
+        Long instructorId,
         Long courseCode
 ) {
 }

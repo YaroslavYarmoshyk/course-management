@@ -5,12 +5,12 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface LessonMarkRepository extends JpaRepository<LessonMarkEntity, Long> {
 
-    List<LessonMarkEntity> findAllByStudentIdAndLessonCourseCode(final Long userId, final Long courseCode);
+    Set<LessonMarkEntity> findAllByStudentIdAndLessonCourseCode(final Long studentId, final Long courseCode);
 
     @EntityGraph(attributePaths = {"student", "lesson", "instructor"})
     LessonMarkEntity findLessonMarkById(final Long lessonMarkId);

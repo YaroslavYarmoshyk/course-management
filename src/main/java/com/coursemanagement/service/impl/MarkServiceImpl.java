@@ -5,7 +5,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.LessonMark;
 import com.coursemanagement.repository.LessonMarkRepository;
 import com.coursemanagement.repository.entity.LessonMarkEntity;
-import com.coursemanagement.rest.dto.LessonInfoDto;
+import com.coursemanagement.rest.dto.LessonDto;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.coursemanagement.util.Constants.ZERO_MARK_VALUE;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
@@ -26,7 +27,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class MarkServiceImpl implements MarkService {
     private final LessonMarkRepository lessonMarkRepository;
     private final ModelMapper mapper;
-    private static final double ZERO_MARK_VALUE = 0.0;
 
     @Override
     public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId,
@@ -48,7 +48,7 @@ public class MarkServiceImpl implements MarkService {
     private static MarkAssignmentResponseDto getMarkAssignmentResponseDto(final LessonMarkEntity lessonMarkEntity) {
         return new MarkAssignmentResponseDto(
                 new UserDto(lessonMarkEntity.getStudent()),
-                new LessonInfoDto(lessonMarkEntity.getLesson()),
+                new LessonDto(lessonMarkEntity.getLesson()),
                 new UserDto(lessonMarkEntity.getInstructor()),
                 lessonMarkEntity.getMark(),
                 lessonMarkEntity.getMarkSubmissionDate()
@@ -56,26 +56,38 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public CourseMark getStudentCourseMark(final Long studentId, final Long courseCode) {
-        final Map<Long, Double> averageMarkPerLesson = lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
+    public Map<Long, BigDecimal> getAverageLessonMarksForStudentPerCourse(final Long studentId, final Long courseCode) {
+        return lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, courseCode).stream()
                 .map(lessonMarkEntity -> mapper.map(lessonMarkEntity, LessonMark.class))
-                .filter(lessonMark -> lessonMark.getMark() != null)
                 .collect(Collectors.groupingBy(
                         LessonMark::getLessonId,
-                        Collectors.averagingDouble(lessonMark -> lessonMark.getMark().getValue().doubleValue())
+                        Collectors.collectingAndThen(
+                                Collectors.averagingDouble(mark -> mark.getMark().getValue().doubleValue()),
+                                BigDecimal::valueOf
+                        )
                 ));
+    }
 
-        double average = averageMarkPerLesson.values().stream()
-                .mapToDouble(Double::doubleValue)
-                .average()
-                .orElse(ZERO_MARK_VALUE);
-        final BigDecimal markValue = BigDecimal.valueOf(average);
+    @Override
+    public CourseMark getStudentCourseMark(final Long studentId, final Long courseCode) {
+        final Map<Long, BigDecimal> averageLessonMarks = getAverageLessonMarksForStudentPerCourse(studentId, courseCode);
+        final BigDecimal courseMarkValue = getCourseMarkValue(averageLessonMarks);
+        final Mark courseMark = Mark.of(courseMarkValue);
 
         return CourseMark.courseMark()
                 .withCourseCode(courseCode)
                 .withStudentId(studentId)
-                .withMarkValue(markValue)
-                .withMark(Mark.of(markValue))
+                .withLessonMarks(averageLessonMarks)
+                .withMarkValue(courseMarkValue)
+                .withMark(courseMark)
                 .build();
+    }
+
+    private static BigDecimal getCourseMarkValue(final Map<Long, BigDecimal> averageLessonMarks) {
+        final double finalMarkValue = averageLessonMarks.values().stream()
+                .mapToDouble(BigDecimal::doubleValue)
+                .average()
+                .orElse(ZERO_MARK_VALUE);
+        return BigDecimal.valueOf(finalMarkValue);
     }
 }

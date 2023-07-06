@@ -1,0 +1,50 @@
+package com.coursemanagement.rest;
+
+import com.coursemanagement.annotation.CurrentUser;
+import com.coursemanagement.annotation.InstructorAccessLevel;
+import com.coursemanagement.model.File;
+import com.coursemanagement.model.User;
+import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
+import com.coursemanagement.service.HomeworkService;
+import com.coursemanagement.service.LessonService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequestMapping("/api/lessons")
+@RequiredArgsConstructor
+public class LessonResource {
+    private final LessonService lessonService;
+    private final HomeworkService homeworkService;
+
+    @InstructorAccessLevel
+    @PostMapping(value = "/assign-mark")
+    public MarkAssignmentResponseDto markLesson(@CurrentUser final User user,
+                                                @RequestBody final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        return lessonService.assignMarkToUserLesson(user.getId(), markAssigmentRequestDto);
+    }
+
+    @PostMapping(value = "/{lesson-id}/homework/upload")
+    public void uploadHomework(@CurrentUser final User student,
+                               @PathVariable(value = "lesson-id") final Long lessonId,
+                               @RequestParam(value = "file") final MultipartFile homework) {
+        homeworkService.uploadHomework(student.getId(), lessonId, homework);
+    }
+
+    @GetMapping(value = "/homework/download/{file-id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> uploadHomework(@CurrentUser final User user,
+                                                 @PathVariable(value = "file-id") final Long fileId) {
+        final File homework = homeworkService.downloadHomework(user.getId(), fileId);
+        return ResponseEntity.ok(homework.getFileContent());
+    }
+}

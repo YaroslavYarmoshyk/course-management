@@ -26,4 +26,6 @@ public final class Constants {
 
     public static final int MARK_CONVERTER_SCALE = 0;
     public static final RoundingMode MARK_ROUNDING_MODE = RoundingMode.HALF_UP;
+
+    public static final double ZERO_MARK_VALUE = 0.0;
 }

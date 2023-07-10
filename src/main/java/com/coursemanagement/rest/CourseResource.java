@@ -2,6 +2,7 @@ package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.AdminAccessLevel;
 import com.coursemanagement.annotation.CurrentUser;
+import com.coursemanagement.annotation.CurrentUserId;
 import com.coursemanagement.annotation.InstructorAccessLevel;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;
@@ -39,8 +40,8 @@ public class CourseResource {
     private final CourseManagementService courseManagementService;
 
     @GetMapping
-    public Set<CourseDto> getUserCourses(@CurrentUser final User user) {
-        return courseService.getCoursesByUserId(user.getId());
+    public Set<CourseDto> getUserCourses(@CurrentUserId final Long userId) {
+        return courseService.getCoursesByUserId(userId);
     }
 
     @PostMapping(value = "/enrollments")
@@ -71,20 +72,20 @@ public class CourseResource {
     }
 
     @GetMapping(value = "/{course-code}/lessons")
-    public Set<StudentLessonDto> getLessonsPerCourse(@CurrentUser final User user,
+    public Set<StudentLessonDto> getLessonsPerCourse(@CurrentUserId final Long userId,
                                                      @PathVariable(value = "course-code") final Long courseCode) {
-        return lessonService.getStudentLessonsWithContentPerCourse(user.getId(), courseCode);
+        return lessonService.getStudentLessonsWithContentPerCourse(userId, courseCode);
     }
 
     @GetMapping(value = "/{course-code}/complete")
-    public StudentCourseDto completeCourse(@CurrentUser final User student,
+    public StudentCourseDto completeCourse(@CurrentUserId final Long studentId,
                                            @PathVariable(value = "course-code") final Long courseCode) {
-        return courseManagementService.completeStudentCourse(student.getId(), courseCode);
+        return courseManagementService.completeStudentCourse(studentId, courseCode);
     }
 
     @GetMapping(value = "/{course-code}/final-mark")
-    public CourseMark getStudentCourseMark(@CurrentUser final User student,
+    public CourseMark getStudentCourseMark(@CurrentUserId final Long studentId,
                                            @PathVariable(value = "course-code") final Long courseCode) {
-        return courseService.getStudentCourseFinalMark(student.getId(), courseCode);
+        return courseService.getStudentCourseFinalMark(studentId, courseCode);
     }
 }

@@ -1,9 +1,8 @@
 package com.coursemanagement.rest;
 
-import com.coursemanagement.annotation.CurrentUser;
+import com.coursemanagement.annotation.CurrentUserId;
 import com.coursemanagement.annotation.InstructorAccessLevel;
 import com.coursemanagement.model.File;
-import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.HomeworkService;
@@ -29,22 +28,22 @@ public class LessonResource {
 
     @InstructorAccessLevel
     @PostMapping(value = "/assign-mark")
-    public MarkAssignmentResponseDto markLesson(@CurrentUser final User user,
+    public MarkAssignmentResponseDto markLesson(@CurrentUserId final Long userId,
                                                 @RequestBody final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        return lessonService.assignMarkToUserLesson(user.getId(), markAssigmentRequestDto);
+        return lessonService.assignMarkToUserLesson(userId, markAssigmentRequestDto);
     }
 
     @PostMapping(value = "/{lesson-id}/homework/upload")
-    public void uploadHomework(@CurrentUser final User student,
+    public void uploadHomework(@CurrentUserId final Long studentId,
                                @PathVariable(value = "lesson-id") final Long lessonId,
                                @RequestParam(value = "file") final MultipartFile homework) {
-        homeworkService.uploadHomework(student.getId(), lessonId, homework);
+        homeworkService.uploadHomework(studentId, lessonId, homework);
     }
 
     @GetMapping(value = "/homework/download/{file-id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<byte[]> uploadHomework(@CurrentUser final User user,
+    public ResponseEntity<byte[]> uploadHomework(@CurrentUserId final Long userId,
                                                  @PathVariable(value = "file-id") final Long fileId) {
-        final File homework = homeworkService.downloadHomework(user.getId(), fileId);
+        final File homework = homeworkService.downloadHomework(userId, fileId);
         return ResponseEntity.ok(homework.getFileContent());
     }
 }

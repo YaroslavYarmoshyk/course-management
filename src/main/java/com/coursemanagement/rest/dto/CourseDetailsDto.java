@@ -33,4 +33,16 @@ public record CourseDetailsDto(
                 userCourse.getAccomplishmentDate()
         );
     }
+
+    public CourseDetailsDto(final UserCourse userCourse) {
+        this(
+                userCourse.getCourse().getCode(),
+                userCourse.getCourse().getSubject(),
+                userCourse.getCourse().getDescription(),
+                null,
+                userCourse.getStatus(),
+                null,
+                userCourse.getAccomplishmentDate()
+        );
+    }
 }

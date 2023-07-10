@@ -17,6 +17,7 @@ import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.MarkService;
+import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -99,6 +100,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseDetailsDto getCourseDetails(final Long studentId, final Long courseCode) {
         final UserCourse userCourse = getUserCourse(studentId, courseCode);
+        if (AuthorizationUtil.isCurrentUserAdminOrInstructor()) {
+            return new CourseDetailsDto(userCourse);
+        }
         final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
         return new CourseDetailsDto(userCourse, courseMark);
     }

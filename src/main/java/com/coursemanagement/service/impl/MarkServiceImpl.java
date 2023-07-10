@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.coursemanagement.util.Constants.ZERO_MARK_VALUE;
+import static com.coursemanagement.util.Constants.*;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
@@ -63,7 +63,7 @@ public class MarkServiceImpl implements MarkService {
                         LessonMark::getLessonId,
                         Collectors.collectingAndThen(
                                 Collectors.averagingDouble(mark -> mark.getMark().getValue().doubleValue()),
-                                BigDecimal::valueOf
+                                doubleValue -> BigDecimal.valueOf(doubleValue).setScale(MARK_ROUNDING_SCALE, MARK_ROUNDING_MODE)
                         )
                 ));
     }
@@ -84,10 +84,13 @@ public class MarkServiceImpl implements MarkService {
     }
 
     private static BigDecimal getCourseMarkValue(final Map<Long, BigDecimal> averageLessonMarks) {
+        if (averageLessonMarks.isEmpty()) {
+            return null;
+        }
         final double finalMarkValue = averageLessonMarks.values().stream()
                 .mapToDouble(BigDecimal::doubleValue)
                 .average()
                 .orElse(ZERO_MARK_VALUE);
-        return BigDecimal.valueOf(finalMarkValue);
+        return BigDecimal.valueOf(finalMarkValue).setScale(MARK_ROUNDING_SCALE, MARK_ROUNDING_MODE);
     }
 }

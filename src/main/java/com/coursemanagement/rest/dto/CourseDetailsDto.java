@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
 
-public record StudentCourseDto(
+public record CourseDetailsDto(
         Long code,
         String subject,
         String description,
@@ -22,7 +22,7 @@ public record StudentCourseDto(
         @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
         LocalDateTime accomplishmentDate
 ) {
-    public StudentCourseDto(final UserCourse userCourse, final CourseMark courseMark) {
+    public CourseDetailsDto(final UserCourse userCourse, final CourseMark courseMark) {
         this(
                 userCourse.getCourse().getCode(),
                 userCourse.getCourse().getSubject(),

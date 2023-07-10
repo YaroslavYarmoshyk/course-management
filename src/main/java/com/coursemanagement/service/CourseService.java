@@ -5,6 +5,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseDto;
+import com.coursemanagement.rest.dto.CourseDetailsDto;
 import com.coursemanagement.rest.dto.UserDto;
 
 import java.util.Collection;
@@ -27,6 +28,8 @@ public interface CourseService {
     void addUserToCourses(final User student, final Collection<Long> courses);
 
     boolean isUserAssociatedWithCourse(final Long userId, final Long courseCode);
+
+    CourseDetailsDto getCourseDetails(final Long studentId, final Long courseCode);
 
     CourseMark getStudentCourseFinalMark(final Long studentId, final Long courseCode);
 }

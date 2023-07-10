@@ -12,6 +12,7 @@ import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import com.coursemanagement.rest.dto.CourseDetailsDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseService;
@@ -93,6 +94,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public boolean isUserAssociatedWithCourse(final Long userId, final Long courseCode) {
         return courseRepository.existsByUserCoursesUserIdAndCode(userId, courseCode);
+    }
+
+    @Override
+    public CourseDetailsDto getCourseDetails(final Long studentId, final Long courseCode) {
+        final UserCourse userCourse = getUserCourse(studentId, courseCode);
+        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
+        return new CourseDetailsDto(userCourse, courseMark);
     }
 
     @Override

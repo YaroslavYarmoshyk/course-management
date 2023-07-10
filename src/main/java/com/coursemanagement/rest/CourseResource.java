@@ -8,10 +8,10 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.CourseDetailsDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
-import com.coursemanagement.rest.dto.StudentCourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.StudentLessonDto;
@@ -65,6 +65,12 @@ public class CourseResource {
         return feedbackService.provideFeedbackToUserCourse(instructor, feedbackRequestDto);
     }
 
+    @GetMapping(value = "/{course-code}")
+    public CourseDetailsDto getCourseDetails(@CurrentUserId final Long studentId,
+                                             @PathVariable(value = "course-code") final Long courseCode) {
+        return courseService.getCourseDetails(studentId, courseCode);
+    }
+
     @InstructorAccessLevel
     @GetMapping(value = "/{course-code}/students")
     public Set<UserDto> getStudentsPerCourse(@PathVariable(value = "course-code") final Long courseCode) {
@@ -77,10 +83,8 @@ public class CourseResource {
         return lessonService.getStudentLessonsWithContentPerCourse(userId, courseCode);
     }
 
-    //    TODO: add /{course-code}/student-information endpoint which will return StudentCourseDto
-
     @GetMapping(value = "/{course-code}/complete")
-    public StudentCourseDto completeCourse(@CurrentUserId final Long studentId,
+    public CourseDetailsDto completeCourse(@CurrentUserId final Long studentId,
                                            @PathVariable(value = "course-code") final Long courseCode) {
         return courseManagementService.completeStudentCourse(studentId, courseCode);
     }

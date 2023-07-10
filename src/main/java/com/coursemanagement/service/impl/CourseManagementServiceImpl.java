@@ -5,11 +5,13 @@ import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.Course;
+import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDto;
+import com.coursemanagement.rest.dto.StudentCourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
@@ -25,12 +27,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -137,7 +142,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     @Override
-    public CourseDto completeStudentCourse(final Long studentId, final Long courseCode) {
+    public StudentCourseDto completeStudentCourse(final Long studentId, final Long courseCode) {
         final UserCourse studentCourse = courseService.getUserCourse(studentId, courseCode);
         final Set<Lesson> lessonsPerCourse = lessonService.getLessonsPerCourse(courseCode);
         final Map<Long, BigDecimal> averageLessonMarks = markService.getAverageLessonMarksForStudentPerCourse(studentId, courseCode);
@@ -145,8 +150,10 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         validateStudentLessonCompletion(lessonsPerCourse, averageLessonMarks);
 
         studentCourse.setStatus(UserCourseStatus.COMPLETED);
+        studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
         final UserCourse completedStudentCourse = courseService.saveUserCourse(studentCourse);
-        return new CourseDto(completedStudentCourse);
+        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
+        return new StudentCourseDto(completedStudentCourse, courseMark);
     }
 
     private static void validateStudentLessonCompletion(final Set<Lesson> lessonsPerCourse,

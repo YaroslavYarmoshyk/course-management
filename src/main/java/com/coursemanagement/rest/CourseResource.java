@@ -10,6 +10,7 @@ import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
+import com.coursemanagement.rest.dto.StudentCourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.StudentLessonDto;
@@ -76,8 +77,8 @@ public class CourseResource {
     }
 
     @GetMapping(value = "/{course-code}/complete")
-    public CourseDto completeCourse(@CurrentUser final User student,
-                                    @PathVariable(value = "course-code") final Long courseCode) {
+    public StudentCourseDto completeCourse(@CurrentUser final User student,
+                                           @PathVariable(value = "course-code") final Long courseCode) {
         return courseManagementService.completeStudentCourse(student.getId(), courseCode);
     }
 

@@ -20,14 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -89,7 +86,6 @@ public class CourseServiceImpl implements CourseService {
         for (final CourseEntity courseEntity : courseEntities) {
             final Set<UserCourseEntity> userCourseEntities = courseEntity.getUserCourses();
             userCourseEntities.add(new UserCourseEntity(userEntity, courseEntity));
-            reEnrollFinishedCourses(userCourseEntities);
         }
         courseRepository.saveAll(courseEntities);
     }
@@ -97,17 +93,6 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public boolean isUserAssociatedWithCourse(final Long userId, final Long courseCode) {
         return courseRepository.existsByUserCoursesUserIdAndCode(userId, courseCode);
-    }
-
-    private static void reEnrollFinishedCourses(final Set<UserCourseEntity> userCourseEntities) {
-        for (final UserCourseEntity userCourseEntity : userCourseEntities) {
-            final UserCourseStatus status = userCourseEntity.getStatus();
-            if (Objects.equals(status, UserCourseStatus.COMPLETED)) {
-                userCourseEntity.setStatus(UserCourseStatus.STARTED);
-                userCourseEntity.setEnrollmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
-                userCourseEntity.setAccomplishmentDate(null);
-            }
-        }
     }
 
     @Override

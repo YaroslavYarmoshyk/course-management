@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.coursemanagement.util.Constants.MARK_CONVERTER_SCALE;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
@@ -24,11 +25,17 @@ public enum Mark implements DatabaseEnum {
     private final BigDecimal value;
 
     public static Mark of(final BigDecimal value) {
-        final BigDecimal roundedValue = value.setScale(MARK_CONVERTER_SCALE, MARK_ROUNDING_MODE);
+        return Optional.ofNullable(value)
+                .map(Mark::getMarkByValue)
+                .orElse(null);
+    }
+
+    private static Mark getMarkByValue(final BigDecimal markValue) {
+        final BigDecimal roundedValue = markValue.setScale(MARK_CONVERTER_SCALE, MARK_ROUNDING_MODE);
         return Arrays.stream(Mark.values())
                 .filter(mark -> Objects.equals(mark.getValue(), roundedValue))
                 .findAny()
-                .orElseThrow(() -> new SystemException("Cannot parse " + value + " to mark", SystemErrorCode.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new SystemException("Cannot parse " + roundedValue + " to mark", SystemErrorCode.INTERNAL_SERVER_ERROR));
     }
 
     @Override

@@ -18,6 +18,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -67,7 +69,8 @@ public class LessonServiceImpl implements LessonService {
 
         return lessonsPerCourse.stream()
                 .map(toStudentLesson(lessonContents, lessonMarks))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(StudentLessonDto::id))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     private static Function<Lesson, StudentLessonDto> toStudentLesson(final Map<Long, Set<LessonContent>> lessonContents,

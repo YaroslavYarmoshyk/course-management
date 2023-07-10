@@ -3,9 +3,11 @@ package com.coursemanagement.config;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.repository.entity.UserEntity;
 import org.hibernate.collection.spi.LazyInitializable;
 import org.hibernate.jpa.internal.util.PersistenceUtilHelper;
 import org.modelmapper.Condition;
@@ -30,6 +32,7 @@ public class MapperConfiguration {
         final ModelMapper modelMapper = new ModelMapper();
         addRoleMapping(modelMapper);
         addCourseMapping(modelMapper);
+        addUserCourseMapping(modelMapper);
 
         modelMapper.getConfiguration()
                 .setPropertyCondition(Conditions.isNotNull())
@@ -88,5 +91,20 @@ public class MapperConfiguration {
     private static <T> boolean isLoaded(final T object) {
         final String loadedState = PersistenceUtilHelper.isLoaded(object).name();
         return ALLOWED_PERSISTENCE_LOADING_STATES.contains(loadedState);
+    }
+
+    private static void addUserCourseMapping(final ModelMapper modelMapper) {
+        final Converter<UserCourse, UserCourseEntity> userCourseToUserCourseEntityConverter = context -> {
+            final UserCourse userCourse = context.getSource();
+            final UserEntity userEntity = modelMapper.map(userCourse.getUser(), UserEntity.class);
+            final CourseEntity courseEntity = modelMapper.map(userCourse.getCourse(), CourseEntity.class);
+            final UserCourseEntity userCourseEntity = new UserCourseEntity(userEntity, courseEntity);
+            userCourseEntity.setStatus(userCourse.getStatus());
+            userCourseEntity.setEnrollmentDate(userCourse.getEnrollmentDate());
+            userCourseEntity.setAccomplishmentDate(userCourse.getAccomplishmentDate());
+            return userCourseEntity;
+        };
+        modelMapper.createTypeMap(UserCourse.class, UserCourseEntity.class)
+                .setConverter(userCourseToUserCourseEntityConverter);
     }
 }

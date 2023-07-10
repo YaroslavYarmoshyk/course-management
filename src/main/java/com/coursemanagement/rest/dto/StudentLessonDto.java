@@ -14,8 +14,8 @@ public record StudentLessonDto(
         String description,
         @JsonIgnoreProperties(value = "lessonId")
         Set<LessonContent> lessonContent,
-        BigDecimal averageMark,
-        Mark finalMark
+        BigDecimal markValue,
+        Mark mark
 ) {
 
     public StudentLessonDto(

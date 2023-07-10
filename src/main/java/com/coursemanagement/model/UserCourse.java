@@ -19,8 +19,8 @@ public class UserCourse {
     private UserCourseStatus status;
 
     @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
-    private LocalDateTime enrollment_date;
+    private LocalDateTime enrollmentDate;
 
     @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)
-    private LocalDateTime accomplishment_date;
+    private LocalDateTime accomplishmentDate;
 }

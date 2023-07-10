@@ -77,6 +77,8 @@ public class CourseResource {
         return lessonService.getStudentLessonsWithContentPerCourse(userId, courseCode);
     }
 
+    //    TODO: add /{course-code}/student-information endpoint which will return StudentCourseDto
+
     @GetMapping(value = "/{course-code}/complete")
     public StudentCourseDto completeCourse(@CurrentUserId final Long studentId,
                                            @PathVariable(value = "course-code") final Long courseCode) {

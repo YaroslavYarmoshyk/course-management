@@ -147,7 +147,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         final Set<Lesson> lessonsPerCourse = lessonService.getLessonsPerCourse(courseCode);
         final Map<Long, BigDecimal> averageLessonMarks = markService.getAverageLessonMarksForStudentPerCourse(studentId, courseCode);
 
-        validateStudentLessonCompletion(lessonsPerCourse, averageLessonMarks);
+        validateStudentCourseCompletion(lessonsPerCourse, averageLessonMarks);
 
         studentCourse.setStatus(UserCourseStatus.COMPLETED);
         studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
@@ -156,7 +156,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         return new StudentCourseDto(completedStudentCourse, courseMark);
     }
 
-    private static void validateStudentLessonCompletion(final Set<Lesson> lessonsPerCourse,
+    private static void validateStudentCourseCompletion(final Set<Lesson> lessonsPerCourse,
                                                         final Map<Long, BigDecimal> averageLessonMarks) {
         final Set<Long> gradedLessonIds = averageLessonMarks.keySet();
         final boolean areAllLessonsGraded = lessonsPerCourse.stream()

@@ -6,9 +6,12 @@ import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
-import jakarta.annotation.PostConstruct;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,12 +26,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest(showSql = false)
 @ExtendWith(DatabaseSetupExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @EnableConfigurationProperties(UserTestDataProperties.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest {
@@ -36,25 +39,23 @@ class UserRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private UserTestDataProperties userTestDataProperties;
-    public static User ADMIN;
+    private User admin;
 
-    @PostConstruct
-    public void init() {
-        ADMIN = userTestDataProperties.getAdmin();
+    @BeforeEach
+    void setUp() {
+        admin = userTestDataProperties.getAdmin();
     }
 
     @Test
+    @Order(1)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user by email with fetched roles")
-    void shouldReturnUserWithFetchedRolesByEmail() {
-        final String adminEmail = ADMIN.getEmail();
+    void testFindUserByEmail_Roles_Are_Fetched() {
+        final String adminEmail = admin.getEmail();
         final Optional<UserEntity> userByEmail = userRepository.findByEmail(adminEmail);
         assertTrue(userByEmail.isPresent());
 
-        final UserEntity userEntity = userByEmail.get();
-        assertEquals(adminEmail, userEntity.getEmail());
-
-        final Set<Role> actualRoles = userEntity.getRoles()
+        final Set<Role> actualRoles = userByEmail.get().getRoles()
                 .stream()
                 .map(RoleEntity::getRole)
                 .sorted()
@@ -66,17 +67,15 @@ class UserRepositoryTest {
     }
 
     @Test
+    @Order(2)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user by id with fetched roles")
-    void shouldReturnUserWithFetchedRolesById() {
-        final Long id = ADMIN.getId();
+    void testFindUserById_Roles_Are_Fetched() {
+        final Long id = admin.getId();
         final Optional<UserEntity> userById = userRepository.findById(id);
         assertTrue(userById.isPresent());
 
-        final UserEntity userEntity = userById.get();
-        assertEquals(id, userEntity.getId());
-
-        final Set<Role> actualRoles = userEntity.getRoles()
+        final Set<Role> actualRoles = userById.get().getRoles()
                 .stream()
                 .map(RoleEntity::getRole)
                 .sorted()

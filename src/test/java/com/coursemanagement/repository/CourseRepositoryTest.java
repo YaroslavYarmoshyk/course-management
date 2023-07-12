@@ -52,7 +52,7 @@ class CourseRepositoryTest {
     @Test
     @Order(1)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting course by code with user courses")
+    @DisplayName(value = "Test find course by code with fetched user courses")
     @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindCourseByCode_UserCourse_Is_Fetched() {
         final Optional<CourseEntity> courseEntityOptional = courseRepository.findByCode(mathematicsCourseCode);
@@ -66,7 +66,7 @@ class CourseRepositoryTest {
     @Test
     @Order(2)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting course by code with users")
+    @DisplayName(value = "Test find course by code with fetched users")
     @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindCourseByCode_Users_Are_Fetched() {
         final Optional<CourseEntity> courseEntityOptional = courseRepository.findByCode(mathematicsCourseCode);
@@ -85,7 +85,7 @@ class CourseRepositoryTest {
     @Test
     @Order(3)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting course by code with user roles")
+    @DisplayName(value = "Test find course by code with fetched user roles")
     @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindCourseByCode_User_Roles_Are_Fetched() {
         final Optional<CourseEntity> courseEntityOptional = courseRepository.findByCode(mathematicsCourseCode);
@@ -105,7 +105,7 @@ class CourseRepositoryTest {
     @Test
     @Order(4)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting all courses by codes with user courses")
+    @DisplayName(value = "Test find all courses by codes with fetched user courses")
     @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindAllCoursesByCodeIn_UserCourses_Are_Fetched() {
         final Set<Long> courseCodes = Set.of(mathematicsCourseCode, historyCourseCode);

@@ -46,7 +46,7 @@ class LessonMarkRepositoryTest {
     @Test
     @Order(1)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting lesson mark by id with student")
+    @DisplayName(value = "Test find lesson mark by id with fetched student")
     @Sql(value = "/scripts/add_lesson_marks.sql")
     void testFindLessonMarkById_Student_Is_Fetched() {
         final LessonMarkEntity lessonMarkEntity = lessonMarkRepository.findLessonMarkById(1L);
@@ -59,7 +59,7 @@ class LessonMarkRepositoryTest {
     @Test
     @Order(2)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting lesson mark by id with lesson")
+    @DisplayName(value = "Test find lesson mark by id with fetched lesson")
     @Sql(value = "/scripts/add_lesson_marks.sql")
     void testFindLessonMarkById_Lesson_Is_Fetched() {
         final LessonMarkEntity lessonMarkEntity = lessonMarkRepository.findLessonMarkById(1L);
@@ -72,7 +72,7 @@ class LessonMarkRepositoryTest {
     @Test
     @Order(3)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting lesson mark by id with instructor")
+    @DisplayName(value = "Test find lesson mark by id with fetched instructor")
     @Sql(value = "/scripts/add_lesson_marks.sql")
     void testFindLessonMarkById_Instructor_Is_Fetched() {
         final LessonMarkEntity lessonMarkEntity = lessonMarkRepository.findLessonMarkById(1L);

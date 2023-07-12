@@ -45,7 +45,7 @@ class UserRepositoryTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting user by email with fetched roles")
+    @DisplayName(value = "Test find user by email with fetched roles")
     void shouldReturnUserWithFetchedRolesByEmail() {
         final String adminEmail = ADMIN.getEmail();
         final Optional<UserEntity> userByEmail = userRepository.findByEmail(adminEmail);
@@ -67,7 +67,7 @@ class UserRepositoryTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName(value = "Test getting user by id with fetched roles")
+    @DisplayName(value = "Test find user by id with fetched roles")
     void shouldReturnUserWithFetchedRolesById() {
         final Long id = ADMIN.getId();
         final Optional<UserEntity> userById = userRepository.findById(id);

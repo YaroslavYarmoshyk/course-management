@@ -19,3 +19,13 @@ users:
     id: 3
     email: goldlannister@gmail.com
     password: passw@rd-2
+
+courses:
+  mathematics:
+    code: 22324
+    subject: Mathematics
+    description: Introductory course on mathematics
+  history:
+    code: 34432
+    subject: History
+    description: Overview of world history

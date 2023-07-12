@@ -1,4 +1,4 @@
-package com.coursemanagement.config;
+package com.coursemanagement.config.properties;
 
 import com.coursemanagement.model.User;
 import lombok.Data;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "users")
-public class UserProperties {
+public class UserTestDataProperties {
     private User admin;
     private User instructor;
     private User student;

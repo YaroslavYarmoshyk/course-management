@@ -1,7 +1,7 @@
 package com.coursemanagement.repository;
 
 import com.coursemanagement.config.DatabaseSetupExtension;
-import com.coursemanagement.config.UserProperties;
+import com.coursemanagement.config.properties.UserTestDataProperties;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.entity.RoleEntity;
@@ -29,18 +29,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest(showSql = false)
 @ExtendWith(DatabaseSetupExtension.class)
-@EnableConfigurationProperties(UserProperties.class)
+@EnableConfigurationProperties(UserTestDataProperties.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserProperties userProperties;
+    private UserTestDataProperties userTestDataProperties;
     public static User ADMIN;
 
     @PostConstruct
     public void init() {
-        ADMIN = userProperties.getAdmin();
+        ADMIN = userTestDataProperties.getAdmin();
     }
 
     @Test

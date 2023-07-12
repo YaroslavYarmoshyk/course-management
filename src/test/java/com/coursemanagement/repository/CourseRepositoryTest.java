@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DataJpaTest(showSql = false)
 @ExtendWith(DatabaseSetupExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@EnableConfigurationProperties({CourseTestDataProperties.class})
+@EnableConfigurationProperties(CourseTestDataProperties.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CourseRepositoryTest {
     @Autowired

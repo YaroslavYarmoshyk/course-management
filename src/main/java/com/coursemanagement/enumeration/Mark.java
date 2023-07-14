@@ -2,6 +2,7 @@ package com.coursemanagement.enumeration;
 
 import com.coursemanagement.enumeration.converter.DatabaseEnum;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

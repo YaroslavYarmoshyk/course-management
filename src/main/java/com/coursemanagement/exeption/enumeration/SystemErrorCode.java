@@ -1,4 +1,4 @@
-package com.coursemanagement.enumeration;
+package com.coursemanagement.exeption.enumeration;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +14,5 @@ public enum SystemErrorCode {
     @Getter
     private final int value;
     @Getter
-    private final String text;
+    private final String description;
 }

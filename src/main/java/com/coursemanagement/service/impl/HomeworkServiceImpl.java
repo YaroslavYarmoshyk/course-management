@@ -1,7 +1,7 @@
 package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.FileType;
-import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.File;
 import com.coursemanagement.repository.HomeworkRepository;

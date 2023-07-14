@@ -1,6 +1,6 @@
 package com.coursemanagement.exeption;
 
-import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import lombok.Getter;
 
 public class SystemException extends RuntimeException {

@@ -12,7 +12,6 @@ import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EncryptionService;
 import com.coursemanagement.service.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,16 +28,27 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private final ConfirmationTokenRepository tokenRepository;
     private final EncryptionService encryptionService;
     private final UserService userService;
     private final ModelMapper mapper;
-    @Value("${token.confirmation.expiration-time.email}")
-    private Long emailTokenExpirationTime;
-    @Value("${token.confirmation.expiration-time.reset-password}")
-    private Long resetPasswordTokenExpirationTime;
+    private final Long emailTokenExpirationTime;
+    private final Long resetPasswordTokenExpirationTime;
+
+    public ConfirmationTokenServiceImpl(@Value("${token.confirmation.expiration-time.email}") final Long emailTokenExpirationTime,
+                                        @Value("${token.confirmation.expiration-time.reset-password}") final Long resetPasswordTokenExpirationTime,
+                                        final ConfirmationTokenRepository tokenRepository,
+                                        final EncryptionService encryptionService,
+                                        final UserService userService,
+                                        final ModelMapper mapper) {
+        this.emailTokenExpirationTime = emailTokenExpirationTime;
+        this.resetPasswordTokenExpirationTime = resetPasswordTokenExpirationTime;
+        this.tokenRepository = tokenRepository;
+        this.encryptionService = encryptionService;
+        this.userService = userService;
+        this.mapper = mapper;
+    }
 
     @Override
     @Transactional

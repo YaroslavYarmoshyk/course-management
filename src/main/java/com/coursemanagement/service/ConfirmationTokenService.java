@@ -10,8 +10,6 @@ public interface ConfirmationTokenService {
 
     ConfirmationToken createResetPasswordToken(final User user);
 
-    ConfirmationToken getByTokenAndType(final String token, final TokenType type);
-
     ConfirmationToken confirmToken(final String token, final TokenType type);
 
     User confirmUserByEmailToken(final String token);

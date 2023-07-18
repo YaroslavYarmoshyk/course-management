@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,7 +32,11 @@ import java.util.stream.LongStream;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 import static com.coursemanagement.util.TestUtil.STUDENT;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -53,7 +58,7 @@ class ConfirmationTokenServiceImplTest {
     private static final Long EMAIL_TOKEN_EXPIRATION_HOURS = 2L;
     private static final Long RESET_PASSWORD_TOKEN_EXPIRATION_MINUTES = 90L;
     private static final Long TEST_TOKEN_EXPIRATION_SECONDS = 5L;
-    private static final Long START_IDS_NUMBER = 1L;
+    private static final Long START_TEST_IDS_NUMBER = 1L;
 
 
     @BeforeEach
@@ -74,7 +79,7 @@ class ConfirmationTokenServiceImplTest {
     @Order(1)
     @DisplayName("Verify old tokens get invalidated when a new email confirmation token is created")
     void whenCreateEmailConfirmationToken_thenOldTokensShouldBeInvalidated() {
-        final Set<ConfirmationTokenEntity> tokenEntities = generateOldTokenEntities(3, TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
+        final Set<ConfirmationTokenEntity> tokenEntities = generateTokenEntities(3, TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
         when(tokenRepository.findAllByUserIdAndType(any(), any())).thenReturn(tokenEntities);
 
         confirmationTokenService.createEmailConfirmationToken(STUDENT);
@@ -86,10 +91,22 @@ class ConfirmationTokenServiceImplTest {
     @Order(2)
     @DisplayName("Verify old tokens get invalidated when a new reset password confirmation token is created")
     void whenCreateResetPasswordConfirmationToken_thenOldTokensShouldBeInvalidated() {
-        final Set<ConfirmationTokenEntity> tokenEntities = generateOldTokenEntities(2, TokenType.RESET_PASSWORD, TokenStatus.NOT_ACTIVATED);
+        final Set<ConfirmationTokenEntity> tokenEntities = generateTokenEntities(2, TokenType.RESET_PASSWORD, TokenStatus.NOT_ACTIVATED);
         when(tokenRepository.findAllByUserIdAndType(any(), any())).thenReturn(tokenEntities);
 
         confirmationTokenService.createResetPasswordToken(STUDENT);
+
+        verifyOldTokensGetActivated();
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Verify old tokens get invalidated when a new reset password confirmation token is created")
+    void testConfirmEmailToken_getByTokenAndType_FoundEntity() {
+        final ConfirmationTokenEntity tokenEntity = generateTokenEntity(TokenType.EMAIL_CONFIRMATION);
+        when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.of(tokenEntity));
+
+        confirmationTokenService.confirmToken(tokenEntity.getToken(), tokenEntity.getType());
 
         verifyOldTokensGetActivated();
     }
@@ -102,9 +119,9 @@ class ConfirmationTokenServiceImplTest {
                 .allMatch(tokenStatus -> Objects.equals(tokenStatus, TokenStatus.ACTIVATED)));
     }
 
-    private static Set<ConfirmationTokenEntity> generateOldTokenEntities(final int tokenCount, final TokenType tokenType, final TokenStatus tokenStatus) {
+    private static Set<ConfirmationTokenEntity> generateTokenEntities(final int tokenCount, final TokenType tokenType, final TokenStatus tokenStatus) {
         final LocalDateTime expirationDate = LocalDateTime.now(DEFAULT_ZONE_ID).plus(TEST_TOKEN_EXPIRATION_SECONDS, ChronoUnit.SECONDS);
-        return LongStream.rangeClosed(START_IDS_NUMBER, tokenCount)
+        return LongStream.rangeClosed(START_TEST_IDS_NUMBER, tokenCount)
                 .mapToObj(i -> {
                     final ConfirmationTokenEntity tokenEntity = new ConfirmationTokenEntity();
                     tokenEntity.setId(i);
@@ -116,5 +133,11 @@ class ConfirmationTokenServiceImplTest {
                     return tokenEntity;
                 })
                 .collect(Collectors.toSet());
+    }
+
+    private static ConfirmationTokenEntity generateTokenEntity(final TokenType tokenType) {
+        return generateTokenEntities(1, tokenType, TokenStatus.NOT_ACTIVATED).stream()
+                .findFirst()
+                .orElse(new ConfirmationTokenEntity());
     }
 }

@@ -1,6 +1,7 @@
 package com.coursemanagement.enumeration;
 
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 
 import java.util.Optional;
 

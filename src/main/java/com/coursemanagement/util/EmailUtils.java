@@ -1,6 +1,6 @@
 package com.coursemanagement.util;
 
-import com.coursemanagement.enumeration.SystemErrorCode;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

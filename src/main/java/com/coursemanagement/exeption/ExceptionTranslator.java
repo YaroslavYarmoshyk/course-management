@@ -1,7 +1,7 @@
 package com.coursemanagement.exeption;
 
-import com.coursemanagement.enumeration.SystemErrorCode;
-import com.coursemanagement.exeption.dto.ApiErrorDto;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exeption.dto.ErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,24 +18,24 @@ import java.nio.file.AccessDeniedException;
 public class ExceptionTranslator {
 
     @ExceptionHandler(value = SystemException.class)
-    public ResponseEntity<ApiErrorDto> handleSystemException(final SystemException e, final HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleSystemException(final SystemException e, final HttpServletRequest request) {
         log.warn(e.getClass().getSimpleName(), e);
         final SystemErrorCode systemErrorCode = e.getErrorCode();
         final int codeValue = systemErrorCode.getValue();
         final HttpStatus status = HttpStatus.valueOf(codeValue);
-        final ApiErrorDto apiErrorDto = new ApiErrorDto(e, status, request);
-        return ResponseEntity.status(apiErrorDto.getStatus())
+        final ErrorDto errorDto = new ErrorDto(e, status, request);
+        return ResponseEntity.status(errorDto.getStatus())
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(apiErrorDto);
+                .body(errorDto);
     }
 
     @ExceptionHandler(value = {BadCredentialsException.class, AccessDeniedException.class})
-    public ResponseEntity<ApiErrorDto> handleAccessException(final Exception e,
-                                                             final HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleAccessException(final Exception e,
+                                                          final HttpServletRequest request) {
         log.warn(e.getClass().getSimpleName(), e);
-        final ApiErrorDto apiErrorDto = new ApiErrorDto(e, HttpStatus.FORBIDDEN, request);
-        return ResponseEntity.status(apiErrorDto.getStatus())
+        final ErrorDto errorDto = new ErrorDto(e, HttpStatus.FORBIDDEN, request);
+        return ResponseEntity.status(errorDto.getStatus())
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(apiErrorDto);
+                .body(errorDto);
     }
 }

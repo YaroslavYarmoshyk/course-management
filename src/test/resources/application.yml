@@ -22,16 +22,44 @@ spring:
 users:
   admin:
     id: 1
+    firstName: John
+    lastName: Smith
     email: john-smith@gmail.com
     password: passw@rd-1
+    phone: +380974457822
+    status: ACTIVE
+    roles:
+      - ADMIN
   instructor:
     id: 2
+    firstName: Marry
+    lastName: Poppins
     email: poppins@yahoo.com
     password: passw@rd-2
+    phone: +380975697454
+    status: ACTIVE
+    roles:
+      - INSTRUCTOR
   student:
     id: 3
+    firstName: Tyrion
+    lastName: Lannister
     email: goldlannister@gmail.com
-    password: passw@rd-2
+    password: passw@rd-3
+    phone: +380639854660
+    status: ACTIVE
+    roles:
+      - STUDENT
+  new-user:
+    id: 3
+    firstName: Thor
+    lastName: Odinson
+    email: thor-odinson96@gmail.com
+    password: passw@rd-4
+    phone: +380637898875
+    status: ACTIVE
+    roles:
+      - STUDENT
 
 courses:
   mathematics:

@@ -3,7 +3,6 @@ package com.coursemanagement.service.impl;
 import com.coursemanagement.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
-import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
@@ -65,7 +64,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     public ConfirmationToken getByTokenAndType(final String token, final TokenType type) {
         return tokenRepository.findByTokenAndType(token, type)
                 .map(entity -> mapper.map(entity, ConfirmationToken.class))
-                .orElseThrow(() -> new SystemException("Cannot find token in the database ", SystemErrorCode.BAD_REQUEST));
+                .orElseThrow(() -> new SystemException("Cannot find token in the database", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override
@@ -85,15 +84,12 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
         final ConfirmationToken confirmationToken = confirmToken(encodedToken, TokenType.EMAIL_CONFIRMATION);
         final Long userId = confirmationToken.getUserId();
-        final User user = userService.getUserById(userId);
-        user.setStatus(UserStatus.ACTIVE);
-        return userService.save(user);
+        return userService.activateById(userId);
     }
 
     private void invalidateToken(final ConfirmationToken token) {
-        final ConfirmationTokenEntity tokenEntity = mapper.map(token, ConfirmationTokenEntity.class);
-        tokenEntity.setStatus(TokenStatus.ACTIVATED);
-        tokenRepository.save(tokenEntity);
+        token.setStatus(TokenStatus.ACTIVATED);
+        tokenRepository.save(mapper.map(token, ConfirmationTokenEntity.class));
     }
 
     private ConfirmationToken saveConfirmationToken(final User user,

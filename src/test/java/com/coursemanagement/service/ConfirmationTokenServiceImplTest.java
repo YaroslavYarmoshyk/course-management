@@ -64,10 +64,12 @@ class ConfirmationTokenServiceImplTest {
     private UserService userService;
     @Spy
     private ModelMapper mapper;
+
     @RegisterExtension
     private static final UserProviderExtension USER_PROVIDER = new UserProviderExtension();
     @Captor
     private ArgumentCaptor<Set<ConfirmationTokenEntity>> tokenEntitiesCaptor;
+
     private static final Long EMAIL_TOKEN_EXPIRATION_HOURS = 2L;
     private static final Long RESET_PASSWORD_TOKEN_EXPIRATION_MINUTES = 90L;
     private static final Long TEST_TOKEN_EXPIRATION_SECONDS = 5L;
@@ -127,26 +129,27 @@ class ConfirmationTokenServiceImplTest {
         @ParameterizedTest(name = "{index} token type = {0}")
         @EnumSource
         @Order(1)
-        @DisplayName("Test find confirmation token by token and type when token exists")
+        @DisplayName("Test token confirmation by token and type when token exists")
         void testFindConfirmationTokenByTokenAndTypeExist(TokenType tokenType) {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
             when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.of(confirmationTokenEntity));
 
-            final var actualToken = confirmationTokenService.getByTokenAndType(confirmationTokenEntity.getToken(), tokenType);
+            final var actualToken = confirmationTokenService.confirmToken(confirmationTokenEntity.getToken(), tokenType);
 
             assertEquals(confirmationTokenEntity.getId(), actualToken.getId());
             assertEquals(confirmationTokenEntity.getToken(), actualToken.getToken());
+            assertEquals(TokenStatus.ACTIVATED, actualToken.getStatus());
         }
 
         @ParameterizedTest(name = "{index} token type = {0}")
         @EnumSource
         @Order(2)
-        @DisplayName("Test throwing system exception when token cannot be found")
+        @DisplayName("Test throwing system exception when token doesn't exist")
         void testThrowSystemExceptionWhenTokenAndTypeDoNotExist(TokenType tokenType) {
             when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.empty());
             assertThrows(
                     SystemException.class,
-                    () -> confirmationTokenService.getByTokenAndType(TOKEN_VALUE, tokenType)
+                    () -> confirmationTokenService.confirmToken(TOKEN_VALUE, tokenType)
             );
         }
 
@@ -169,34 +172,35 @@ class ConfirmationTokenServiceImplTest {
         @DisplayName("Test throwing system exception during confirmation when token is invalid")
         Stream<DynamicTest> testThrowSystemExceptionWhenTokenIsInvalid() {
             final LocalDateTime expiredDate = LocalDateTime.now(DEFAULT_ZONE_ID).minusMinutes(1L);
-            final Stream<ConfirmationToken> argsStream = generateInvalidTokens(expiredDate);
+            final Stream<ConfirmationTokenEntity> argsStream = generateInvalidTokenEntities(expiredDate);
 
-            final Function<ConfirmationToken, String> displayName = input -> "Test token: " + input.getType()
+            final Function<ConfirmationTokenEntity, String> displayName = input -> "Test token: " + input.getType()
                     + " with status: " + input.getStatus()
                     + " expired: " + Objects.equals(input.getExpirationDate(), expiredDate);
 
-            final ThrowingConsumer<ConfirmationToken> testExecutor = this::confirmInvalidToken;
+            final ThrowingConsumer<ConfirmationTokenEntity> testExecutor = this::confirmInvalidToken;
 
             return DynamicTest.stream(argsStream, displayName, testExecutor);
         }
 
-        private Stream<ConfirmationToken> generateInvalidTokens(final LocalDateTime expiredDate) {
-            final ConfirmationToken activatedResetPassToken = getConfirmationToken(TokenType.RESET_PASSWORD, TokenStatus.ACTIVATED);
-            final ConfirmationToken activatedEmailToken = getConfirmationToken(TokenType.EMAIL_CONFIRMATION, TokenStatus.ACTIVATED);
-            final ConfirmationToken expiredResetPassToken = getConfirmationToken(TokenType.RESET_PASSWORD, TokenStatus.NOT_ACTIVATED)
-                    .setExpirationDate(expiredDate);
-            final ConfirmationToken expiredEmailToken = getConfirmationToken(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED)
-                    .setExpirationDate(expiredDate);
+        private Stream<ConfirmationTokenEntity> generateInvalidTokenEntities(final LocalDateTime expiredDate) {
+            final ConfirmationTokenEntity activatedResetPassToken = getConfirmationTokenEntity(TokenType.RESET_PASSWORD, TokenStatus.ACTIVATED);
+            final ConfirmationTokenEntity activatedEmailToken = getConfirmationTokenEntity(TokenType.EMAIL_CONFIRMATION, TokenStatus.ACTIVATED);
+            final ConfirmationTokenEntity expiredResetPassToken = getConfirmationTokenEntity(TokenType.RESET_PASSWORD, TokenStatus.NOT_ACTIVATED);
+            final ConfirmationTokenEntity expiredEmailToken = getConfirmationTokenEntity(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
+            expiredResetPassToken.setExpirationDate(expiredDate);
+            expiredEmailToken.setExpirationDate(expiredDate);
 
             return Stream.of(activatedResetPassToken, activatedEmailToken, expiredResetPassToken, expiredEmailToken);
         }
 
-        private void confirmInvalidToken(final ConfirmationToken invalidToken) {
-            doReturn(invalidToken).when(confirmationTokenService).getByTokenAndType(any(), any());
-            assertThrows(
-                    SystemException.class,
-                    () -> confirmationTokenService.confirmToken(invalidToken.getToken(), invalidToken.getType())
-            );
+        private void confirmInvalidToken(final ConfirmationTokenEntity invalidTokenEntity) {
+            final String token = invalidTokenEntity.getToken();
+            final TokenType tokenType = invalidTokenEntity.getType();
+
+            doReturn(Optional.of(invalidTokenEntity)).when(tokenRepository).findByTokenAndType(token, tokenType);
+
+            assertThrows(SystemException.class, () -> confirmationTokenService.confirmToken(token, tokenType));
         }
     }
 
@@ -207,15 +211,15 @@ class ConfirmationTokenServiceImplTest {
         @Test
         @DisplayName("Test invoke user activation after email confirmation")
         void testInvokeUserActivationAfterEmailConfirmation() {
-            final ConfirmationToken confirmationToken = getConfirmationToken(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
-            final String token = confirmationToken.getToken();
-            final TokenType tokenType = confirmationToken.getType();
+            final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
+            final String token = confirmationTokenEntity.getToken();
+            final TokenType tokenType = confirmationTokenEntity.getType();
 
-            doReturn(confirmationToken).when(confirmationTokenService).confirmToken(token, tokenType);
+            doReturn(mapper.map(confirmationTokenEntity, ConfirmationToken.class)).when(confirmationTokenService).confirmToken(token, tokenType);
 
             confirmationTokenService.confirmUserByEmailToken(token);
 
-            verify(userService).activateById(confirmationToken.getUserId());
+            verify(userService).activateById(confirmationTokenEntity.getUserId());
         }
     }
 
@@ -229,10 +233,6 @@ class ConfirmationTokenServiceImplTest {
         confirmationTokenEntity.setExpirationDate(LocalDateTime.now(DEFAULT_ZONE_ID).plusHours(EMAIL_TOKEN_EXPIRATION_HOURS));
         return confirmationTokenEntity;
 
-    }
-
-    private ConfirmationToken getConfirmationToken(final TokenType tokenType, final TokenStatus tokenStatus) {
-        return mapper.map(getConfirmationTokenEntity(tokenType, tokenStatus), ConfirmationToken.class);
     }
 
     private static Set<ConfirmationTokenEntity> generateTokenEntities(final TokenType tokenType) {

@@ -61,13 +61,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public ConfirmationToken getByTokenAndType(final String token, final TokenType type) {
-        return tokenRepository.findByTokenAndType(token, type)
-                .map(entity -> mapper.map(entity, ConfirmationToken.class))
-                .orElseThrow(() -> new SystemException("Cannot find token in the database", SystemErrorCode.BAD_REQUEST));
-    }
-
-    @Override
     public ConfirmationToken confirmToken(final String token, final TokenType type) {
         final ConfirmationToken confirmationToken = getByTokenAndType(token, type);
         if (isTokenValid(confirmationToken)) {
@@ -76,6 +69,12 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
             return confirmationToken;
         }
         throw new SystemException(type + " token sent by user is invalid", SystemErrorCode.BAD_REQUEST);
+    }
+
+    private ConfirmationToken getByTokenAndType(final String token, final TokenType type) {
+        return tokenRepository.findByTokenAndType(token, type)
+                .map(entity -> mapper.map(entity, ConfirmationToken.class))
+                .orElseThrow(() -> new SystemException("Cannot find token in the database ", SystemErrorCode.BAD_REQUEST));
     }
 
     @Override

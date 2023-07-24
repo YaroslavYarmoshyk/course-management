@@ -1,17 +1,30 @@
 package com.coursemanagement.service;
 
+import com.coursemanagement.config.extension.UserProviderExtension;
 import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
+import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.model.ConfirmationToken;
+import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
 import com.coursemanagement.service.impl.ConfirmationTokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -23,20 +36,25 @@ import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
-import static com.coursemanagement.util.TestUtil.STUDENT;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(value = MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ConfirmationTokenServiceImplTest {
     @InjectMocks
+    @Spy
     private ConfirmationTokenServiceImpl confirmationTokenService;
     @Mock
     private ConfirmationTokenRepository tokenRepository;
@@ -46,15 +64,17 @@ class ConfirmationTokenServiceImplTest {
     private UserService userService;
     @Spy
     private ModelMapper mapper;
-
+    @RegisterExtension
+    private static final UserProviderExtension USER_PROVIDER = new UserProviderExtension();
     @Captor
     private ArgumentCaptor<Set<ConfirmationTokenEntity>> tokenEntitiesCaptor;
-
     private static final Long EMAIL_TOKEN_EXPIRATION_HOURS = 2L;
     private static final Long RESET_PASSWORD_TOKEN_EXPIRATION_MINUTES = 90L;
     private static final Long TEST_TOKEN_EXPIRATION_SECONDS = 5L;
     private static final Long START_IDS_NUMBER = 1L;
-
+    private static final int RANDOM_OLD_TOKEN_COUNT_LIMIT = 5;
+    private static final String TOKEN_VALUE = UUID.randomUUID().toString();
+    private static final User STUDENT = USER_PROVIDER.getStudent();
 
     @BeforeEach
     void setUp() {
@@ -66,51 +86,165 @@ class ConfirmationTokenServiceImplTest {
                 userService,
                 mapper
         );
-        doReturn(new ConfirmationTokenEntity()).when(tokenRepository).save(any(ConfirmationTokenEntity.class));
-        when(encryptionService.encryptUrlToken(anyString())).thenReturn(UUID.randomUUID().toString());
+        confirmationTokenService = spy(confirmationTokenService);
     }
 
-    @Test
-    @Order(1)
-    @DisplayName("Verify old tokens get invalidated when a new email confirmation token is created")
-    void whenCreateEmailConfirmationToken_thenOldTokensShouldBeInvalidated() {
-        final Set<ConfirmationTokenEntity> tokenEntities = generateOldTokenEntities(3, TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
-        when(tokenRepository.findAllByUserIdAndType(any(), any())).thenReturn(tokenEntities);
+    @Nested
+    @DisplayName("Old tokens invalidation")
+    class OldTokenInvalidationTests {
 
-        confirmationTokenService.createEmailConfirmationToken(STUDENT);
+        @ParameterizedTest(name = "{index} old tokens are invalidated after {0} is created")
+        @MethodSource("provideTokenTypesAndServiceMethods")
+        @DisplayName("Verify old tokens get invalidated when a new confirmation token is created")
+        void testOldTokensInvalidation(TokenType tokenType, Consumer<ConfirmationTokenService> tokenCreator) {
+            final Set<ConfirmationTokenEntity> tokenEntities = generateTokenEntities(tokenType);
+            when(tokenRepository.findAllByUserIdAndType(any(), any())).thenReturn(tokenEntities);
+            when(encryptionService.encryptUrlToken(anyString())).thenReturn(TOKEN_VALUE);
+            doReturn(new ConfirmationTokenEntity()).when(tokenRepository).save(any(ConfirmationTokenEntity.class));
 
-        verifyOldTokensGetActivated();
+            tokenCreator.accept(confirmationTokenService);
+            verify(tokenRepository).saveAll(tokenEntitiesCaptor.capture());
+
+            final Set<ConfirmationTokenEntity> foundTokenEntities = tokenEntitiesCaptor.getValue();
+            assertTrue(foundTokenEntities.stream()
+                    .map(ConfirmationTokenEntity::getStatus)
+                    .allMatch(tokenStatus -> Objects.equals(tokenStatus, TokenStatus.ACTIVATED)));
+        }
+
+        private static Stream<Arguments> provideTokenTypesAndServiceMethods() {
+            return Stream.of(
+                    Arguments.of(TokenType.EMAIL_CONFIRMATION, (Consumer<ConfirmationTokenService>) service -> service.createEmailConfirmationToken(STUDENT)),
+                    Arguments.of(TokenType.RESET_PASSWORD, (Consumer<ConfirmationTokenService>) service -> service.createResetPasswordToken(STUDENT))
+            );
+        }
     }
 
-    @Test
-    @Order(2)
-    @DisplayName("Verify old tokens get invalidated when a new reset password confirmation token is created")
-    void whenCreateResetPasswordConfirmationToken_thenOldTokensShouldBeInvalidated() {
-        final Set<ConfirmationTokenEntity> tokenEntities = generateOldTokenEntities(2, TokenType.RESET_PASSWORD, TokenStatus.NOT_ACTIVATED);
-        when(tokenRepository.findAllByUserIdAndType(any(), any())).thenReturn(tokenEntities);
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @DisplayName("Token confirmation")
+    class TokenConfirmationTests {
 
-        confirmationTokenService.createResetPasswordToken(STUDENT);
+        @ParameterizedTest(name = "{index} token type = {0}")
+        @EnumSource
+        @Order(1)
+        @DisplayName("Test find confirmation token by token and type when token exists")
+        void testFindConfirmationTokenByTokenAndTypeExist(TokenType tokenType) {
+            final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
+            when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.of(confirmationTokenEntity));
 
-        verifyOldTokensGetActivated();
+            final var actualToken = confirmationTokenService.getByTokenAndType(confirmationTokenEntity.getToken(), tokenType);
+
+            assertEquals(confirmationTokenEntity.getId(), actualToken.getId());
+            assertEquals(confirmationTokenEntity.getToken(), actualToken.getToken());
+        }
+
+        @ParameterizedTest(name = "{index} token type = {0}")
+        @EnumSource
+        @Order(2)
+        @DisplayName("Test throwing system exception when token cannot be found")
+        void testThrowSystemExceptionWhenTokenAndTypeDoNotExist(TokenType tokenType) {
+            when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.empty());
+            assertThrows(
+                    SystemException.class,
+                    () -> confirmationTokenService.getByTokenAndType(TOKEN_VALUE, tokenType)
+            );
+        }
+
+        @ParameterizedTest(name = "{index} token type = {0}")
+        @EnumSource
+        @Order(3)
+        @DisplayName("Test valid token is activated after confirmation")
+        void testValidTokenIsActivated(TokenType tokenType) {
+            final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
+            when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.of(confirmationTokenEntity));
+
+            final var actualConfirmationToken = confirmationTokenService.confirmToken(confirmationTokenEntity.getToken(), tokenType);
+
+            assertEquals(TokenStatus.ACTIVATED, actualConfirmationToken.getStatus());
+            assertEquals(1L, actualConfirmationToken.getId());
+        }
+
+        @TestFactory
+        @Order(4)
+        @DisplayName("Test throwing system exception during confirmation when token is invalid")
+        Stream<DynamicTest> testThrowSystemExceptionWhenTokenIsInvalid() {
+            final LocalDateTime expiredDate = LocalDateTime.now(DEFAULT_ZONE_ID).minusMinutes(1L);
+            final Stream<ConfirmationToken> argsStream = generateInvalidTokens(expiredDate);
+
+            final Function<ConfirmationToken, String> displayName = input -> "Test token: " + input.getType()
+                    + " with status: " + input.getStatus()
+                    + " expired: " + Objects.equals(input.getExpirationDate(), expiredDate);
+
+            final ThrowingConsumer<ConfirmationToken> testExecutor = this::confirmInvalidToken;
+
+            return DynamicTest.stream(argsStream, displayName, testExecutor);
+        }
+
+        private Stream<ConfirmationToken> generateInvalidTokens(final LocalDateTime expiredDate) {
+            final ConfirmationToken activatedResetPassToken = getConfirmationToken(TokenType.RESET_PASSWORD, TokenStatus.ACTIVATED);
+            final ConfirmationToken activatedEmailToken = getConfirmationToken(TokenType.EMAIL_CONFIRMATION, TokenStatus.ACTIVATED);
+            final ConfirmationToken expiredResetPassToken = getConfirmationToken(TokenType.RESET_PASSWORD, TokenStatus.NOT_ACTIVATED)
+                    .setExpirationDate(expiredDate);
+            final ConfirmationToken expiredEmailToken = getConfirmationToken(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED)
+                    .setExpirationDate(expiredDate);
+
+            return Stream.of(activatedResetPassToken, activatedEmailToken, expiredResetPassToken, expiredEmailToken);
+        }
+
+        private void confirmInvalidToken(final ConfirmationToken invalidToken) {
+            doReturn(invalidToken).when(confirmationTokenService).getByTokenAndType(any(), any());
+            assertThrows(
+                    SystemException.class,
+                    () -> confirmationTokenService.confirmToken(invalidToken.getToken(), invalidToken.getType())
+            );
+        }
     }
 
-    private void verifyOldTokensGetActivated() {
-        verify(tokenRepository).saveAll(tokenEntitiesCaptor.capture());
-        final Set<ConfirmationTokenEntity> foundTokenEntities = tokenEntitiesCaptor.getValue();
-        assertTrue(foundTokenEntities.stream()
-                .map(ConfirmationTokenEntity::getStatus)
-                .allMatch(tokenStatus -> Objects.equals(tokenStatus, TokenStatus.ACTIVATED)));
+    @Nested
+    @DisplayName("Invocation user activation")
+    class InvocationUserActivationTests {
+
+        @Test
+        @DisplayName("Test invoke user activation after email confirmation")
+        void testInvokeUserActivationAfterEmailConfirmation() {
+            final ConfirmationToken confirmationToken = getConfirmationToken(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
+            final String token = confirmationToken.getToken();
+            final TokenType tokenType = confirmationToken.getType();
+
+            doReturn(confirmationToken).when(confirmationTokenService).confirmToken(token, tokenType);
+
+            confirmationTokenService.confirmUserByEmailToken(token);
+
+            verify(userService).activateById(confirmationToken.getUserId());
+        }
     }
 
-    private static Set<ConfirmationTokenEntity> generateOldTokenEntities(final int tokenCount, final TokenType tokenType, final TokenStatus tokenStatus) {
+    private static ConfirmationTokenEntity getConfirmationTokenEntity(final TokenType tokenType, final TokenStatus tokenStatus) {
+        final ConfirmationTokenEntity confirmationTokenEntity = new ConfirmationTokenEntity();
+        confirmationTokenEntity.setId(START_IDS_NUMBER);
+        confirmationTokenEntity.setToken(TOKEN_VALUE);
+        confirmationTokenEntity.setType(tokenType);
+        confirmationTokenEntity.setStatus(tokenStatus);
+        confirmationTokenEntity.setUserId(START_IDS_NUMBER);
+        confirmationTokenEntity.setExpirationDate(LocalDateTime.now(DEFAULT_ZONE_ID).plusHours(EMAIL_TOKEN_EXPIRATION_HOURS));
+        return confirmationTokenEntity;
+
+    }
+
+    private ConfirmationToken getConfirmationToken(final TokenType tokenType, final TokenStatus tokenStatus) {
+        return mapper.map(getConfirmationTokenEntity(tokenType, tokenStatus), ConfirmationToken.class);
+    }
+
+    private static Set<ConfirmationTokenEntity> generateTokenEntities(final TokenType tokenType) {
         final LocalDateTime expirationDate = LocalDateTime.now(DEFAULT_ZONE_ID).plus(TEST_TOKEN_EXPIRATION_SECONDS, ChronoUnit.SECONDS);
-        return LongStream.rangeClosed(START_IDS_NUMBER, tokenCount)
+        final int randomTokenCount = new Random().nextInt(RANDOM_OLD_TOKEN_COUNT_LIMIT);
+        return LongStream.rangeClosed(START_IDS_NUMBER, randomTokenCount)
                 .mapToObj(i -> {
                     final ConfirmationTokenEntity tokenEntity = new ConfirmationTokenEntity();
                     tokenEntity.setId(i);
-                    tokenEntity.setToken(UUID.randomUUID().toString());
+                    tokenEntity.setToken(TOKEN_VALUE);
                     tokenEntity.setType(tokenType);
-                    tokenEntity.setStatus(tokenStatus);
+                    tokenEntity.setStatus(TokenStatus.NOT_ACTIVATED);
                     tokenEntity.setExpirationDate(expirationDate);
                     tokenEntity.setUserId(i);
                     return tokenEntity;

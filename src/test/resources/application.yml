@@ -1,24 +1,65 @@
 spring:
-  jpa:
-    show-sql: false
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+    jpa:
+      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
   flyway:
     enabled: false
+  mail:
+    host: smtp.gmail.com
+    username: iryna19890909@gmail.com
+    password: eofhvaklswvejhto
+    port: 587
+    protocol: smtp
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
 
 users:
   admin:
     id: 1
+    firstName: John
+    lastName: Smith
     email: john-smith@gmail.com
     password: passw@rd-1
+    phone: +380974457822
+    status: ACTIVE
+    roles:
+      - ADMIN
   instructor:
     id: 2
+    firstName: Marry
+    lastName: Poppins
     email: poppins@yahoo.com
     password: passw@rd-2
+    phone: +380975697454
+    status: ACTIVE
+    roles:
+      - INSTRUCTOR
   student:
     id: 3
+    firstName: Tyrion
+    lastName: Lannister
     email: goldlannister@gmail.com
-    password: passw@rd-2
+    password: passw@rd-3
+    phone: +380639854660
+    status: ACTIVE
+    roles:
+      - STUDENT
+  new-user:
+    id: 3
+    firstName: Thor
+    lastName: Odinson
+    email: thor-odinson96@gmail.com
+    password: passw@rd-4
+    phone: +380637898875
+    status: ACTIVE
+    roles:
+      - STUDENT
 
 courses:
   mathematics:
@@ -29,3 +70,20 @@ courses:
     code: 34432
     subject: History
     description: Overview of world history
+
+course-management:
+  url:
+    base: http://localhost:8080
+  student:
+    course-limit: 5
+
+token:
+  jwt:
+    expiration-time: 24 # hours
+  confirmation:
+    expiration-time:
+      email: 2 # hours
+      reset-password: 90 # minutes
+
+encryption:
+  key: strong-$key$1991

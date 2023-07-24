@@ -12,4 +12,5 @@ public class UserTestDataProperties {
     private User admin;
     private User instructor;
     private User student;
+    private User newUser;
 }

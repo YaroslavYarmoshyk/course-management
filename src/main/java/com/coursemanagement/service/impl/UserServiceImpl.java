@@ -1,7 +1,8 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.RoleRepository;
 import com.coursemanagement.repository.UserRepository;
@@ -46,6 +47,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(entity -> mapper.map(entity, User.class))
                 .orElseThrow(() -> new SystemException("User not found", SystemErrorCode.BAD_REQUEST));
+    }
+
+    @Override
+    public User activateById(final Long userId) {
+        final User userById = getUserById(userId);
+        userById.setStatus(UserStatus.ACTIVE);
+        return save(userById);
     }
 
     @Override

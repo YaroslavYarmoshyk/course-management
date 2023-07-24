@@ -10,5 +10,7 @@ public interface UserService {
 
     User getUserById(final Long userId);
 
+    User activateById(final Long userId);
+
     User save(final User user);
 }

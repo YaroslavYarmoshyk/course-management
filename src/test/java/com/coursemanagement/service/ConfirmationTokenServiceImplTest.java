@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -126,9 +127,9 @@ class ConfirmationTokenServiceImplTest {
     @DisplayName("Token confirmation")
     class TokenConfirmationTests {
 
+        @Order(1)
         @ParameterizedTest(name = "{index} token type = {0}")
         @EnumSource
-        @Order(1)
         @DisplayName("Test token confirmation by token and type when token exists")
         void testFindConfirmationTokenByTokenAndTypeExist(TokenType tokenType) {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
@@ -141,21 +142,22 @@ class ConfirmationTokenServiceImplTest {
             assertEquals(TokenStatus.ACTIVATED, actualToken.getStatus());
         }
 
+        @Order(2)
         @ParameterizedTest(name = "{index} token type = {0}")
         @EnumSource
-        @Order(2)
         @DisplayName("Test throwing system exception when token doesn't exist")
         void testThrowSystemExceptionWhenTokenAndTypeDoNotExist(TokenType tokenType) {
             when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.empty());
-            assertThrows(
+            assertThrowsWithMessage(
+                    () -> confirmationTokenService.confirmToken(TOKEN_VALUE, tokenType),
                     SystemException.class,
-                    () -> confirmationTokenService.confirmToken(TOKEN_VALUE, tokenType)
+                    "Cannot find token in the database"
             );
         }
 
+        @Order(3)
         @ParameterizedTest(name = "{index} token type = {0}")
         @EnumSource
-        @Order(3)
         @DisplayName("Test valid token is activated after confirmation")
         void testValidTokenIsActivated(TokenType tokenType) {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
@@ -167,8 +169,8 @@ class ConfirmationTokenServiceImplTest {
             assertEquals(1L, actualConfirmationToken.getId());
         }
 
-        @TestFactory
         @Order(4)
+        @TestFactory
         @DisplayName("Test throwing system exception during confirmation when token is invalid")
         Stream<DynamicTest> testThrowSystemExceptionWhenTokenIsInvalid() {
             final LocalDateTime expiredDate = LocalDateTime.now(DEFAULT_ZONE_ID).minusMinutes(1L);
@@ -200,7 +202,11 @@ class ConfirmationTokenServiceImplTest {
 
             doReturn(Optional.of(invalidTokenEntity)).when(tokenRepository).findByTokenAndType(token, tokenType);
 
-            assertThrows(SystemException.class, () -> confirmationTokenService.confirmToken(token, tokenType));
+            assertThrowsWithMessage(
+                    () -> confirmationTokenService.confirmToken(token, tokenType),
+                    SystemException.class,
+                    tokenType + " token sent by user is invalid"
+            );
         }
     }
 
@@ -214,7 +220,6 @@ class ConfirmationTokenServiceImplTest {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
             final String token = confirmationTokenEntity.getToken();
             final TokenType tokenType = confirmationTokenEntity.getType();
-
             doReturn(mapper.map(confirmationTokenEntity, ConfirmationToken.class)).when(confirmationTokenService).confirmToken(token, tokenType);
 
             confirmationTokenService.confirmUserByEmailToken(token);

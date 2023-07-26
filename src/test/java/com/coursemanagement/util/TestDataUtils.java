@@ -7,16 +7,20 @@ import com.coursemanagement.model.User;
 import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.When;
-import org.instancio.generators.Generators;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.instancio.Assign.given;
 import static org.instancio.Select.field;
 
 public final class TestDataUtils {
+    private static final AtomicReference<Long> START_USER_ID = new AtomicReference<>(10L);
+    private static final AtomicReference<Long> START_COURSE_CODE = new AtomicReference<>(22332L);
+    private static final int USER_ID_INCREMENT_STEP = 1;
+    private static final int COURSE_CDE_INCREMENT_STEP = 10000;
     public static final Model<User> USER_TEST_MODEL = Instancio.of(User.class)
-            .generate(field(User::getId), Generators::longSeq)
+            .supply(field(User::getId), () -> START_USER_ID.getAndSet(START_USER_ID.get() + USER_ID_INCREMENT_STEP))
             .generate(field(User::getFirstName), gen -> gen.oneOf("John", "Marry", "Tyrion"))
             .generate(field(User::getLastName), gen -> gen.oneOf("Smith", "Poppins", "Lannister"))
             .assign(given(field(User::getLastName), field(User::getEmail))
@@ -29,7 +33,7 @@ public final class TestDataUtils {
             .toModel();
 
     public static final Model<Course> COURSE_TEST_MODEL = Instancio.of(Course.class)
-            .generate(field(Course::getCode), gen -> gen.oneOf(22324L, 34432L, 99831L, 56548L, 76552L))
+            .supply(field(Course::getCode), () -> START_COURSE_CODE.getAndSet(START_COURSE_CODE.get() + COURSE_CDE_INCREMENT_STEP))
             .generate(field(Course::getSubject), gen -> gen.oneOf("Mathematics", "History", "Literature", "Physics", "Computer Science"))
             .assign(given(field(Course::getSubject), field(Course::getDescription))
                     .set(When.is("Mathematics"), "Introductory course on mathematics")
@@ -37,12 +41,6 @@ public final class TestDataUtils {
                     .set(When.is("Literature"), "Study of classical literature")
                     .set(When.is("Physics"), "Fundamentals of physics")
                     .set(When.is("Computer Science"), "Introduction to computer programming"))
-            .assign(given(field(Course::getSubject), field(Course::getCode))
-                    .set(When.is("Mathematics"), 22324L)
-                    .set(When.is("History"), 34432L)
-                    .set(When.is("Literature"), 99831L)
-                    .set(When.is("Physics"), 56548L)
-                    .set(When.is("Introduction to computer programming"), 76552L))
             .supply(field(Course::getUsers), gen -> createDefaultUsers())
             .toModel();
 

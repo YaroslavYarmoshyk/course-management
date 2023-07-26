@@ -1,10 +1,14 @@
 package com.coursemanagement.service;
 
 import com.coursemanagement.enumeration.Role;
+import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.service.impl.CourseManagementServiceImpl;
+import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,27 +26,21 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
-import static com.coursemanagement.util.TestDataUtils.ADMIN;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
-import static com.coursemanagement.util.TestDataUtils.NEW_USER;
-import static com.coursemanagement.util.TestDataUtils.RANDOM_COURSE;
-import static com.coursemanagement.util.TestDataUtils.SECOND_STUDENT;
+import static com.coursemanagement.util.TestDataUtils.*;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(value = {
         MockitoExtension.class,
@@ -129,7 +127,7 @@ class CourseManagementServiceImplTest {
                     dynamicTest("Requested by admin for user without roles",
                             () -> testStudentEnrollmentThrowsException(ADMIN, NEW_USER, "Only students can enroll courses")),
                     dynamicTest("Requested by admin for instructor",
-                            () -> testStudentEnrollmentThrowsException(ADMIN, NEW_USER, "Only students can enroll courses")),
+                            () -> testStudentEnrollmentThrowsException(ADMIN, INSTRUCTOR, "Only students can enroll courses")),
                     dynamicTest("Requested by instructor for student",
                             () -> testStudentEnrollmentThrowsException(INSTRUCTOR, FIRST_STUDENT, "Access denied")),
                     dynamicTest("Requested by student for another student",
@@ -147,6 +145,24 @@ class CourseManagementServiceImplTest {
                     SystemException.class,
                     expectedMessage
             );
+        }
+
+        @Test
+        void testCourseEnrollment() {
+            final Set<UserCourse> alreadyTakenCourses = Instancio.ofSet(UserCourse.class).size(5)
+                    .supply(field(UserCourse::getUser), () -> FIRST_STUDENT)
+                    .supply(field(UserCourse::getCourse), () -> Instancio.of(COURSE_TEST_MODEL)
+                            .onComplete(field(Course::getUsers), (Set<User> users) -> users.add(FIRST_STUDENT))
+                            .create())
+                    .set(field(UserCourse::getStatus), UserCourseStatus.STARTED)
+                    .create();
+
+            final List<Long> collect = alreadyTakenCourses.stream()
+                    .map(UserCourse::getCourse)
+                    .map(Course::getCode)
+                    .sorted()
+                    .toList();
+            System.out.println(collect);
         }
     }
 }

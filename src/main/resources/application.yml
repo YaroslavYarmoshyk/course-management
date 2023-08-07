@@ -39,11 +39,10 @@ spring:
       "mail.smtp.auth": true
       "mail.smtp.starttls.enable": true
 
-course-management:
-  url:
-    base: http://localhost:8080
-  student:
-    course-limit: 5
+course:
+  base-url: http://localhost:8080
+  student-course-limit: 5
+  course-passing-percentage: 80
 
 token:
   jwt:

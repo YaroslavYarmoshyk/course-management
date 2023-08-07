@@ -15,6 +15,8 @@ public interface CourseService {
 
     Course getCourseByCode(final Long code);
 
+    Set<Course> getCoursesByCodes(final Collection<Long> codes);
+
     Set<CourseDto> getCoursesByUserId(final Long userId);
 
     UserCourse getUserCourse(final Long userId, final Long courseCode);

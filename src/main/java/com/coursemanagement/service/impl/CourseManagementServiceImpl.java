@@ -1,17 +1,19 @@
 package com.coursemanagement.service.impl;
 
+import com.coursemanagement.config.properties.CourseProperties;
+import com.coursemanagement.enumeration.Mark;
 import com.coursemanagement.enumeration.Role;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
-import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.CourseDetailsDto;
+import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
@@ -22,7 +24,6 @@ import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.coursemanagement.util.Constants.HUNDRED;
+import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
+import static com.coursemanagement.util.Constants.MARK_ROUNDING_SCALE;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service
@@ -44,8 +48,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     private final CourseService courseService;
     private final LessonService lessonService;
     private final MarkService markService;
-    @Value("${course-management.student.course-limit:5}")
-    private int studentCourseLimit;
+    private final CourseProperties courseProperties;
 
 
     @Override
@@ -99,9 +102,12 @@ public class CourseManagementServiceImpl implements CourseManagementService {
                 .map(Course::getCode)
                 .collect(Collectors.toSet());
         final Set<Long> requestedCourseCodes = studentEnrollInCourseRequestDto.courseCodes();
-        validateCourseEnrollment(requestedCourseCodes, alreadyTakenCourseCodes);
+        final Set<Long> foundRequestedCourseCodes = courseService.getCoursesByCodes(requestedCourseCodes).stream()
+                .map(Course::getCode)
+                .collect(Collectors.toSet());
+        validateCourseEnrollment(foundRequestedCourseCodes, alreadyTakenCourseCodes);
 
-        courseService.addUserToCourses(student, requestedCourseCodes);
+        courseService.addUserToCourses(student, foundRequestedCourseCodes);
 
         final Set<UserCourse> updatedUserCourses = courseService.getUserCoursesByUserId(studentId);
         final Set<CourseDto> studentCourses = updatedUserCourses.stream()
@@ -128,7 +134,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
                 .collect(Collectors.toSet());
         final int alreadyTakenCoursesCount = alreadyTakenCourseCodes.size();
         final int requestedCoursesCount = requestedNewCourseCodes.size();
-        final boolean reachedCourseLimit = studentCourseLimit < (alreadyTakenCoursesCount + requestedCoursesCount);
+        final boolean reachedCourseLimit = courseProperties.getStudentCourseLimit() < (alreadyTakenCoursesCount + requestedCoursesCount);
 
         if (reachedCourseLimit) {
             final String exceptionMessage = String.format(
@@ -145,25 +151,37 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     public CourseDetailsDto completeStudentCourse(final Long studentId, final Long courseCode) {
         final UserCourse studentCourse = courseService.getUserCourse(studentId, courseCode);
         final Set<Lesson> lessonsPerCourse = lessonService.getLessonsPerCourse(courseCode);
-        final Map<Long, BigDecimal> averageLessonMarks = markService.getAverageLessonMarksForStudentPerCourse(studentId, courseCode);
-
-        validateStudentCourseCompletion(lessonsPerCourse, averageLessonMarks);
+        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
+        validateStudentCourseCompletion(lessonsPerCourse, courseMark);
 
         studentCourse.setStatus(UserCourseStatus.COMPLETED);
         studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
         final UserCourse completedStudentCourse = courseService.saveUserCourse(studentCourse);
-        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
         return new CourseDetailsDto(completedStudentCourse, courseMark);
     }
 
-    private static void validateStudentCourseCompletion(final Set<Lesson> lessonsPerCourse,
-                                                        final Map<Long, BigDecimal> averageLessonMarks) {
+    private void validateStudentCourseCompletion(final Set<Lesson> lessonsPerCourse,
+                                                 final CourseMark courseMark) {
+        final Map<Long, BigDecimal> averageLessonMarks = courseMark.getLessonMarks();
         final Set<Long> gradedLessonIds = averageLessonMarks.keySet();
-        final boolean areAllLessonsGraded = lessonsPerCourse.stream()
+        final boolean allLessonsGraded = lessonsPerCourse.stream()
                 .map(Lesson::getId)
                 .allMatch(gradedLessonIds::contains);
-        if (!areAllLessonsGraded) {
+        if (!allLessonsGraded) {
             throw new SystemException("Cannot complete course, not all lessons are graded", SystemErrorCode.BAD_REQUEST);
+        }
+
+        validateCoursePassingPercentage(courseMark);
+    }
+
+    private void validateCoursePassingPercentage(final CourseMark courseMark) {
+        final BigDecimal minPassingPercentage = courseProperties.getCoursePassingPercentage();
+        final BigDecimal actualPercentageOfMaxGrade = courseMark.getMarkValue().divide(Mark.EXCELLENT.getValue(), MARK_ROUNDING_SCALE, MARK_ROUNDING_MODE).multiply(HUNDRED);
+        final boolean isBelowPassingPercentage = actualPercentageOfMaxGrade.compareTo(minPassingPercentage) < BigDecimal.ZERO.intValue();
+        if (isBelowPassingPercentage) {
+            throw new SystemException("Cannot complete course, minimum passing percentage is: " + minPassingPercentage
+                    + " but student has: " + actualPercentageOfMaxGrade, SystemErrorCode.BAD_REQUEST
+            );
         }
     }
 }

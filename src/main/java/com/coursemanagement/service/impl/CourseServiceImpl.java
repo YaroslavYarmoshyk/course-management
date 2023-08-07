@@ -19,6 +19,7 @@ import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
@@ -41,6 +43,26 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findByCode(code)
                 .map(entity -> mapper.map(entity, Course.class))
                 .orElseThrow(() -> new SystemException("Course with code " + code + " not found", SystemErrorCode.BAD_REQUEST));
+    }
+
+    @Override
+    public Set<Course> getCoursesByCodes(final Collection<Long> codes) {
+        final Set<CourseEntity> foundCourseEntities = courseRepository.findAllByCodeIn(codes);
+        final Set<Long> foundCourseCodes = foundCourseEntities.stream()
+                .map(CourseEntity::getCode)
+                .collect(Collectors.toSet());
+
+        logMissingCourses(codes, foundCourseCodes);
+
+        return foundCourseEntities.stream()
+                .map(entity -> mapper.map(entity, Course.class))
+                .collect(Collectors.toSet());
+    }
+
+    private static void logMissingCourses(final Collection<Long> codes, final Set<Long> foundCourseCodes) {
+        codes.stream()
+                .filter(code -> !foundCourseCodes.contains(code))
+                .forEach(code -> log.warn("Course by code: {} was not found", code));
     }
 
     @Override

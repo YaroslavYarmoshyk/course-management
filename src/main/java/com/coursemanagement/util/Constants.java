@@ -1,5 +1,6 @@
 package com.coursemanagement.util;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public final class Constants {
@@ -29,4 +30,6 @@ public final class Constants {
     public static final RoundingMode MARK_ROUNDING_MODE = RoundingMode.HALF_UP;
 
     public static final double ZERO_MARK_VALUE = 0.0;
+
+    public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 }

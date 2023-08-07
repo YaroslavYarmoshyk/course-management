@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
+import static com.coursemanagement.util.Constants.HUNDRED;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_SCALE;
 import static com.coursemanagement.util.TestDataUtils.ADMIN;
@@ -240,7 +241,7 @@ class CourseManagementServiceImplTest {
         @Captor
         private ArgumentCaptor<UserCourse> userCourseCaptor;
         private static final BigDecimal MIN_PASSING_AVG_LESSONS_MARK = MIN_PASSING_PERCENTAGE
-                .divide(BigDecimal.valueOf(100), MARK_ROUNDING_SCALE, MARK_ROUNDING_MODE)
+                .divide(HUNDRED, MARK_ROUNDING_SCALE, MARK_ROUNDING_MODE)
                 .multiply(Mark.EXCELLENT.getValue());
         private static final BigDecimal BELLOW_MIN_PASSING_AVG_LESSONS_MARK = MIN_PASSING_AVG_LESSONS_MARK.subtract(BigDecimal.ONE);
         private static final BigDecimal EXCELLENT_AVG_LESSONS_MARK = Mark.EXCELLENT.getValue();

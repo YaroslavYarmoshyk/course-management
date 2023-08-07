@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.coursemanagement.util.Constants.HUNDRED;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_SCALE;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
@@ -48,7 +49,6 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     private final LessonService lessonService;
     private final MarkService markService;
     private final CourseProperties courseProperties;
-    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
 
     @Override

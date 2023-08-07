@@ -8,11 +8,7 @@ import com.coursemanagement.rest.dto.StudentLessonDto;
 import java.util.Set;
 
 public interface LessonService {
-
-    boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId);
-
-    boolean isUserAssociatedWithLessonFile(final Long userId, final Long fileId);
-
+    
     Set<Lesson> getLessonsPerCourse(final Long courseCode);
 
     Set<StudentLessonDto> getStudentLessonsWithContentPerCourse(final Long studentId, final Long courseCode);

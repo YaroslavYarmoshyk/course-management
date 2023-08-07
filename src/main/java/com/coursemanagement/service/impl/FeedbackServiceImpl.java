@@ -1,8 +1,8 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.CourseFeedback;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
@@ -12,8 +12,9 @@ import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
-import com.coursemanagement.service.CourseService;
+import com.coursemanagement.service.CourseAssociationService;
 import com.coursemanagement.service.FeedbackService;
+import com.coursemanagement.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,8 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @RequiredArgsConstructor
 public class FeedbackServiceImpl implements FeedbackService {
     private final CourseFeedbackRepository feedbackRepository;
-    private final CourseService courseService;
+    private final CourseAssociationService courseAssociationService;
+    private final UserCourseService userCourseService;
     private final ModelMapper mapper;
 
     @Override
@@ -39,7 +41,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         final Long courseCode = feedbackRequestDto.courseCode();
         validateUserCourseAccess(studentId, courseCode);
 
-        final UserCourse studentCourse = courseService.getUserCoursesByUserId(studentId).stream()
+        final UserCourse studentCourse = userCourseService.getUserCoursesByUserId(studentId).stream()
                 .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
                 .filter(userCourse -> Objects.equals(userCourse.getCourse().getCode(), courseCode))
                 .findFirst()
@@ -64,7 +66,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     private void validateUserCourseAccess(final Long studentId, final Long courseCode) {
-        if (!courseService.isUserAssociatedWithCourse(studentId, courseCode)) {
+        final boolean userIsAssociatedWithCourse = courseAssociationService.isUserAssociatedWithCourse(studentId, courseCode);
+        if (!userIsAssociatedWithCourse) {
             throw new SystemException("Student is not associated with course", SystemErrorCode.BAD_REQUEST);
         }
     }

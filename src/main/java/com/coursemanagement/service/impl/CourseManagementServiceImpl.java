@@ -21,6 +21,7 @@ import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
+import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class CourseManagementServiceImpl implements CourseManagementService {
     private final UserService userService;
     private final CourseService courseService;
+    private final UserCourseService userCourseService;
     private final LessonService lessonService;
     private final MarkService markService;
     private final CourseProperties courseProperties;
@@ -94,7 +96,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         final User student = userService.getUserById(studentId);
         validateStudentEnrollment(student);
 
-        final Set<UserCourse> alreadyTakenUserCourses = courseService.getUserCoursesByUserId(studentId).stream()
+        final Set<UserCourse> alreadyTakenUserCourses = userCourseService.getUserCoursesByUserId(studentId).stream()
                 .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
                 .collect(Collectors.toSet());
         final Set<Long> alreadyTakenCourseCodes = alreadyTakenUserCourses.stream()
@@ -109,7 +111,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
         courseService.addUserToCourses(student, foundRequestedCourseCodes);
 
-        final Set<UserCourse> updatedUserCourses = courseService.getUserCoursesByUserId(studentId);
+        final Set<UserCourse> updatedUserCourses = userCourseService.getUserCoursesByUserId(studentId);
         final Set<CourseDto> studentCourses = updatedUserCourses.stream()
                 .map(CourseDto::new)
                 .collect(Collectors.toSet());
@@ -149,14 +151,14 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
     @Override
     public CourseDetailsDto completeStudentCourse(final Long studentId, final Long courseCode) {
-        final UserCourse studentCourse = courseService.getUserCourse(studentId, courseCode);
+        final UserCourse studentCourse = userCourseService.getUserCourse(studentId, courseCode);
         final Set<Lesson> lessonsPerCourse = lessonService.getLessonsPerCourse(courseCode);
         final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
         validateStudentCourseCompletion(lessonsPerCourse, courseMark);
 
         studentCourse.setStatus(UserCourseStatus.COMPLETED);
         studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
-        final UserCourse completedStudentCourse = courseService.saveUserCourse(studentCourse);
+        final UserCourse completedStudentCourse = userCourseService.saveUserCourse(studentCourse);
         return new CourseDetailsDto(completedStudentCourse, courseMark);
     }
 

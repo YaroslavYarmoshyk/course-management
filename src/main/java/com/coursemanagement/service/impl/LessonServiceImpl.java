@@ -1,7 +1,7 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.LessonContent;
 import com.coursemanagement.repository.LessonContentRepository;
@@ -9,7 +9,8 @@ import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.StudentLessonDto;
-import com.coursemanagement.service.CourseService;
+import com.coursemanagement.service.CourseAssociationService;
+import com.coursemanagement.service.LessonAssociationService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.util.AuthorizationUtil;
@@ -30,21 +31,10 @@ import java.util.stream.Collectors;
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonContentRepository lessonContentRepository;
-    private final CourseService courseService;
+    private final LessonAssociationService lessonAssociationService;
+    private final CourseAssociationService courseAssociationService;
     private final MarkService markService;
     private final ModelMapper mapper;
-
-    @Override
-    public boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId) {
-        return lessonRepository.existsByCourseUserCoursesUserIdAndId(userId, lessonId);
-    }
-
-    @Override
-    public boolean isUserAssociatedWithLessonFile(final Long userId, final Long fileId) {
-        final LessonContent lessonContent = lessonContentRepository.findByFileId(fileId);
-        final Long lessonId = lessonContent.getLessonId();
-        return isUserAssociatedWithLesson(userId, lessonId);
-    }
 
     @Override
     public Set<Lesson> getLessonsPerCourse(final Long courseCode) {
@@ -85,7 +75,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private void validateUserCourseAccess(Long userId, Long courseCode) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !courseService.isUserAssociatedWithCourse(userId, courseCode)) {
+        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !courseAssociationService.isUserAssociatedWithCourse(userId, courseCode)) {
             throw new SystemException("Access to the lesson is limited to associated students only", SystemErrorCode.FORBIDDEN);
         }
     }
@@ -97,7 +87,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private void validateMarkAssigment(final Long studentId, final Long lessonId) {
-        if (!isUserAssociatedWithLesson(studentId, lessonId)) {
+        if (!lessonAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
             throw new SystemException("Student is not associated with lesson", SystemErrorCode.BAD_REQUEST);
         }
     }

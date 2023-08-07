@@ -6,10 +6,10 @@ import com.coursemanagement.annotation.CurrentUserId;
 import com.coursemanagement.annotation.InstructorAccessLevel;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;
+import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseDetailsDto;
-import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
@@ -20,6 +20,7 @@ import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.LessonService;
+import com.coursemanagement.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,13 +36,14 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CourseResource {
     private final CourseService courseService;
+    private final UserCourseService userCourseService;
     private final LessonService lessonService;
     private final FeedbackService feedbackService;
     private final CourseManagementService courseManagementService;
 
     @GetMapping
-    public Set<CourseDto> getUserCourses(@CurrentUserId final Long userId) {
-        return courseService.getCoursesByUserId(userId);
+    public Set<UserCourse> getUserCourses(@CurrentUserId final Long userId) {
+        return userCourseService.getUserCoursesByUserId(userId);
     }
 
     @PostMapping(value = "/enrollments")
@@ -74,7 +76,7 @@ public class CourseResource {
     @InstructorAccessLevel
     @GetMapping(value = "/{course-code}/students")
     public Set<UserDto> getStudentsPerCourse(@PathVariable(value = "course-code") final Long courseCode) {
-        return courseService.getStudentsByCourseCode(courseCode);
+        return userCourseService.getStudentsByCourseCode(courseCode);
     }
 
     @GetMapping(value = "/{course-code}/lessons")

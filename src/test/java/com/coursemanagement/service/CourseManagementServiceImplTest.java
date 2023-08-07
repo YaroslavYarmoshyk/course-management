@@ -78,6 +78,8 @@ class CourseManagementServiceImplTest {
     @Mock
     private CourseService courseService;
     @Mock
+    private UserCourseService userCourseService;
+    @Mock
     private LessonService lessonService;
     @Mock
     private MarkService markService;
@@ -177,7 +179,7 @@ class CourseManagementServiceImplTest {
                     .collect(Collectors.toSet());
             final Long studentId = FIRST_STUDENT.getId();
             final var requestDto = new StudentEnrollInCourseRequestDto(studentId, requestedCourseCodes);
-            when(courseService.getUserCoursesByUserId(studentId)).thenReturn(alreadyTakenCourses);
+            when(userCourseService.getUserCoursesByUserId(studentId)).thenReturn(alreadyTakenCourses);
             when(courseService.getCoursesByCodes(anyCollection())).thenReturn(foundRequestedCourses);
             when(userService.getUserById(studentId)).thenReturn(FIRST_STUDENT);
             when(userService.resolveCurrentUser()).thenReturn(FIRST_STUDENT);
@@ -192,7 +194,7 @@ class CourseManagementServiceImplTest {
             final Set<UserCourse> alreadyTakenCourses = getAlreadyTakenCourses();
             final int alreadyTakenCourseCount = alreadyTakenCourses.size();
 
-            when(courseService.getUserCoursesByUserId(anyLong())).thenReturn(alreadyTakenCourses);
+            when(userCourseService.getUserCoursesByUserId(anyLong())).thenReturn(alreadyTakenCourses);
             when(courseProperties.getStudentCourseLimit()).thenReturn(COURSE_LIMIT);
 
             return Stream.of(
@@ -261,10 +263,10 @@ class CourseManagementServiceImplTest {
             final CourseMark minPassCourseMark = getCourseMark(studentId, lessons, MIN_PASSING_AVG_LESSONS_MARK, true);
             final CourseMark belowAverageCourseMark = getCourseMark(studentId, lessons, BELLOW_MIN_PASSING_AVG_LESSONS_MARK, true);
 
-            when(courseService.getUserCourse(anyLong(), anyLong())).thenReturn(userCourse);
+            when(userCourseService.getUserCourse(anyLong(), anyLong())).thenReturn(userCourse);
             when(lessonService.getLessonsPerCourse(anyLong())).thenReturn(lessons);
             when(courseProperties.getCoursePassingPercentage()).thenReturn(MIN_PASSING_PERCENTAGE);
-            doReturn(userCourse).when(courseService).saveUserCourse(userCourse);
+            doReturn(userCourse).when(userCourseService).saveUserCourse(userCourse);
 
             return Stream.of(
                     dynamicTest("Not all lessons are graded", () -> testCourseCompletionValidation(studentId, courseCode, notCompletedCourseMark, "Cannot complete course, not all lessons are graded")),
@@ -306,7 +308,7 @@ class CourseManagementServiceImplTest {
 
             courseManagementService.completeStudentCourse(studentId, courseCode);
 
-            verify(courseService, atLeastOnce()).saveUserCourse(userCourseCaptor.capture());
+            verify(userCourseService, atLeastOnce()).saveUserCourse(userCourseCaptor.capture());
 
             final UserCourse savedUserCourse = userCourseCaptor.getValue();
             assertEquals(UserCourseStatus.COMPLETED, savedUserCourse.getStatus());

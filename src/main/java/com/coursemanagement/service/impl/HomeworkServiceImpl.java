@@ -1,14 +1,14 @@
 package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.FileType;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.File;
 import com.coursemanagement.repository.HomeworkRepository;
 import com.coursemanagement.repository.entity.HomeworkEntity;
 import com.coursemanagement.service.FileService;
 import com.coursemanagement.service.HomeworkService;
-import com.coursemanagement.service.LessonService;
+import com.coursemanagement.service.LessonAssociationService;
 import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @RequiredArgsConstructor
 public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkRepository homeworkRepository;
-    private final LessonService lessonService;
+    private final LessonAssociationService lessonAssociationService;
     private final FileService fileService;
 
     @Override
@@ -47,7 +47,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private void validateHomeworkUploading(final Long studentId, final Long lessonId) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !lessonService.isUserAssociatedWithLesson(studentId, lessonId)) {
+        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !lessonAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
             throw new SystemException("Access to the homework uploading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
         }
     }
@@ -75,7 +75,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private void validateHomeworkDownloading(final Long studentId, final Long fileId) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !lessonService.isUserAssociatedWithLessonFile(studentId, fileId)) {
+        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !lessonAssociationService.isUserAssociatedWithLessonFile(studentId, fileId)) {
             throw new SystemException("Access to the homework downloading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
         }
     }

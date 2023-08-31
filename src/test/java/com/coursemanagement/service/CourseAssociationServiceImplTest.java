@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
@@ -18,7 +17,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(value = MockitoExtension.class)
 class CourseAssociationServiceImplTest {
     @InjectMocks
-    @Spy
     private CourseAssociationServiceImpl courseAssociationService;
     @Mock
     private CourseRepository courseRepository;

@@ -9,12 +9,12 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
-import com.coursemanagement.rest.dto.CourseDetailsDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.StudentLessonDto;
+import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
@@ -68,9 +68,9 @@ public class CourseResource {
     }
 
     @GetMapping(value = "/{course-code}")
-    public CourseDetailsDto getCourseDetails(@CurrentUserId final Long studentId,
-                                             @PathVariable(value = "course-code") final Long courseCode) {
-        return courseService.getCourseDetails(studentId, courseCode);
+    public UserCourseDetailsDto getUserCourseDetails(@CurrentUserId final Long studentId,
+                                                     @PathVariable(value = "course-code") final Long courseCode) {
+        return userCourseService.getUserCourseDetails(studentId, courseCode);
     }
 
     @InstructorAccessLevel
@@ -86,8 +86,8 @@ public class CourseResource {
     }
 
     @GetMapping(value = "/{course-code}/complete")
-    public CourseDetailsDto completeCourse(@CurrentUserId final Long studentId,
-                                           @PathVariable(value = "course-code") final Long courseCode) {
+    public UserCourseDetailsDto completeCourse(@CurrentUserId final Long studentId,
+                                               @PathVariable(value = "course-code") final Long courseCode) {
         return courseManagementService.completeStudentCourse(studentId, courseCode);
     }
 

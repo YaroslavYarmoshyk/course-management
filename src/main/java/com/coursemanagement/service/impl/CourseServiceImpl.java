@@ -11,11 +11,9 @@ import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
-import com.coursemanagement.rest.dto.CourseDetailsDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
-import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -71,16 +69,6 @@ public class CourseServiceImpl implements CourseService {
             userCourseEntities.add(new UserCourseEntity(userEntity, courseEntity));
         }
         courseRepository.saveAll(courseEntities);
-    }
-
-    @Override
-    public CourseDetailsDto getCourseDetails(final Long studentId, final Long courseCode) {
-        final UserCourse userCourse = userCourseService.getUserCourse(studentId, courseCode);
-        if (AuthorizationUtil.isCurrentUserAdminOrInstructor()) {
-            return new CourseDetailsDto(userCourse);
-        }
-        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
-        return new CourseDetailsDto(userCourse, courseMark);
     }
 
     @Override

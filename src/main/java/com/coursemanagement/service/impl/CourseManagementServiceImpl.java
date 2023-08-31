@@ -12,7 +12,7 @@ import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
-import com.coursemanagement.rest.dto.CourseDetailsDto;
+import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
@@ -150,7 +150,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     @Override
-    public CourseDetailsDto completeStudentCourse(final Long studentId, final Long courseCode) {
+    public UserCourseDetailsDto completeStudentCourse(final Long studentId, final Long courseCode) {
         final UserCourse studentCourse = userCourseService.getUserCourse(studentId, courseCode);
         final Set<Lesson> lessonsPerCourse = lessonService.getLessonsPerCourse(courseCode);
         final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
@@ -159,7 +159,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         studentCourse.setStatus(UserCourseStatus.COMPLETED);
         studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
         final UserCourse completedStudentCourse = userCourseService.saveUserCourse(studentCourse);
-        return new CourseDetailsDto(completedStudentCourse, courseMark);
+        return new UserCourseDetailsDto(completedStudentCourse, courseMark);
     }
 
     private void validateStudentCourseCompletion(final Set<Lesson> lessonsPerCourse,

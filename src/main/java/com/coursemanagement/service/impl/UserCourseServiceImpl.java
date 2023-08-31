@@ -2,10 +2,13 @@ package com.coursemanagement.service.impl;
 
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserCourseServiceImpl implements UserCourseService {
     private final UserCourseRepository userCourseRepository;
+    private final MarkService markService;
     private final ModelMapper mapper;
 
     @Override
@@ -50,5 +54,12 @@ public class UserCourseServiceImpl implements UserCourseService {
                 .map(UserCourseEntity::getUser)
                 .map(UserDto::new)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public UserCourseDetailsDto getUserCourseDetails(final Long studentId, final Long courseCode) {
+        final UserCourse userCourse = getUserCourse(studentId, courseCode);
+        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
+        return new UserCourseDetailsDto(userCourse, courseMark);
     }
 }

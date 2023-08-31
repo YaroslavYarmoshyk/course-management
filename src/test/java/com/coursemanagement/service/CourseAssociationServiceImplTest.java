@@ -1,6 +1,7 @@
-package com.coursemanagement.service.impl;
+package com.coursemanagement.service;
 
 import com.coursemanagement.repository.CourseRepository;
+import com.coursemanagement.service.impl.CourseAssociationServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

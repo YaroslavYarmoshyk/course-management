@@ -12,8 +12,8 @@ import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
-import com.coursemanagement.service.CourseAssociationService;
 import com.coursemanagement.service.FeedbackService;
+import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,7 +29,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @RequiredArgsConstructor
 public class FeedbackServiceImpl implements FeedbackService {
     private final CourseFeedbackRepository feedbackRepository;
-    private final CourseAssociationService courseAssociationService;
+    private final UserAssociationService userAssociationService;
     private final UserCourseService userCourseService;
     private final ModelMapper mapper;
 
@@ -66,8 +66,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     private void validateUserCourseAccess(final Long studentId, final Long courseCode) {
-        final boolean userIsAssociatedWithCourse = courseAssociationService.isUserAssociatedWithCourse(studentId, courseCode);
-        if (!userIsAssociatedWithCourse) {
+        if (!userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)) {
             throw new SystemException("Student is not associated with course", SystemErrorCode.BAD_REQUEST);
         }
     }

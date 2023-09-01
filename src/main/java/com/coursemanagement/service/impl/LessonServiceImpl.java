@@ -9,10 +9,9 @@ import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.StudentLessonDto;
-import com.coursemanagement.service.CourseAssociationService;
-import com.coursemanagement.service.LessonAssociationService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
+import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,8 +30,7 @@ import java.util.stream.Collectors;
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final LessonContentRepository lessonContentRepository;
-    private final LessonAssociationService lessonAssociationService;
-    private final CourseAssociationService courseAssociationService;
+    private final UserAssociationService userAssociationService;
     private final MarkService markService;
     private final ModelMapper mapper;
 
@@ -75,7 +73,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private void validateUserCourseAccess(Long userId, Long courseCode) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !courseAssociationService.isUserAssociatedWithCourse(userId, courseCode)) {
+        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !userAssociationService.isUserAssociatedWithCourse(userId, courseCode)) {
             throw new SystemException("Access to the lesson is limited to associated students only", SystemErrorCode.FORBIDDEN);
         }
     }
@@ -87,7 +85,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     private void validateMarkAssigment(final Long studentId, final Long lessonId) {
-        if (!lessonAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
+        if (!userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
             throw new SystemException("Student is not associated with lesson", SystemErrorCode.BAD_REQUEST);
         }
     }

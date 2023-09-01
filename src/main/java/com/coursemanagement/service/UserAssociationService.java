@@ -1,6 +1,8 @@
 package com.coursemanagement.service;
 
-public interface LessonAssociationService {
+public interface UserAssociationService {
+
+    boolean isUserAssociatedWithCourse(final Long userId, final Long courseCode);
 
     boolean isUserAssociatedWithLesson(final Long userId, final Long lessonId);
 

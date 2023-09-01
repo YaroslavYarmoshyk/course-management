@@ -8,7 +8,7 @@ import com.coursemanagement.repository.HomeworkRepository;
 import com.coursemanagement.repository.entity.HomeworkEntity;
 import com.coursemanagement.service.FileService;
 import com.coursemanagement.service.HomeworkService;
-import com.coursemanagement.service.LessonAssociationService;
+import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @RequiredArgsConstructor
 public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkRepository homeworkRepository;
-    private final LessonAssociationService lessonAssociationService;
+    private final UserAssociationService userAssociationService;
     private final FileService fileService;
 
     @Override
@@ -47,7 +47,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private void validateHomeworkUploading(final Long studentId, final Long lessonId) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !lessonAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
+        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
             throw new SystemException("Access to the homework uploading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
         }
     }
@@ -75,7 +75,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private void validateHomeworkDownloading(final Long studentId, final Long fileId) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !lessonAssociationService.isUserAssociatedWithLessonFile(studentId, fileId)) {
+        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !userAssociationService.isUserAssociatedWithLessonFile(studentId, fileId)) {
             throw new SystemException("Access to the homework downloading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
         }
     }

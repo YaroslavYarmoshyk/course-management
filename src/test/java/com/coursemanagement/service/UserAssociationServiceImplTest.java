@@ -1,7 +1,9 @@
 package com.coursemanagement.service;
 
 import com.coursemanagement.repository.CourseRepository;
-import com.coursemanagement.service.impl.CourseAssociationServiceImpl;
+import com.coursemanagement.repository.LessonContentRepository;
+import com.coursemanagement.repository.LessonRepository;
+import com.coursemanagement.service.impl.UserAssociationServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +17,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(value = MockitoExtension.class)
-class CourseAssociationServiceImplTest {
+class UserAssociationServiceImplTest {
     @InjectMocks
-    private CourseAssociationServiceImpl courseAssociationService;
+    private UserAssociationServiceImpl userAssociationService;
     @Mock
     private CourseRepository courseRepository;
+    @Mock
+    private LessonRepository lessonRepository;
+    @Mock
+    private LessonContentRepository lessonContentRepository;
 
     @Test
     @DisplayName("Test user course association")
@@ -28,7 +34,7 @@ class CourseAssociationServiceImplTest {
         final Long courseCode = getRandomUserCourseByUser(FIRST_STUDENT).getCourse().getCode();
         when(courseRepository.existsByUserCoursesUserIdAndCode(studentId, courseCode)).thenReturn(true);
 
-        courseAssociationService.isUserAssociatedWithCourse(studentId, courseCode);
+        userAssociationService.isUserAssociatedWithCourse(studentId, courseCode);
 
         verify(courseRepository).existsByUserCoursesUserIdAndCode(studentId, courseCode);
     }

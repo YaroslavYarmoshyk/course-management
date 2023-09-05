@@ -80,7 +80,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId, final MarkAssigmentRequestDto markAssigmentRequestDto) {
         validateMarkAssigment(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId());
-        return markService.assignMarkToUserLesson(instructorId, markAssigmentRequestDto);
+        return markService.assignMarkToStudentLesson(instructorId, markAssigmentRequestDto);
     }
 
     private void validateMarkAssigment(final Long studentId, final Long lessonId) {

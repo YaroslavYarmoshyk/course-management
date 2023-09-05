@@ -29,8 +29,8 @@ public class MarkServiceImpl implements MarkService {
     private final ModelMapper mapper;
 
     @Override
-    public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId,
-                                                            final MarkAssigmentRequestDto markAssigmentRequestDto) {
+    public MarkAssignmentResponseDto assignMarkToStudentLesson(final Long instructorId,
+                                                               final MarkAssigmentRequestDto markAssigmentRequestDto) {
         final Long studentId = markAssigmentRequestDto.studentId();
         final Long lessonId = markAssigmentRequestDto.lessonId();
 

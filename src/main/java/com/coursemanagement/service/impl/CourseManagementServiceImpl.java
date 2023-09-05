@@ -12,6 +12,7 @@ import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
@@ -150,7 +151,9 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     @Override
-    public UserCourseDetailsDto completeStudentCourse(final Long studentId, final Long courseCode) {
+    public UserCourseDetailsDto completeStudentCourse(final CourseCompletionRequestDto courseCompletionRequestDto) {
+        final Long studentId = courseCompletionRequestDto.studentId();
+        final Long courseCode = courseCompletionRequestDto.courseCode();
         final UserCourse studentCourse = userCourseService.getUserCourse(studentId, courseCode);
         final Set<Lesson> lessonsPerCourse = lessonService.getLessonsPerCourse(courseCode);
         final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);

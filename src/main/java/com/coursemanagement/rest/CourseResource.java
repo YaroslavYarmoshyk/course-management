@@ -9,6 +9,7 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
@@ -67,6 +68,11 @@ public class CourseResource {
         return feedbackService.provideFeedbackToUserCourse(instructor, feedbackRequestDto);
     }
 
+    @PostMapping(value = "/complete")
+    public UserCourseDetailsDto completeCourse(@RequestBody final CourseCompletionRequestDto courseCompletionRequestDto) {
+        return courseManagementService.completeStudentCourse(courseCompletionRequestDto);
+    }
+
     @GetMapping(value = "/{course-code}")
     public UserCourseDetailsDto getUserCourseDetails(@CurrentUserId final Long studentId,
                                                      @PathVariable(value = "course-code") final Long courseCode) {
@@ -83,12 +89,6 @@ public class CourseResource {
     public Set<UserLessonDto> getLessonsPerCourse(@CurrentUserId final Long userId,
                                                   @PathVariable(value = "course-code") final Long courseCode) {
         return lessonService.getUserLessonsWithContentPerCourse(userId, courseCode);
-    }
-
-    @GetMapping(value = "/{course-code}/complete")
-    public UserCourseDetailsDto completeCourse(@CurrentUserId final Long studentId,
-                                               @PathVariable(value = "course-code") final Long courseCode) {
-        return courseManagementService.completeStudentCourse(studentId, courseCode);
     }
 
     @GetMapping(value = "/{course-code}/final-mark")

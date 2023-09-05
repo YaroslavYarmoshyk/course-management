@@ -10,6 +10,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.service.impl.CourseManagementServiceImpl;
@@ -38,32 +39,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
-import static com.coursemanagement.util.Constants.HUNDRED;
-import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
-import static com.coursemanagement.util.Constants.MARK_ROUNDING_SCALE;
-import static com.coursemanagement.util.TestDataUtils.ADMIN;
-import static com.coursemanagement.util.TestDataUtils.COURSE_TEST_MODEL;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
-import static com.coursemanagement.util.TestDataUtils.NEW_USER;
-import static com.coursemanagement.util.TestDataUtils.RANDOM_COURSE;
-import static com.coursemanagement.util.TestDataUtils.SECOND_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.getRandomLessonsByCourse;
-import static com.coursemanagement.util.TestDataUtils.getRandomUserCourseByUser;
+import static com.coursemanagement.util.Constants.*;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(value = {
         MockitoExtension.class,
@@ -297,7 +279,7 @@ class CourseManagementServiceImplTest {
             when(markService.getStudentCourseMark(anyLong(), anyLong())).thenReturn(courseMark);
 
             assertThrowsWithMessage(
-                    () -> courseManagementService.completeStudentCourse(studentId, courseCode),
+                    () -> courseManagementService.completeStudentCourse(new CourseCompletionRequestDto(studentId, courseCode)),
                     SystemException.class,
                     expectedErrorMessage
             );
@@ -306,7 +288,7 @@ class CourseManagementServiceImplTest {
         private void testCourseCompletion(final Long studentId, final Long courseCode, final CourseMark courseMark) {
             when(markService.getStudentCourseMark(anyLong(), anyLong())).thenReturn(courseMark);
 
-            courseManagementService.completeStudentCourse(studentId, courseCode);
+            courseManagementService.completeStudentCourse(new CourseCompletionRequestDto(studentId, courseCode));
 
             verify(userCourseService, atLeastOnce()).saveUserCourse(userCourseCaptor.capture());
 

@@ -12,15 +12,16 @@ import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
-import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.CourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
+import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
+import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.util.AuthorizationUtil;
@@ -46,6 +47,7 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 @RequiredArgsConstructor
 public class CourseManagementServiceImpl implements CourseManagementService {
     private final UserService userService;
+    private final UserAssociationService userAssociationService;
     private final CourseService courseService;
     private final UserCourseService userCourseService;
     private final LessonService lessonService;
@@ -72,7 +74,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     private static void validateInstructorAssigment(final User potentialInstructor) {
-        if (!AuthorizationUtil.isInstructor(potentialInstructor)) {
+        if (!AuthorizationUtil.userHasAnyRole(potentialInstructor, Role.INSTRUCTOR)) {
             throw new SystemException("Cannot assign user to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST);
         }
     }
@@ -119,10 +121,8 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     private void validateStudentEnrollment(final User potentialStudent) {
-        final User currentUser = userService.resolveCurrentUser();
-        final boolean isDifferentUser = !Objects.equals(potentialStudent.getId(), currentUser.getId());
-        if (isDifferentUser && !AuthorizationUtil.isAdmin(currentUser)) {
-            throw new SystemException("Access denied", SystemErrorCode.FORBIDDEN);
+        if (!userAssociationService.currentUserHasAccessTo(potentialStudent.getId())) {
+            throw new SystemException("Current user cannot enroll in course for requested one", SystemErrorCode.FORBIDDEN);
         }
         Optional.ofNullable(potentialStudent.getRoles())
                 .filter(roles -> roles.contains(Role.STUDENT))

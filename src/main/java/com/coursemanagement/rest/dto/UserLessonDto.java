@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.Set;
 
-public record StudentLessonDto(
+public record UserLessonDto(
         Long id,
         String title,
         String description,
@@ -18,7 +18,7 @@ public record StudentLessonDto(
         Mark mark
 ) {
 
-    public StudentLessonDto(
+    public UserLessonDto(
             final Lesson lesson,
             final Set<LessonContent> lessonContent,
             final BigDecimal averageMark

@@ -13,7 +13,7 @@ import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
-import com.coursemanagement.rest.dto.StudentLessonDto;
+import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseManagementService;
@@ -80,9 +80,9 @@ public class CourseResource {
     }
 
     @GetMapping(value = "/{course-code}/lessons")
-    public Set<StudentLessonDto> getLessonsPerCourse(@CurrentUserId final Long userId,
-                                                     @PathVariable(value = "course-code") final Long courseCode) {
-        return lessonService.getStudentLessonsWithContentPerCourse(userId, courseCode);
+    public Set<UserLessonDto> getLessonsPerCourse(@CurrentUserId final Long userId,
+                                                  @PathVariable(value = "course-code") final Long courseCode) {
+        return lessonService.getUserLessonsWithContentPerCourse(userId, courseCode);
     }
 
     @GetMapping(value = "/{course-code}/complete")

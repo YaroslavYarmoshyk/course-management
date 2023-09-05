@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(entity -> mapper.map(entity, User.class))
                 .orElseThrow(() -> new SystemException("User not found", SystemErrorCode.BAD_REQUEST));
+    }
+
+    @Override
+    public Set<User> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userEntity -> mapper.map(userEntity, User.class))
+                .collect(Collectors.toSet());
     }
 
     @Override

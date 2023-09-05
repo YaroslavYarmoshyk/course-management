@@ -1,24 +1,21 @@
 package com.coursemanagement.rest;
 
-import com.coursemanagement.annotation.AdminAccessLevel;
+import com.coursemanagement.annotation.CurrentUserId;
 import com.coursemanagement.model.User;
-import com.coursemanagement.rest.dto.RoleAssignmentDto;
-import com.coursemanagement.service.RoleManagementService;
+import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserResource {
-    private final RoleManagementService roleManagementService;
+    private final UserService userService;
 
-    @AdminAccessLevel
-    @PostMapping(value = "/assign-role")
-    public User assignRoleToUser(@RequestBody final RoleAssignmentDto roleAssignmentDto) {
-        return roleManagementService.assignRoleToUser(roleAssignmentDto);
+    @GetMapping("/me")
+    public User getCurrentUser(@CurrentUserId final Long userId) {
+        return userService.getUserById(userId);
     }
 }

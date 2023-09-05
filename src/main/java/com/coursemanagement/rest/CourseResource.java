@@ -14,9 +14,9 @@ import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
-import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.FeedbackService;
@@ -74,9 +74,9 @@ public class CourseResource {
     }
 
     @GetMapping(value = "/{course-code}")
-    public UserCourseDetailsDto getUserCourseDetails(@CurrentUserId final Long studentId,
+    public UserCourseDetailsDto getUserCourseDetails(@CurrentUserId final Long userId,
                                                      @PathVariable(value = "course-code") final Long courseCode) {
-        return userCourseService.getUserCourseDetails(studentId, courseCode);
+        return userCourseService.getUserCourseDetails(userId, courseCode);
     }
 
     @InstructorAccessLevel

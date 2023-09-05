@@ -57,9 +57,9 @@ public class UserCourseServiceImpl implements UserCourseService {
     }
 
     @Override
-    public UserCourseDetailsDto getUserCourseDetails(final Long studentId, final Long courseCode) {
-        final UserCourse userCourse = getUserCourse(studentId, courseCode);
-        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
+    public UserCourseDetailsDto getUserCourseDetails(final Long userId, final Long courseCode) {
+        final UserCourse userCourse = getUserCourse(userId, courseCode);
+        final CourseMark courseMark = markService.getStudentCourseMark(userId, courseCode);
         return new UserCourseDetailsDto(userCourse, courseMark);
     }
 }

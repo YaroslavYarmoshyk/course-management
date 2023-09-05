@@ -123,7 +123,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
     private void validateStudentEnrollment(final User potentialStudent) {
         if (!userAssociationService.currentUserHasAccessTo(potentialStudent.getId())) {
-            throw new SystemException("Current user cannot enroll in course for requested one", SystemErrorCode.FORBIDDEN);
+            throw new SystemException("Current user cannot enroll in courses for requested one", SystemErrorCode.FORBIDDEN);
         }
         Optional.ofNullable(potentialStudent.getRoles())
                 .filter(roles -> roles.contains(Role.STUDENT))

@@ -16,5 +16,5 @@ public interface UserCourseService {
 
     Set<UserDto> getStudentsByCourseCode(final Long courseCode);
 
-    UserCourseDetailsDto getUserCourseDetails(final Long studentId, final Long courseCode);
+    UserCourseDetailsDto getUserCourseDetails(final Long userId, final Long courseCode);
 }

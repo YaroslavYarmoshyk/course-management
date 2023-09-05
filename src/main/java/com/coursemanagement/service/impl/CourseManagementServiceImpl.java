@@ -13,7 +13,7 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
-import com.coursemanagement.rest.dto.CourseDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
@@ -115,8 +115,8 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         courseService.addUserToCourses(student, foundRequestedCourseCodes);
 
         final Set<UserCourse> updatedUserCourses = userCourseService.getUserCoursesByUserId(studentId);
-        final Set<CourseDto> studentCourses = updatedUserCourses.stream()
-                .map(CourseDto::new)
+        final Set<UserCourseDto> studentCourses = updatedUserCourses.stream()
+                .map(UserCourseDto::new)
                 .collect(Collectors.toSet());
         return new StudentEnrollInCourseResponseDto(student.getId(), studentCourses);
     }

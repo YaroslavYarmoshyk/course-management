@@ -8,7 +8,7 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;
 import com.coursemanagement.repository.entity.CourseFeedbackEntity;
-import com.coursemanagement.rest.dto.CourseDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
@@ -58,7 +58,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         return FeedbackResponseDto.builder()
                 .withStudent(new UserDto(studentCourse.getUser()))
-                .withCourse(new CourseDto(studentCourse))
+                .withUserCourse(new UserCourseDto(studentCourse))
                 .withInstructor(new UserDto(instructor))
                 .withFeedback(savedEntity.getFeedback())
                 .withFeedbackSubmissionDate(savedEntity.getFeedbackSubmissionDate())

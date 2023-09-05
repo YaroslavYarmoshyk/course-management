@@ -9,8 +9,7 @@ import java.util.Map;
 
 public interface MarkService {
 
-    MarkAssignmentResponseDto assignMarkToStudentLesson(final Long instructorId,
-                                                        final MarkAssigmentRequestDto markAssigmentRequestDto);
+    MarkAssignmentResponseDto assignMarkToStudentLesson(final MarkAssigmentRequestDto markAssigmentRequestDto);
 
     Map<Long, BigDecimal> getAverageLessonMarksForStudentPerCourse(final Long studentId, final Long courseCode);
 

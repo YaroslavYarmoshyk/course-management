@@ -73,19 +73,15 @@ public class LessonServiceImpl implements LessonService {
 
     private void validateUserCourseAccess(Long userId, Long courseCode) {
         if (!userAssociationService.isUserAssociatedWithCourse(userId, courseCode)) {
-            throw new SystemException("Access to the lesson is limited to associated students only", SystemErrorCode.FORBIDDEN);
+            throw new SystemException("Access to the lesson is limited to associated users only", SystemErrorCode.FORBIDDEN);
         }
     }
 
     @Override
-    public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId, final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        validateMarkAssigment(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId());
-        return markService.assignMarkToStudentLesson(instructorId, markAssigmentRequestDto);
-    }
-
-    private void validateMarkAssigment(final Long studentId, final Long lessonId) {
-        if (!userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
-            throw new SystemException("Student is not associated with lesson", SystemErrorCode.BAD_REQUEST);
+    public MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        if (!userAssociationService.isUserAssociatedWithLesson(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId())) {
+            throw new SystemException("Student is not associated with lesson", SystemErrorCode.FORBIDDEN);
         }
+        return markService.assignMarkToStudentLesson(markAssigmentRequestDto);
     }
 }

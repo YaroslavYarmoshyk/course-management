@@ -13,5 +13,5 @@ public interface LessonService {
 
     Set<UserLessonDto> getUserLessonsWithContentPerCourse(final Long userId, final Long courseCode);
 
-    MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId, final MarkAssigmentRequestDto markAssigmentRequestDto);
+    MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto);
 }

@@ -28,9 +28,8 @@ public class LessonResource {
 
     @InstructorAccessLevel
     @PostMapping(value = "/assign-mark")
-    public MarkAssignmentResponseDto markLesson(@CurrentUserId final Long instructorId,
-                                                @RequestBody final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        return lessonService.assignMarkToUserLesson(instructorId, markAssigmentRequestDto);
+    public MarkAssignmentResponseDto assignMarkToLesson(@RequestBody final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        return lessonService.assignMarkToUserLesson(markAssigmentRequestDto);
     }
 
     @PostMapping(value = "/{lesson-id}/homework/upload")

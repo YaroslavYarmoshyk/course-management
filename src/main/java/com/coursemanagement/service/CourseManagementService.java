@@ -1,5 +1,6 @@
 package com.coursemanagement.service;
 
+import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
@@ -8,7 +9,7 @@ import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 
 public interface CourseManagementService {
 
-    CourseAssignmentResponseDto assignInstructorToCourse(final Long instructorId, final Long courseCode);
+    CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto);
 
     StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto);
 

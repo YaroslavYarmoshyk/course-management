@@ -11,6 +11,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
@@ -58,7 +59,9 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
     @Override
     @Transactional
-    public CourseAssignmentResponseDto assignInstructorToCourse(final Long instructorId, final Long courseCode) {
+    public CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
+        final Long instructorId = courseAssignmentRequestDto.instructorId();
+        final Long courseCode = courseAssignmentRequestDto.courseCode();
         final User potentialInstructor = userService.getUserById(instructorId);
         validateInstructorAssigment(potentialInstructor);
 

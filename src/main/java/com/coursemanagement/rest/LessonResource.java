@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/lessons")
+@RequestMapping("/api/v1/lessons")
 @RequiredArgsConstructor
 public class LessonResource {
     private final LessonService lessonService;

@@ -1,9 +1,7 @@
 package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.AdminAccessLevel;
-import com.coursemanagement.annotation.CurrentUser;
 import com.coursemanagement.annotation.InstructorAccessLevel;
-import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
@@ -40,9 +38,8 @@ public class CourseManagementResource {
 
     @InstructorAccessLevel
     @PostMapping(value = "/provide-feedback")
-    public FeedbackResponseDto provideFeedback(@CurrentUser final User instructor,
-                                               @RequestBody final FeedbackRequestDto feedbackRequestDto) {
-        return feedbackService.provideFeedbackToUserCourse(instructor, feedbackRequestDto);
+    public FeedbackResponseDto provideFeedback(@RequestBody final FeedbackRequestDto feedbackRequestDto) {
+        return feedbackService.provideFeedbackToUserCourse(feedbackRequestDto);
     }
 
     @PostMapping(value = "/complete")

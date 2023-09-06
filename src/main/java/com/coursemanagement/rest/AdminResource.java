@@ -59,13 +59,13 @@ public class AdminResource {
         return userCourseService.getUserCourseDetails(userId, courseCode);
     }
 
-    @GetMapping(value = "/{user-id}/courses/{course-code}/final-mark")
+    @GetMapping(value = "/users/{user-id}/courses/{course-code}/final-mark")
     public CourseMark getStudentCourseMark(@PathVariable(value = "user-id") final Long studentId,
                                            @PathVariable(value = "course-code") final Long courseCode) {
         return courseService.getStudentCourseFinalMark(studentId, courseCode);
     }
 
-    @GetMapping(value = "/{user-id}/courses/{course-code}/lessons")
+    @GetMapping(value = "/users/{user-id}/courses/{course-code}/lessons")
     public Set<UserLessonDto> getStudentLessonsPerCourse(@PathVariable(value = "user-id") final Long studentId,
                                                          @PathVariable(value = "course-code") final Long courseCode) {
         return lessonService.getUserLessonsWithContentPerCourse(studentId, courseCode);

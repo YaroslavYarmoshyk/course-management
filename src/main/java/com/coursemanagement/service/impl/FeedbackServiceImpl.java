@@ -67,7 +67,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     private void validateUserCourseAccess(final Long studentId, final Long courseCode) {
         if (!userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)) {
-            throw new SystemException("Student is not associated with course", SystemErrorCode.BAD_REQUEST);
+            throw new SystemException("Student is not associated with course", SystemErrorCode.FORBIDDEN);
         }
     }
 }

@@ -30,7 +30,7 @@ public class UserCourseServiceImpl implements UserCourseService {
     public UserCourse getUserCourse(final Long userId, final Long courseCode) {
         return userCourseRepository.findByUserIdAndCourseCode(userId, courseCode)
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
-                .orElseThrow(() -> new SystemException("User is not associated with course", SystemErrorCode.BAD_REQUEST));
+                .orElseThrow(() -> new SystemException("User is not associated with course", SystemErrorCode.FORBIDDEN));
     }
 
     @Override

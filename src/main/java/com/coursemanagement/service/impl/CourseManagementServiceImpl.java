@@ -130,7 +130,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         }
         Optional.ofNullable(potentialStudent.getRoles())
                 .filter(roles -> roles.contains(Role.STUDENT))
-                .orElseThrow(() -> new SystemException("Only students can enroll courses", SystemErrorCode.BAD_REQUEST));
+                .orElseThrow(() -> new SystemException("Only students can enroll courses", SystemErrorCode.FORBIDDEN));
     }
 
     private void validateCourseEnrollment(final Set<Long> requestedCourseCodes,

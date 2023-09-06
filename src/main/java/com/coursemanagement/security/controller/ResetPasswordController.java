@@ -16,11 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static com.coursemanagement.util.Constants.RESET_PASSWORD_CONFIRMATION_ENDPOINT;
-import static com.coursemanagement.util.Constants.TOKEN_CONFIRMATION_ENDPOINT_PARAMETER;
+import static com.coursemanagement.util.Constants.*;
 
 @RestController
-@RequestMapping(value = "/api/reset-password")
+@RequestMapping(value = RESET_PASSWORD_ENDPOINT)
 @RequiredArgsConstructor
 public class ResetPasswordController {
     private final ResetPasswordService resetPasswordService;

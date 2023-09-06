@@ -9,7 +9,6 @@ import com.coursemanagement.repository.entity.HomeworkEntity;
 import com.coursemanagement.service.FileService;
 import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.UserAssociationService;
-import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -47,7 +46,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private void validateHomeworkUploading(final Long studentId, final Long lessonId) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
+        if (!userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
             throw new SystemException("Access to the homework uploading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
         }
     }
@@ -75,7 +74,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private void validateHomeworkDownloading(final Long studentId, final Long fileId) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !userAssociationService.isUserAssociatedWithLessonFile(studentId, fileId)) {
+        if (!userAssociationService.isUserAssociatedWithLessonFile(studentId, fileId)) {
             throw new SystemException("Access to the homework downloading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
         }
     }

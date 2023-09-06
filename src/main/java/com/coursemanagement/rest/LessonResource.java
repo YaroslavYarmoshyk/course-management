@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/lessons")
+@RequestMapping("/api/v1/lessons")
 @RequiredArgsConstructor
 public class LessonResource {
     private final LessonService lessonService;
@@ -28,9 +28,8 @@ public class LessonResource {
 
     @InstructorAccessLevel
     @PostMapping(value = "/assign-mark")
-    public MarkAssignmentResponseDto markLesson(@CurrentUserId final Long userId,
-                                                @RequestBody final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        return lessonService.assignMarkToUserLesson(userId, markAssigmentRequestDto);
+    public MarkAssignmentResponseDto assignMarkToLesson(@RequestBody final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        return lessonService.assignMarkToUserLesson(markAssigmentRequestDto);
     }
 
     @PostMapping(value = "/{lesson-id}/homework/upload")

@@ -3,13 +3,13 @@ package com.coursemanagement.rest.dto;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.model.UserCourse;
 
-public record CourseDto(
+public record UserCourseDto(
         Long code,
         String subject,
         String description,
         UserCourseStatus status
 ) {
-    public CourseDto(final UserCourse userCourse) {
+    public UserCourseDto(final UserCourse userCourse) {
         this(
                 userCourse.getCourse().getCode(),
                 userCourse.getCourse().getSubject(),

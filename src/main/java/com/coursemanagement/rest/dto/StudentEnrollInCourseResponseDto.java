@@ -4,6 +4,6 @@ import java.util.Set;
 
 public record StudentEnrollInCourseResponseDto(
         Long studentId,
-        Set<CourseDto> studentCourses
+        Set<UserCourseDto> studentCourses
 ) {
 }

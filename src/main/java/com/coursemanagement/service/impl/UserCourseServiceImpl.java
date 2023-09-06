@@ -7,6 +7,7 @@ import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
@@ -29,7 +30,7 @@ public class UserCourseServiceImpl implements UserCourseService {
     public UserCourse getUserCourse(final Long userId, final Long courseCode) {
         return userCourseRepository.findByUserIdAndCourseCode(userId, courseCode)
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
-                .orElseThrow(() -> new SystemException("User is not associated with course", SystemErrorCode.BAD_REQUEST));
+                .orElseThrow(() -> new SystemException("User is not associated with course", SystemErrorCode.FORBIDDEN));
     }
 
     @Override
@@ -37,6 +38,13 @@ public class UserCourseServiceImpl implements UserCourseService {
         final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserId(userId);
         return userCourseEntities.stream()
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<UserCourseDto> getUserCourseSummariesByUserId(final Long userId) {
+        return getUserCoursesByUserId(userId).stream()
+                .map(UserCourseDto::new)
                 .collect(Collectors.toSet());
     }
 
@@ -57,9 +65,9 @@ public class UserCourseServiceImpl implements UserCourseService {
     }
 
     @Override
-    public UserCourseDetailsDto getUserCourseDetails(final Long studentId, final Long courseCode) {
-        final UserCourse userCourse = getUserCourse(studentId, courseCode);
-        final CourseMark courseMark = markService.getStudentCourseMark(studentId, courseCode);
+    public UserCourseDetailsDto getUserCourseDetails(final Long userId, final Long courseCode) {
+        final UserCourse userCourse = getUserCourse(userId, courseCode);
+        final CourseMark courseMark = markService.getStudentCourseMark(userId, courseCode);
         return new UserCourseDetailsDto(userCourse, courseMark);
     }
 }

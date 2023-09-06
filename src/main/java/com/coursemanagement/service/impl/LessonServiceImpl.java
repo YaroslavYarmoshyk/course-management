@@ -8,11 +8,10 @@ import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
-import com.coursemanagement.rest.dto.StudentLessonDto;
+import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserAssociationService;
-import com.coursemanagement.util.AuthorizationUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -42,8 +41,8 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public Set<StudentLessonDto> getStudentLessonsWithContentPerCourse(final Long studentId, final Long courseCode) {
-        validateUserCourseAccess(studentId, courseCode);
+    public Set<UserLessonDto> getUserLessonsWithContentPerCourse(final Long userId, final Long courseCode) {
+        validateUserCourseAccess(userId, courseCode);
         final Set<Lesson> lessonsPerCourse = getLessonsPerCourse(courseCode);
         final Set<Long> lessonIds = lessonsPerCourse.stream()
                 .map(Lesson::getId)
@@ -53,40 +52,36 @@ public class LessonServiceImpl implements LessonService {
                         LessonContent::getLessonId,
                         Collectors.toSet()
                 ));
-        final Map<Long, BigDecimal> lessonMarks = markService.getAverageLessonMarksForStudentPerCourse(studentId, courseCode);
+        final Map<Long, BigDecimal> lessonMarks = markService.getAverageLessonMarksForStudentPerCourse(userId, courseCode);
 
         return lessonsPerCourse.stream()
-                .map(toStudentLesson(lessonContents, lessonMarks))
-                .sorted(Comparator.comparing(StudentLessonDto::id))
+                .map(toUserLesson(lessonContents, lessonMarks))
+                .sorted(Comparator.comparing(UserLessonDto::id))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private static Function<Lesson, StudentLessonDto> toStudentLesson(final Map<Long, Set<LessonContent>> lessonContents,
-                                                                      final Map<Long, BigDecimal> lessonMarks) {
+    private static Function<Lesson, UserLessonDto> toUserLesson(final Map<Long, Set<LessonContent>> lessonContents,
+                                                                final Map<Long, BigDecimal> lessonMarks) {
         return lesson -> {
             final Long lessonId = lesson.getId();
             final Set<LessonContent> lessonContent = lessonContents.get(lessonId);
             final BigDecimal lessonMarkValue = lessonMarks.get(lessonId);
 
-            return new StudentLessonDto(lesson, lessonContent, lessonMarkValue);
+            return new UserLessonDto(lesson, lessonContent, lessonMarkValue);
         };
     }
 
     private void validateUserCourseAccess(Long userId, Long courseCode) {
-        if (!AuthorizationUtil.isCurrentUserAdminOrInstructor() && !userAssociationService.isUserAssociatedWithCourse(userId, courseCode)) {
-            throw new SystemException("Access to the lesson is limited to associated students only", SystemErrorCode.FORBIDDEN);
+        if (!userAssociationService.isUserAssociatedWithCourse(userId, courseCode)) {
+            throw new SystemException("Access to the lesson is limited to associated users only", SystemErrorCode.FORBIDDEN);
         }
     }
 
     @Override
-    public MarkAssignmentResponseDto assignMarkToUserLesson(final Long instructorId, final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        validateMarkAssigment(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId());
-        return markService.assignMarkToUserLesson(instructorId, markAssigmentRequestDto);
-    }
-
-    private void validateMarkAssigment(final Long studentId, final Long lessonId) {
-        if (!userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
-            throw new SystemException("Student is not associated with lesson", SystemErrorCode.BAD_REQUEST);
+    public MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        if (!userAssociationService.isUserAssociatedWithLesson(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId())) {
+            throw new SystemException("Student is not associated with lesson", SystemErrorCode.FORBIDDEN);
         }
+        return markService.assignMarkToStudentLesson(markAssigmentRequestDto);
     }
 }

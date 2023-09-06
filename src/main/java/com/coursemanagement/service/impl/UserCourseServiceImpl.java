@@ -7,6 +7,7 @@ import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
@@ -37,6 +38,13 @@ public class UserCourseServiceImpl implements UserCourseService {
         final List<UserCourseEntity> userCourseEntities = userCourseRepository.findByUserId(userId);
         return userCourseEntities.stream()
                 .map(userCourseEntity -> mapper.map(userCourseEntity, UserCourse.class))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<UserCourseDto> getUserCourseSummariesByUserId(final Long userId) {
+        return getUserCoursesByUserId(userId).stream()
+                .map(UserCourseDto::new)
                 .collect(Collectors.toSet());
     }
 

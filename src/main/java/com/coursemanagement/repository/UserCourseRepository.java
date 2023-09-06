@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface UserCourseRepository extends JpaRepository<UserCourseEntity, Long> {
 
-    @EntityGraph(attributePaths = {"course", "course.userCourses", "course.userCourses.roles"})
+    @EntityGraph(attributePaths = {"user", "user.roles", "course"})
     List<UserCourseEntity> findByUserId(final Long userId);
 
     @Query(name = "findStudentsByCourseCode")

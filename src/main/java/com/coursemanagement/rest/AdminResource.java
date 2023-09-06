@@ -3,10 +3,10 @@ package com.coursemanagement.rest;
 import com.coursemanagement.annotation.AdminAccessLevel;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;
-import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
-import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
+import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.RoleManagementService;
@@ -49,8 +49,8 @@ public class AdminResource {
     }
 
     @GetMapping("/users/{user-id}/courses")
-    public Set<UserCourse> getUserCourses(@PathVariable(value = "user-id") final Long userId) {
-        return userCourseService.getUserCoursesByUserId(userId);
+    public Set<UserCourseDto> getUserCourses(@PathVariable(value = "user-id") final Long userId) {
+        return userCourseService.getUserCourseSummariesByUserId(userId);
     }
 
     @GetMapping(value = "/users/{user-id}/courses/{course-code}")

@@ -1,6 +1,5 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.CourseFeedback;
@@ -8,9 +7,9 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;
 import com.coursemanagement.repository.entity.CourseFeedbackEntity;
-import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.UserAssociationService;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
@@ -41,12 +39,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         final Long courseCode = feedbackRequestDto.courseCode();
         validateUserCourseAccess(studentId, courseCode);
 
-        final UserCourse studentCourse = userCourseService.getUserCoursesByUserId(studentId).stream()
-                .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
-                .filter(userCourse -> Objects.equals(userCourse.getCourse().getCode(), courseCode))
-                .findFirst()
-                .orElseThrow(() -> new SystemException("Cannot find student course", SystemErrorCode.BAD_REQUEST));
-
+        final UserCourse studentCourse = userCourseService.getUserCourse(studentId, courseCode);
         final CourseFeedback courseFeedback = CourseFeedback.builder()
                 .withStudentId(studentId)
                 .withCourseCode(courseCode)

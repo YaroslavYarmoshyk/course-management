@@ -24,6 +24,7 @@ public final class TestDataUtils {
     private static final int DEFAULT_INCREMENT_STEP = 1;
     private static final int COURSE_CDE_INCREMENT_STEP = 10000;
     private static final int DEFAULT_LESSON_IN_COURSE_COUNT = 5;
+    private static final int DEFAULT_ROLES_COUNT = 2;
     public static final Model<User> USER_TEST_MODEL = Instancio.of(User.class)
             .supply(field(User::getId), () -> START_USER_ID.getAndSet(START_USER_ID.get() + DEFAULT_INCREMENT_STEP))
             .generate(field(User::getFirstName), gen -> gen.oneOf("John", "Marry", "Tyrion"))
@@ -34,7 +35,7 @@ public final class TestDataUtils {
                     .set(When.is("Lannister"), "goldlannister@gmail.com"))
             .generate(field(User::getPhone), gen -> gen.text().pattern("+38(097)-#d#d#d-#d#d-#d#d"))
             .set(field(User::getStatus), UserStatus.ACTIVE)
-            .generate(field(User::getRoles), gen -> gen.collection().maxSize(2))
+            .generate(field(User::getRoles), gen -> gen.collection().maxSize(DEFAULT_ROLES_COUNT))
             .toModel();
 
     public static final Model<Course> COURSE_TEST_MODEL = Instancio.of(Course.class)
@@ -116,6 +117,12 @@ public final class TestDataUtils {
 
     public static Course getRandomCourse() {
         return Instancio.of(COURSE_TEST_MODEL).create();
+    }
+
+    public static Course getRandomCourseContainingUser(final User user) {
+        return Instancio.of(COURSE_TEST_MODEL)
+                .set(field(Course::getUsers), Set.of(user))
+                .create();
     }
 
     public static UserCourse getRandomUserCourseByUser(final User user) {

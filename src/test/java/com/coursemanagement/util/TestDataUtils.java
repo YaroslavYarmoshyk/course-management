@@ -23,7 +23,7 @@ public final class TestDataUtils {
     private static final AtomicReference<Long> START_LESSON_ID = new AtomicReference<>(100L);
     private static final int DEFAULT_INCREMENT_STEP = 1;
     private static final int COURSE_CDE_INCREMENT_STEP = 10000;
-    private static final int DEFAULT_LESSON_IN_COURSE_COUNT = 5;
+    private static final int DEFAULT_COLLECTION_SIZE = 5;
     private static final int DEFAULT_ROLES_COUNT = 2;
     public static final Model<User> USER_TEST_MODEL = Instancio.of(User.class)
             .supply(field(User::getId), () -> START_USER_ID.getAndSet(START_USER_ID.get() + DEFAULT_INCREMENT_STEP))
@@ -115,6 +115,10 @@ public final class TestDataUtils {
                 .create();
     }
 
+    public static Set<Course> getRandomCourses() {
+        return Instancio.ofSet(COURSE_TEST_MODEL).size(DEFAULT_COLLECTION_SIZE).create();
+    }
+
     public static Course getRandomCourse() {
         return Instancio.of(COURSE_TEST_MODEL).create();
     }
@@ -137,7 +141,7 @@ public final class TestDataUtils {
 
     public static Set<Lesson> getRandomLessonsByCourse(final Course course) {
         return Instancio.ofSet(Lesson.class)
-                .size(DEFAULT_LESSON_IN_COURSE_COUNT)
+                .size(DEFAULT_COLLECTION_SIZE)
                 .supply(field(Lesson::getId), () -> START_LESSON_ID.getAndSet(START_LESSON_ID.get() + DEFAULT_INCREMENT_STEP))
                 .set(field(Lesson::getCourse), course)
                 .assign(given(Lesson::getCourse).satisfies((Course courseVar) -> courseVar.getSubject().equals("Mathematics"))

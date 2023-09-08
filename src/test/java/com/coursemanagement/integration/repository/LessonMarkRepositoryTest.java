@@ -1,8 +1,9 @@
-package com.coursemanagement.repository;
+package com.coursemanagement.integration.repository;
 
 import com.coursemanagement.config.DatabaseSetupExtension;
 import com.coursemanagement.config.properties.UserTestDataProperties;
 import com.coursemanagement.model.User;
+import com.coursemanagement.repository.LessonMarkRepository;
 import com.coursemanagement.repository.entity.LessonEntity;
 import com.coursemanagement.repository.entity.LessonMarkEntity;
 import com.coursemanagement.repository.entity.UserEntity;

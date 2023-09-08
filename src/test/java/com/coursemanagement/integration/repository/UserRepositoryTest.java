@@ -1,9 +1,10 @@
-package com.coursemanagement.repository;
+package com.coursemanagement.integration.repository;
 
 import com.coursemanagement.config.DatabaseSetupExtension;
 import com.coursemanagement.config.properties.UserTestDataProperties;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.User;
+import com.coursemanagement.repository.UserRepository;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;

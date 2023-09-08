@@ -1,4 +1,4 @@
-package com.coursemanagement.service;
+package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.Course;
@@ -8,6 +8,7 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
+import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.UserAssociationServiceImpl;
 import com.coursemanagement.util.AuthorizationUtil;
 import org.instancio.Instancio;

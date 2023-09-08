@@ -1,4 +1,4 @@
-package com.coursemanagement.service;
+package com.coursemanagement.unit.service;
 
 import com.coursemanagement.config.properties.CourseProperties;
 import com.coursemanagement.enumeration.Mark;
@@ -14,6 +14,12 @@ import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
+import com.coursemanagement.service.CourseService;
+import com.coursemanagement.service.LessonService;
+import com.coursemanagement.service.MarkService;
+import com.coursemanagement.service.UserAssociationService;
+import com.coursemanagement.service.UserCourseService;
+import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.CourseManagementServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;

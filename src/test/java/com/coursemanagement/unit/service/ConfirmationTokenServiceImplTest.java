@@ -1,4 +1,4 @@
-package com.coursemanagement.service;
+package com.coursemanagement.unit.service;
 
 import com.coursemanagement.config.extension.UserProviderExtension;
 import com.coursemanagement.enumeration.TokenStatus;
@@ -8,6 +8,9 @@ import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
+import com.coursemanagement.service.ConfirmationTokenService;
+import com.coursemanagement.service.EncryptionService;
+import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.ConfirmationTokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

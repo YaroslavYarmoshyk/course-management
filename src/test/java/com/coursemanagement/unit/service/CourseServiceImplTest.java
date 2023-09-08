@@ -1,4 +1,4 @@
-package com.coursemanagement.service;
+package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exeption.SystemException;
@@ -8,6 +8,8 @@ import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.service.MarkService;
+import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.impl.CourseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.instancio.Instancio;

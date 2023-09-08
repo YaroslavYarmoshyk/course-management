@@ -1,4 +1,4 @@
-package com.coursemanagement.repository;
+package com.coursemanagement.integration.repository;
 
 import com.coursemanagement.config.DatabaseSetupExtension;
 import com.coursemanagement.config.properties.CourseTestDataProperties;
@@ -6,6 +6,7 @@ import com.coursemanagement.config.properties.UserTestDataProperties;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.User;
+import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;

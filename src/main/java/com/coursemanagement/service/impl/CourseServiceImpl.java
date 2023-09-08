@@ -42,22 +42,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Set<Course> getCoursesByCodes(final Collection<Long> codes) {
-        final Set<CourseEntity> foundCourseEntities = courseRepository.findAllByCodeIn(codes);
-        final Set<Long> foundCourseCodes = foundCourseEntities.stream()
-                .map(CourseEntity::getCode)
+        return courseRepository.findAllByCodeIn(codes).stream()
+                .map(courseEntity -> mapper.map(courseEntity, Course.class))
                 .collect(Collectors.toSet());
-
-        logMissingCourses(codes, foundCourseCodes);
-
-        return foundCourseEntities.stream()
-                .map(entity -> mapper.map(entity, Course.class))
-                .collect(Collectors.toSet());
-    }
-
-    private static void logMissingCourses(final Collection<Long> codes, final Set<Long> foundCourseCodes) {
-        codes.stream()
-                .filter(code -> !foundCourseCodes.contains(code))
-                .forEach(code -> log.warn("Course by code: {} was not found", code));
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.security.service.AuthenticationService;
 import com.coursemanagement.service.ConfirmationTokenService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +24,12 @@ public class AuthenticationController {
     private final ConfirmationTokenService confirmationTokenService;
 
     @PostMapping(value = "/register")
-    public AuthenticationResponse register(@RequestBody AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse register(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         return authenticationService.register(authenticationRequest);
     }
 
     @PostMapping(value = "/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         return authenticationService.login(authenticationRequest);
     }
 

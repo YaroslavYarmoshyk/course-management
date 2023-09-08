@@ -5,6 +5,7 @@ import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.ResetPasswordService;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static com.coursemanagement.util.Constants.*;
+import static com.coursemanagement.util.Constants.RESET_PASSWORD_CONFIRMATION_ENDPOINT;
+import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
+import static com.coursemanagement.util.Constants.TOKEN_CONFIRMATION_ENDPOINT_PARAMETER;
 
 @RestController
 @RequestMapping(value = RESET_PASSWORD_ENDPOINT)
@@ -26,7 +29,7 @@ public class ResetPasswordController {
     private final ConfirmationTokenService confirmationTokenService;
 
     @PostMapping(value = RESET_PASSWORD_CONFIRMATION_ENDPOINT)
-    public void sendResetConfirmation(@RequestBody final String email) {
+    public void sendResetConfirmation(@RequestBody @Email final String email) {
         resetPasswordService.sendResetConfirmation(email);
     }
 

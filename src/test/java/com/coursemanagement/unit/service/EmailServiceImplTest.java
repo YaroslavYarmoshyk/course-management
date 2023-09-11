@@ -2,7 +2,6 @@ package com.coursemanagement.unit.service;
 
 import com.coursemanagement.config.properties.CourseProperties;
 import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.impl.EmailServiceImpl;
 import jakarta.mail.Address;
@@ -18,6 +17,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
@@ -28,7 +28,11 @@ import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(value = MockitoExtension.class)
 class EmailServiceImplTest {
@@ -90,8 +94,7 @@ class EmailServiceImplTest {
     }
 
     void testFailureFlow(Consumer<EmailService> emailServiceConsumer) {
-        doThrow(new SystemException("Sending email confirmation was failed", SystemErrorCode.INTERNAL_SERVER_ERROR))
-                .when(emailServiceConsumer).accept(emailService);
+        doThrow(new MailSendException("Cannot send email")).when(javaMailSender).send(any(MimeMessagePreparator.class));
 
         assertThrowsWithMessage(
                 () -> emailServiceConsumer.accept(emailService),

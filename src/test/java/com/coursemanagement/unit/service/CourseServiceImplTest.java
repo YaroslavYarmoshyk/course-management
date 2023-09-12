@@ -72,6 +72,7 @@ class CourseServiceImplTest {
         final CourseEntity courseEntity = Instancio.create(CourseEntity.class);
         final Long courseCode = courseEntity.getCode();
         final Long nonExistingCourseCode = courseCode + 1;
+
         when(courseRepository.findByCode(courseCode)).thenReturn(Optional.of(courseEntity));
         when(courseRepository.findByCode(nonExistingCourseCode)).thenReturn(Optional.empty());
 
@@ -95,6 +96,7 @@ class CourseServiceImplTest {
         final Set<Long> courseCodes = courseEntities.stream()
                 .map(CourseEntity::getCode)
                 .collect(Collectors.toSet());
+
         when(courseRepository.findAllByCodeIn(courseCodes)).thenReturn(courseEntities);
 
         final Set<Course> foundCourses = courseService.getCoursesByCodes(courseCodes);
@@ -117,6 +119,7 @@ class CourseServiceImplTest {
         final Set<Long> courseCodes = courseEntities.stream()
                 .map(CourseEntity::getCode)
                 .collect(Collectors.toSet());
+
         when(courseRepository.findAllByCodeIn(courseCodes)).thenReturn(courseEntities);
 
         courseService.addUserToCourses(user, courseCodes);

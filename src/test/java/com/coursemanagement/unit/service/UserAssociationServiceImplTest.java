@@ -110,6 +110,7 @@ class UserAssociationServiceImplTest {
         final boolean currentUserAdmin = userHasAnyRole(currentUser, Role.ADMIN);
         final boolean currentUserIsRequestedOne = Objects.equals(currentUser.getId(), requestedUser.getId());
         final boolean hasAccess = currentUserAdmin || currentUserIsRequestedOne;
+
         try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
             when(userService.resolveCurrentUser()).thenReturn(currentUser);
             mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
@@ -122,6 +123,7 @@ class UserAssociationServiceImplTest {
         final boolean hasAccessToCourse = course.getUsers().contains(requestedUser);
         final boolean currentUserAdmin = userHasAnyRole(currentUser, Role.ADMIN);
         final boolean hasAccess = currentUserAdmin || hasAccessToCourse;
+
         try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
             mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
             when(courseRepository.existsByUserCoursesUserIdAndCode(anyLong(), anyLong())).thenReturn(hasAccessToCourse);
@@ -134,6 +136,7 @@ class UserAssociationServiceImplTest {
         final boolean hasAccessToLesson = lesson.getCourse().getUsers().contains(requestedUser);
         final boolean currentUserAdmin = userHasAnyRole(currentUser, Role.ADMIN);
         final boolean hasAccess = currentUserAdmin || hasAccessToLesson;
+
         try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
             mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
             when(lessonRepository.existsByCourseUserCoursesUserIdAndId(anyLong(), anyLong())).thenReturn(hasAccessToLesson);
@@ -148,6 +151,7 @@ class UserAssociationServiceImplTest {
         final LessonContent lessonContent = Instancio.of(LessonContent.class)
                 .set(field(LessonContent::getFileId), fileId)
                 .create();
+
         try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
             mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
             when(lessonContentRepository.findByFileId(fileId)).thenReturn(lessonContent);

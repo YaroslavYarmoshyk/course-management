@@ -104,6 +104,7 @@ class ConfirmationTokenServiceImplTest {
         @DisplayName("Verify old tokens get invalidated when a new confirmation token is created")
         void testOldTokensInvalidation(TokenType tokenType, Consumer<ConfirmationTokenService> tokenCreator) {
             final Set<ConfirmationTokenEntity> tokenEntities = generateTokenEntities(tokenType);
+
             when(tokenRepository.findAllByUserIdAndType(any(), any())).thenReturn(tokenEntities);
             when(encryptionService.encryptUrlToken(anyString())).thenReturn(TOKEN_VALUE);
             doReturn(new ConfirmationTokenEntity()).when(tokenRepository).save(any(ConfirmationTokenEntity.class));
@@ -136,6 +137,7 @@ class ConfirmationTokenServiceImplTest {
         @DisplayName("Test token confirmation by token and type when token exists")
         void testFindConfirmationTokenByTokenAndTypeExist(TokenType tokenType) {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
+
             when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.of(confirmationTokenEntity));
 
             final var actualToken = confirmationTokenService.confirmToken(confirmationTokenEntity.getToken(), tokenType);
@@ -164,6 +166,7 @@ class ConfirmationTokenServiceImplTest {
         @DisplayName("Test valid token is activated after confirmation")
         void testValidTokenIsActivated(TokenType tokenType) {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(tokenType, TokenStatus.NOT_ACTIVATED);
+
             when(tokenRepository.findByTokenAndType(any(), any())).thenReturn(Optional.of(confirmationTokenEntity));
 
             final var actualConfirmationToken = confirmationTokenService.confirmToken(confirmationTokenEntity.getToken(), tokenType);
@@ -223,6 +226,7 @@ class ConfirmationTokenServiceImplTest {
             final ConfirmationTokenEntity confirmationTokenEntity = getConfirmationTokenEntity(TokenType.EMAIL_CONFIRMATION, TokenStatus.NOT_ACTIVATED);
             final String token = confirmationTokenEntity.getToken();
             final TokenType tokenType = confirmationTokenEntity.getType();
+
             doReturn(mapper.map(confirmationTokenEntity, ConfirmationToken.class)).when(confirmationTokenService).confirmToken(token, tokenType);
 
             confirmationTokenService.confirmUserByEmailToken(token);

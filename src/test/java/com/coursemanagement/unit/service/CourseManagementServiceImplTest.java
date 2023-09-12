@@ -104,6 +104,7 @@ class CourseManagementServiceImplTest {
         @DisplayName("Test throwing exception when expected user is not instructor")
         void testShouldThrowException_InvalidUserRole() {
             final var requestDto = new CourseAssignmentRequestDto(FIRST_STUDENT.getId(), RANDOM_COURSE.getCode());
+
             when(userService.getUserById(FIRST_STUDENT.getId())).thenReturn(FIRST_STUDENT);
 
             final SystemException exception = assertThrows(SystemException.class, () -> courseManagementService.assignInstructorToCourse(requestDto));
@@ -121,6 +122,7 @@ class CourseManagementServiceImplTest {
                             Collectors.counting()
                     ));
             final var requestDto = new CourseAssignmentRequestDto(INSTRUCTOR.getId(), RANDOM_COURSE.getCode());
+
             when(userService.getUserById(INSTRUCTOR.getId())).thenReturn(INSTRUCTOR);
             doNothing().when(courseService).addUserToCourses(any(), anyCollection());
             doReturn(RANDOM_COURSE).when(courseService).getCourseByCode(any());
@@ -159,6 +161,7 @@ class CourseManagementServiceImplTest {
             final var requestDto = new StudentEnrollInCourseRequestDto(requestedForUser.getId(), Set.of());
             final boolean sameUser = Objects.equals(requestedByUser.getId(), requestedForUser.getId());
             final boolean requestedByAdmin = userHasAnyRole(requestedByUser, Role.ADMIN);
+
             when(userService.getUserById(requestedForUser.getId())).thenReturn(requestedForUser);
             when(userAssociationService.currentUserHasAccessTo(requestedForUser.getId())).thenReturn(sameUser || requestedByAdmin);
 
@@ -176,6 +179,7 @@ class CourseManagementServiceImplTest {
                     .collect(Collectors.toSet());
             final Long studentId = FIRST_STUDENT.getId();
             final var requestDto = new StudentEnrollInCourseRequestDto(studentId, requestedCourseCodes);
+
             when(userAssociationService.currentUserHasAccessTo(studentId)).thenReturn(true);
             when(userCourseService.getUserCoursesByUserId(studentId)).thenReturn(alreadyTakenCourses);
             when(courseService.getCoursesByCodes(anyCollection())).thenReturn(foundRequestedCourses);
@@ -211,6 +215,7 @@ class CourseManagementServiceImplTest {
             final Set<Course> foundRequestedCourses = foundRequestedCourseCodes.stream()
                     .map(code -> Course.builder().code(code).build())
                     .collect(Collectors.toSet());
+
             when(courseService.getCoursesByCodes(anyCollection())).thenReturn(foundRequestedCourses);
             when(userService.getUserById(studentId)).thenReturn(FIRST_STUDENT);
 

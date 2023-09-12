@@ -2,10 +2,13 @@ package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.model.CourseFeedback;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;
+import com.coursemanagement.repository.entity.CourseFeedbackEntity;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
+import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
@@ -17,7 +20,6 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -27,9 +29,15 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.AuthorizationUtil.userHasAnyRole;
-import static com.coursemanagement.util.TestDataUtils.*;
+import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
+import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
+import static com.coursemanagement.util.TestDataUtils.USER_TEST_MODEL;
+import static com.coursemanagement.util.TestDataUtils.getRandomUserCourseByUser;
 import static org.instancio.Select.field;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(value = MockitoExtension.class)
@@ -44,7 +52,7 @@ class FeedbackServiceImplTest {
     private UserCourseService userCourseService;
     @Mock
     private UserService userService;
-    @Spy
+    @Mock
     private ModelMapper mapper;
 
     @TestFactory
@@ -62,7 +70,6 @@ class FeedbackServiceImplTest {
                 .set(field(User::getId), requestDto.instructorId() + 1)
                 .set(field(User::getRoles), Set.of(Role.INSTRUCTOR))
                 .create();
-        when(userService.getUserById(INSTRUCTOR.getId())).thenReturn(INSTRUCTOR);
         return Stream.of(
                 dynamicTest("Test current user is neither admin or instructor",
                         () -> testFeedbackValidation(
@@ -83,7 +90,8 @@ class FeedbackServiceImplTest {
                                 requestDto,
                                 false,
                                 "Student is not associated with course"
-                        ))
+                        )),
+                dynamicTest("Test feedback submission", () -> testFeedbackProviding(requestDto, userCourse))
         );
     }
 
@@ -96,6 +104,8 @@ class FeedbackServiceImplTest {
         final Long courseCode = feedbackRequestDto.courseCode();
         final boolean currentAdmin = userHasAnyRole(currentUser, Role.ADMIN);
         final boolean sameUserWithInstructorRole = Objects.equals(currentUser.getId(), feedbackRequestDto.instructorId()) && userHasAnyRole(currentUser, Role.INSTRUCTOR);
+
+        when(userService.getUserById(INSTRUCTOR.getId())).thenReturn(INSTRUCTOR);
         when(userAssociationService.currentUserHasAccessTo(instructorId)).thenReturn(currentAdmin || sameUserWithInstructorRole);
         when(userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)).thenReturn(studentAssociatedWithCourse);
 
@@ -104,6 +114,32 @@ class FeedbackServiceImplTest {
                 SystemException.class,
                 expectedMessage
         );
+    }
+
+    void testFeedbackProviding(final FeedbackRequestDto feedbackRequestDto, final UserCourse userCourse) {
+        final Long instructorId = feedbackRequestDto.instructorId();
+        final Long studentId = feedbackRequestDto.studentId();
+        final Long courseCode = feedbackRequestDto.courseCode();
+        final String feedback = feedbackRequestDto.feedback();
+        final CourseFeedbackEntity courseFeedbackEntity = Instancio.of(CourseFeedbackEntity.class)
+                .set(field(CourseFeedbackEntity::getInstructorId), instructorId)
+                .set(field(CourseFeedbackEntity::getCourseCode), courseCode)
+                .set(field(CourseFeedbackEntity::getStudentId), studentId)
+                .set(field(CourseFeedbackEntity::getFeedback), feedback)
+                .create();
+
+        when(userAssociationService.currentUserHasAccessTo(anyLong())).thenReturn(true);
+        when(userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)).thenReturn(true);
+        when(userCourseService.getUserCourse(studentId, courseCode)).thenReturn(userCourse);
+        when(mapper.map(any(CourseFeedback.class), any())).thenReturn(courseFeedbackEntity);
+        when(feedbackRepository.save(any(CourseFeedbackEntity.class))).thenReturn(courseFeedbackEntity);
+
+        final FeedbackResponseDto feedbackResponseDto = feedbackService.provideFeedbackToUserCourse(feedbackRequestDto);
+
+        assertEquals(instructorId, feedbackResponseDto.instructor().id());
+        assertEquals(studentId, feedbackResponseDto.student().id());
+        assertEquals(userCourse.getCourse().getCode(), feedbackResponseDto.userCourse().code());
+        assertEquals(feedback, feedbackResponseDto.feedback());
     }
 
 }

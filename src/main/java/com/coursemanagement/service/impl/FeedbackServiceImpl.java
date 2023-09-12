@@ -71,9 +71,10 @@ public class FeedbackServiceImpl implements FeedbackService {
     private void validateInstructor(final User instructor) {
         final boolean currentUserHasAccess = userAssociationService.currentUserHasAccessTo(instructor.getId());
         final boolean currentUserAdminOrInstructor = userHasAnyRole(instructor, ADMIN, INSTRUCTOR);
-        if (!currentUserHasAccess || !currentUserAdminOrInstructor) {
-            throw new SystemException("Current user is not allowed to provide feedback to student course", SystemErrorCode.FORBIDDEN);
+        if (currentUserHasAccess && currentUserAdminOrInstructor) {
+            return;
         }
+        throw new SystemException("Current user is not allowed to provide feedback to student course", SystemErrorCode.FORBIDDEN);
     }
 
     private void validateUserCourseAccess(final Long studentId, final Long courseCode) {

@@ -3,6 +3,8 @@ package com.coursemanagement.enumeration;
 import com.coursemanagement.enumeration.converter.DatabaseEnum;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 public enum FileType implements DatabaseEnum {
     TEXT(1), IMAGE(2), AUDIO(3), VIDEO(4);
@@ -15,6 +17,12 @@ public enum FileType implements DatabaseEnum {
     }
 
     public static FileType of(final String contentType) {
+        return Optional.ofNullable(contentType)
+                .map(FileType::mapToFileType)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid content type: " + contentType));
+    }
+
+    private static FileType mapToFileType(final String contentType) {
         return switch (contentType) {
             case "text/plain", "text/html", "application/xml", "application/json", "text/csv" -> FileType.TEXT;
             case "image/jpeg", "image/jpg", "image/png", "image/gif", "image/bmp" -> FileType.IMAGE;

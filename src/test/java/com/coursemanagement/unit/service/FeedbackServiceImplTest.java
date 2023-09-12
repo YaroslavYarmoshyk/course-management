@@ -2,7 +2,6 @@ package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.model.CourseFeedback;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -38,6 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(value = MockitoExtension.class)
@@ -52,7 +54,7 @@ class FeedbackServiceImplTest {
     private UserCourseService userCourseService;
     @Mock
     private UserService userService;
-    @Mock
+    @Spy
     private ModelMapper mapper;
 
     @TestFactory
@@ -131,11 +133,17 @@ class FeedbackServiceImplTest {
         when(userAssociationService.currentUserHasAccessTo(anyLong())).thenReturn(true);
         when(userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)).thenReturn(true);
         when(userCourseService.getUserCourse(studentId, courseCode)).thenReturn(userCourse);
-        when(mapper.map(any(CourseFeedback.class), any())).thenReturn(courseFeedbackEntity);
         when(feedbackRepository.save(any(CourseFeedbackEntity.class))).thenReturn(courseFeedbackEntity);
 
         final FeedbackResponseDto feedbackResponseDto = feedbackService.provideFeedbackToUserCourse(feedbackRequestDto);
 
+        verify(feedbackRepository).save(argThat(entity -> {
+            assertEquals(instructorId, entity.getInstructorId());
+            assertEquals(studentId, entity.getStudentId());
+            assertEquals(courseCode, entity.getCourseCode());
+            assertEquals(feedback, entity.getFeedback());
+            return true;
+        }));
         assertEquals(instructorId, feedbackResponseDto.instructor().id());
         assertEquals(studentId, feedbackResponseDto.student().id());
         assertEquals(userCourse.getCourse().getCode(), feedbackResponseDto.userCourse().code());

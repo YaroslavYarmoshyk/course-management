@@ -1,6 +1,5 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.enumeration.FileType;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.File;
@@ -11,14 +10,11 @@ import com.coursemanagement.service.HomeworkService;
 import com.coursemanagement.service.UserAssociationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
@@ -36,7 +32,7 @@ public class HomeworkServiceImpl implements HomeworkService {
                                final Long lessonId,
                                final MultipartFile multipartFile) {
         validateHomeworkUploading(studentId, lessonId);
-        final File file = createFile(multipartFile);
+        final File file = fileService.createFile(multipartFile);
         final HomeworkEntity homeworkEntity = new HomeworkEntity()
                 .setFileId(file.getId())
                 .setStudentId(studentId)
@@ -48,22 +44,6 @@ public class HomeworkServiceImpl implements HomeworkService {
     private void validateHomeworkUploading(final Long studentId, final Long lessonId) {
         if (!userAssociationService.isUserAssociatedWithLesson(studentId, lessonId)) {
             throw new SystemException("Access to the homework uploading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);
-        }
-    }
-
-    private File createFile(final MultipartFile multipartFile) {
-        try {
-            final FileType fileType = Optional.ofNullable(multipartFile)
-                    .map(MultipartFile::getContentType)
-                    .map(FileType::of)
-                    .orElseThrow(() -> new SystemException("Invalid input file: " + multipartFile, SystemErrorCode.BAD_REQUEST));
-            final File file = new File()
-                    .setFileName(FilenameUtils.removeExtension(multipartFile.getOriginalFilename()))
-                    .setFileType(fileType)
-                    .setFileContent(multipartFile.getBytes());
-            return fileService.save(file);
-        } catch (final IOException e) {
-            throw new SystemException(e.getMessage(), SystemErrorCode.BAD_REQUEST);
         }
     }
 

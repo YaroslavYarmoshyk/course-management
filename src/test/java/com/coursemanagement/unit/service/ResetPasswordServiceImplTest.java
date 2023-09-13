@@ -104,5 +104,4 @@ class ResetPasswordServiceImplTest {
                 FIRST_STUDENT.getPhone(),
                 newPassword);
     }
-
 }

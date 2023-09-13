@@ -11,6 +11,7 @@ import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.When;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -111,7 +112,7 @@ public final class TestDataUtils {
     public static User getNewUser() {
         return Instancio.of(USER_TEST_MODEL)
                 .set(field(User::getId), 5L)
-                .set(field(User::getRoles), Set.of())
+                .set(field(User::getRoles), new HashSet<>())
                 .create();
     }
 

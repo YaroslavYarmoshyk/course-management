@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 public record UserLessonDto(
-        Long id,
+        Long lessonId,
         String title,
         String description,
         @JsonIgnoreProperties(value = "lessonId")

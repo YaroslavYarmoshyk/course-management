@@ -56,7 +56,7 @@ public class LessonServiceImpl implements LessonService {
 
         return lessonsPerCourse.stream()
                 .map(toUserLesson(lessonContents, lessonMarks))
-                .sorted(Comparator.comparing(UserLessonDto::id))
+                .sorted(Comparator.comparing(UserLessonDto::lessonId))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
@@ -79,9 +79,16 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        validateLessonMarkAssignment(markAssigmentRequestDto);
+        return markService.assignMarkToStudentLesson(markAssigmentRequestDto);
+    }
+
+    private void validateLessonMarkAssignment(final MarkAssigmentRequestDto markAssigmentRequestDto) {
+        if (!userAssociationService.currentUserHasAccessTo(markAssigmentRequestDto.instructorId())) {
+            throw new SystemException("Current user cannot assign mark to lesson", SystemErrorCode.FORBIDDEN);
+        }
         if (!userAssociationService.isUserAssociatedWithLesson(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId())) {
             throw new SystemException("Student is not associated with lesson", SystemErrorCode.FORBIDDEN);
         }
-        return markService.assignMarkToStudentLesson(markAssigmentRequestDto);
     }
 }

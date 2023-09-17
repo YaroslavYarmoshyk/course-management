@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTERN;
 
 public record UserCourseDetailsDto(
-        Long code,
+        Long courseCode,
         String subject,
         String description,
         @JsonIgnoreProperties(value = {"courseCode", "studentId"})

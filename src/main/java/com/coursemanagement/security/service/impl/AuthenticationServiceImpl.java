@@ -1,8 +1,8 @@
 package com.coursemanagement.security.service.impl;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.UserRepository;
@@ -14,7 +14,6 @@ import com.coursemanagement.security.service.JwtService;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +36,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthenticationResponse register(final AuthenticationRequest authenticationRequest) {
         final String email = authenticationRequest.email();
-        validateAuthenticationRequest(authenticationRequest);
         checkIfEmailIsTaken(email);
 
         var user = new User()
@@ -57,7 +55,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse login(final AuthenticationRequest authenticationRequest) {
-        validateAuthenticationRequest(authenticationRequest);
         return getAuthenticationResponse(authenticationRequest);
     }
 
@@ -66,17 +63,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var authentication = authenticationManager.authenticate(getAuthenticationToken(authenticationRequest));
         final String token = jwtService.generateJwt(authentication);
         return new AuthenticationResponse(token);
-    }
-
-    private void validateAuthenticationRequest(final AuthenticationRequest authenticationRequest) {
-        final String email = authenticationRequest.email();
-        final String password = authenticationRequest.password();
-        if (Strings.isBlank(email)) {
-            throw new SystemException("Email cannot be empty", SystemErrorCode.BAD_REQUEST);
-        }
-        if (Strings.isBlank(password)) {
-            throw new SystemException("Password cannot be empty", SystemErrorCode.BAD_REQUEST);
-        }
     }
 
     private void checkIfEmailIsTaken(final String email) {

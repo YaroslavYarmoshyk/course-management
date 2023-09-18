@@ -99,23 +99,14 @@ class AuthenticationServiceImplTest {
         assertTrue(passwordEncoder.matches(AUTHENTICATION_REQUEST.password(), userToSave.getPassword()));
         verify(confirmationTokenService).createEmailConfirmationToken(any());
         verify(emailService).sendEmailConfirmation(any(), any());
-        verify(authenticationService).getAuthenticationResponse(AUTHENTICATION_REQUEST);
+        verify(authenticationService).authenticate(AUTHENTICATION_REQUEST);
     }
 
     @Order(3)
     @Test
-    @DisplayName("Test user login")
-    void testUserLogin() {
-        authenticationService.login(AUTHENTICATION_REQUEST);
-
-        verify(authenticationService).getAuthenticationResponse(AUTHENTICATION_REQUEST);
-    }
-
-    @Order(4)
-    @Test
-    @DisplayName("Test get authentication response")
-    void testGetAuthenticationResponse() {
-        authenticationService.getAuthenticationResponse(AUTHENTICATION_REQUEST);
+    @DisplayName("Test authenticate user")
+    void testAuthenticateUser() {
+        authenticationService.authenticate(AUTHENTICATION_REQUEST);
 
         verify(authenticationManager).authenticate(any());
         verify(jwtService).generateJwt(any());

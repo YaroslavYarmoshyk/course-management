@@ -7,7 +7,5 @@ public interface AuthenticationService {
 
     AuthenticationResponse register(final AuthenticationRequest authenticationRequest);
 
-    AuthenticationResponse login(final AuthenticationRequest authenticationRequest);
-
-    AuthenticationResponse getAuthenticationResponse(final AuthenticationRequest authenticationRequest);
+    AuthenticationResponse authenticate(final AuthenticationRequest authenticationRequest);
 }

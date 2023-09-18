@@ -42,7 +42,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             final User user = userService.getUserByEmail(authenticationRequest.email());
             user.setPassword(passwordEncoder.encode(authenticationRequest.password()));
             userService.save(user);
-            return authenticationService.getAuthenticationResponse(authenticationRequest);
+            return authenticationService.authenticate(authenticationRequest);
         }
         throw new SystemException("Email cannot be empty", SystemErrorCode.INTERNAL_SERVER_ERROR);
     }

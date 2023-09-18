@@ -50,17 +50,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final ConfirmationToken emailConfirmationToken = confirmationTokenService.createEmailConfirmationToken(savedUser);
         emailService.sendEmailConfirmation(user, emailConfirmationToken.getToken());
 
-        return getAuthenticationResponse(authenticationRequest);
+        return authenticate(authenticationRequest);
     }
 
     @Override
-    public AuthenticationResponse login(final AuthenticationRequest authenticationRequest) {
-        return getAuthenticationResponse(authenticationRequest);
-    }
-
-    @Override
-    public AuthenticationResponse getAuthenticationResponse(final AuthenticationRequest authenticationRequest) {
-        var authentication = authenticationManager.authenticate(getAuthenticationToken(authenticationRequest));
+    public AuthenticationResponse authenticate(final AuthenticationRequest authenticationRequest) {
+        var authenticationToken = new UsernamePasswordAuthenticationToken(authenticationRequest.email(), authenticationRequest.password());
+        var authentication = authenticationManager.authenticate(authenticationToken);
         final String token = jwtService.generateJwt(authentication);
         return new AuthenticationResponse(token);
     }
@@ -69,12 +65,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new SystemException("User with email " + email + " already exists", SystemErrorCode.BAD_REQUEST);
         }
-    }
-
-    private static UsernamePasswordAuthenticationToken getAuthenticationToken(final AuthenticationRequest authenticationRequest) {
-        return new UsernamePasswordAuthenticationToken(
-                authenticationRequest.email(),
-                authenticationRequest.password()
-        );
     }
 }

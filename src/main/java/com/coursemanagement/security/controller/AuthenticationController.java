@@ -30,7 +30,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login")
     public AuthenticationResponse login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
-        return authenticationService.login(authenticationRequest);
+        return authenticationService.authenticate(authenticationRequest);
     }
 
     @GetMapping(value = EMAIL_CONFIRMATION_ENDPOINT)

@@ -3,10 +3,14 @@ package com.coursemanagement.util;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.enumeration.UserStatus;
+import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.security.model.AuthenticationRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
 import org.instancio.Model;
 import org.instancio.When;
@@ -116,6 +120,16 @@ public final class TestDataUtils {
                 .create();
     }
 
+    public static AuthenticationRequest getAuthenticationRequest() {
+        return new AuthenticationRequest(
+                NEW_USER.getFirstName(),
+                NEW_USER.getLastName(),
+                NEW_USER.getEmail(),
+                NEW_USER.getPhone(),
+                NEW_USER.getPassword()
+        );
+    }
+
     public static Set<Course> getRandomCourses() {
         return Instancio.ofSet(COURSE_TEST_MODEL).create();
     }
@@ -160,5 +174,13 @@ public final class TestDataUtils {
                         .supply(field(Lesson::getTitle), () -> "Computer Science Lesson №" + START_LESSON_ID.get())
                         .supply(field(Lesson::getDescription), () -> "Lesson on Computer Science concepts №" + START_LESSON_ID.get()))
                 .create();
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (final Exception e) {
+            throw new SystemException("Cannot convert object: " + obj.toString() + " to string", SystemErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 }

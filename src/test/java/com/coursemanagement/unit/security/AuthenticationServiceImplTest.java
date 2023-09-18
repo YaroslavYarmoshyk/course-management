@@ -29,7 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
-import static com.coursemanagement.util.TestDataUtils.NEW_USER;
+import static com.coursemanagement.util.TestDataUtils.getAuthenticationRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -110,15 +110,5 @@ class AuthenticationServiceImplTest {
 
         verify(authenticationManager).authenticate(any());
         verify(jwtService).generateJwt(any());
-    }
-
-    private static AuthenticationRequest getAuthenticationRequest() {
-        return new AuthenticationRequest(
-                NEW_USER.getFirstName(),
-                NEW_USER.getLastName(),
-                NEW_USER.getEmail(),
-                NEW_USER.getPhone(),
-                NEW_USER.getPassword()
-        );
     }
 }

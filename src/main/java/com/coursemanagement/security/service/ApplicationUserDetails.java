@@ -1,4 +1,4 @@
-package com.coursemanagement.security;
+package com.coursemanagement.security.service;
 
 import com.coursemanagement.model.User;
 import org.springframework.security.core.GrantedAuthority;

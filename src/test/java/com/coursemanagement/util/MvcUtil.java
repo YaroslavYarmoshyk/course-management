@@ -16,6 +16,13 @@ import static org.springframework.http.HttpMethod.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 public class MvcUtil {
+
+    public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
+                                                   final HttpMethod requestType,
+                                                   final String endpoint) throws Exception {
+        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, null);
+    }
+
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint,

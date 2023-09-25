@@ -154,7 +154,7 @@ class AuthenticationControllerTest {
         @Test
         @DisplayName("Test email confirmation endpoint without confirmation token")
         void testEmailConfirmationEndpoint_AbsentToken() throws Exception {
-            makeMockMvcRequest(mockMvc, GET, CONFIRMATION_ENDPOINT, null)
+            makeMockMvcRequest(mockMvc, GET, CONFIRMATION_ENDPOINT)
                     .andExpect(status().isBadRequest());
 
         }

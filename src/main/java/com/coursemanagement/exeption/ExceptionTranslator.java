@@ -1,6 +1,5 @@
 package com.coursemanagement.exeption;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.dto.ErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,17 +15,13 @@ import java.nio.file.AccessDeniedException;
 @Slf4j
 @ControllerAdvice
 public class ExceptionTranslator {
-
     @ExceptionHandler(value = SystemException.class)
     public ResponseEntity<ErrorDto> handleSystemException(final SystemException e, final HttpServletRequest request) {
         log.warn(e.getClass().getSimpleName(), e);
-        final SystemErrorCode systemErrorCode = e.getErrorCode();
-        final int codeValue = systemErrorCode.getValue();
-        final HttpStatus status = HttpStatus.valueOf(codeValue);
-        final ErrorDto errorDto = new ErrorDto(e, status, request);
+        final ErrorDto errorDto = new ErrorDto(e, request);
         return ResponseEntity.status(errorDto.getStatus())
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(errorDto);
+                .body(new ErrorDto(e, request));
     }
 
     @ExceptionHandler(value = {BadCredentialsException.class, AccessDeniedException.class})

@@ -1,6 +1,6 @@
 package com.coursemanagement.security.service.impl;
 
-import com.coursemanagement.security.ApplicationUserDetails;
+import com.coursemanagement.security.service.ApplicationUserDetails;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

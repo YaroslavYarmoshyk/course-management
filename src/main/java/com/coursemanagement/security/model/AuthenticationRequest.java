@@ -1,13 +1,13 @@
 package com.coursemanagement.security.model;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record AuthenticationRequest(
-        @NotNull String firstName,
-        @NotNull String lastName,
-        @NotNull @Email String email,
-        @NotNull String phone,
-        @NotNull String password
+        String firstName,
+        String lastName,
+        @NotBlank @Email String email,
+        String phone,
+        @NotBlank String password
 ) {
 }

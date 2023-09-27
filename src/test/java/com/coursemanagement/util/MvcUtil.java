@@ -1,5 +1,7 @@
 package com.coursemanagement.util;
 
+import com.coursemanagement.enumeration.Role;
+import com.coursemanagement.model.User;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -12,36 +14,67 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.coursemanagement.util.JsonUtil.asJsonString;
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 public class MvcUtil {
 
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint) throws Exception {
-        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, null);
+        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, null, null);
+    }
+
+    public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
+                                                   final HttpMethod requestType,
+                                                   final String endpoint,
+                                                   final User user) throws Exception {
+        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, null, user);
     }
 
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint,
                                                    final Object body) throws Exception {
-        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, body);
+        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, body, null);
+    }
+
+    public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
+                                                   final HttpMethod requestType,
+                                                   final String endpoint,
+                                                   final Object body,
+                                                   final User user) throws Exception {
+        return makeMockMvcRequest(mockMvc, requestType, endpoint, null, body, user);
     }
 
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint,
                                                    final Map<String, Object> params) throws Exception {
-        return makeMockMvcRequest(mockMvc, requestType, endpoint, params, null);
+        return makeMockMvcRequest(mockMvc, requestType, endpoint, params, null, null);
     }
 
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint,
                                                    final Map<String, Object> params,
-                                                   final Object body) throws Exception {
+                                                   final Object body,
+                                                   final User user) throws Exception {
+        final var requestBuilder = defineRequestBuilder(requestType, endpoint);
+        addBodyIfExists(body, requestBuilder);
+        addUserIfExists(user, requestBuilder);
+
+        return mockMvc.perform(requestBuilder
+                .contentType(MediaType.APPLICATION_JSON)
+                .params(convertToMultiValueMap(params)));
+    }
+
+    private static MockHttpServletRequestBuilder defineRequestBuilder(final HttpMethod requestType, final String endpoint) {
         MockHttpServletRequestBuilder requestBuilder;
         if (POST.equals(requestType)) {
             requestBuilder = post(endpoint);
@@ -52,14 +85,24 @@ public class MvcUtil {
         } else {
             throw new IllegalArgumentException("Unsupported HTTP request type: " + requestType);
         }
+        return requestBuilder;
+    }
 
+    private static void addBodyIfExists(final Object body, final MockHttpServletRequestBuilder requestBuilder) {
         if (body != null) {
             requestBuilder.content(asJsonString(body));
         }
+    }
 
-        return mockMvc.perform(requestBuilder
-                .contentType(MediaType.APPLICATION_JSON)
-                .params(convertToMultiValueMap(params)));
+    private static void addUserIfExists(final User user, final MockHttpServletRequestBuilder requestBuilder) {
+        if (user != null) {
+            final String[] roles = user.getRoles().stream()
+                    .map(Role::name)
+                    .distinct()
+                    .toArray(String[]::new);
+
+            requestBuilder.with(user(user.getEmail()).roles(roles));
+        }
     }
 
     private static MultiValueMap<String, String> convertToMultiValueMap(final Map<String, Object> actualParameters) {

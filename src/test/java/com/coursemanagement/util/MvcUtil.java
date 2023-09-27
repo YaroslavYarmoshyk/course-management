@@ -52,10 +52,14 @@ public class MvcUtil {
         } else {
             throw new IllegalArgumentException("Unsupported HTTP request type: " + requestType);
         }
+
+        if (body != null) {
+            requestBuilder.content(asJsonString(body));
+        }
+
         return mockMvc.perform(requestBuilder
                 .contentType(MediaType.APPLICATION_JSON)
-                .params(convertToMultiValueMap(params))
-                .content(asJsonString(body)));
+                .params(convertToMultiValueMap(params)));
     }
 
     private static MultiValueMap<String, String> convertToMultiValueMap(final Map<String, Object> actualParameters) {

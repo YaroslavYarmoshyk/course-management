@@ -11,7 +11,6 @@ public final class Constants {
     public static final String FAVICON = "/favicon.ico";
 
     public static final String EMAIL_CONFIRMATION_ENDPOINT = "/confirm-email";
-    public static final String RESET_PASSWORD_CONFIRMATION_ENDPOINT = "/confirm";
     public static final String TOKEN_CONFIRMATION_ENDPOINT_PARAMETER = "token";
 
     public static final String EMAIL_CONFIRMATION_TEMPLATE_PATH = "src/main/resources/templates/email-confirmation.html";
@@ -21,7 +20,7 @@ public final class Constants {
     public static final String RESET_PASSWORD_CONFIRMATION_SUBJECT = "Password Reset Request";
 
     public static final String EMAIL_CONFIRMATION_URL = AUTHENTICATION_ENDPOINT + EMAIL_CONFIRMATION_ENDPOINT + "?" + TOKEN_CONFIRMATION_ENDPOINT_PARAMETER + "=";
-    public static final String RESET_PASSWORD_CONFIRMATION_URL = RESET_PASSWORD_ENDPOINT + RESET_PASSWORD_CONFIRMATION_ENDPOINT + "?" + TOKEN_CONFIRMATION_ENDPOINT_PARAMETER + "=";
+    public static final String RESET_PASSWORD_CONFIRMATION_URL = RESET_PASSWORD_ENDPOINT + "/confirm" + "?" + TOKEN_CONFIRMATION_ENDPOINT_PARAMETER + "=";
 
     public static final String EMAIL_SENDER = "course-administration";
 

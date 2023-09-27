@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResponseBodyMatchers {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -33,6 +34,10 @@ public class ResponseBodyMatchers {
                     .ignoringFields(Objects.equals(targetClass, User.class) ? "password" : "")
                     .isEqualTo(expectedObject);
         };
+    }
+
+    public ResultMatcher equalToString(final String expectedString) {
+        return mvcResult -> assertEquals(expectedString, mvcResult.getResponse().getContentAsString());
     }
 
     public ResultMatcher containsSystemException(final SystemException systemException) {

@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.coursemanagement.util.Constants.COURSE_MANAGEMENT_ENDPOINT;
+
 @RestController
-@RequestMapping(value = "/api/v1/course-management")
+@RequestMapping(value = COURSE_MANAGEMENT_ENDPOINT)
 @RequiredArgsConstructor
 public class CourseManagementResource {
     private final CourseManagementService courseManagementService;

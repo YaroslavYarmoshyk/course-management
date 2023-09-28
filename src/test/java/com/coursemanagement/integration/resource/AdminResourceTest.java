@@ -34,10 +34,9 @@ import java.util.stream.Stream;
 import static com.coursemanagement.config.ResponseBodyMatchers.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
+import static com.coursemanagement.util.Constants.ADMIN_RESOURCE_ENDPOINT;
 import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
-import static com.coursemanagement.util.TestDataUtils.ADMIN;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.USER_TEST_MODEL;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.when;
@@ -63,7 +62,6 @@ class AdminResourceTest {
     @MockBean
     private LessonService lessonService;
 
-    private static final String ADMIN_ENDPOINT = "/api/v1/admin";
     private static final Long USER_ID = FIRST_STUDENT.getId();
     private static final Long COURSE_CODE = 112L;
 
@@ -71,7 +69,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins assign role endpoint")
     Stream<DynamicTest> testAdminAssignRoleEndpoint() {
-        final String assignRoleEndpoint = ADMIN_ENDPOINT + "/assign-role";
+        final String assignRoleEndpoint = ADMIN_RESOURCE_ENDPOINT + "/assign-role";
         final RoleAssignmentDto roleAssignmentDto = Instancio.create(RoleAssignmentDto.class);
         return Stream.of(
                 dynamicTest("Test empty body request",
@@ -99,7 +97,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins all users endpoint")
     Stream<DynamicTest> testAdminAllUsersEndpoint() {
-        final String allUsersEndpoint = ADMIN_ENDPOINT + "/users";
+        final String allUsersEndpoint = ADMIN_RESOURCE_ENDPOINT + "/users";
         final Set<User> users = Instancio.ofSet(USER_TEST_MODEL).create();
         return Stream.of(
                 dynamicTest("Test unauthorized access to admins endpoint",
@@ -124,7 +122,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins user by id endpoint")
     Stream<DynamicTest> testAdminUserByIdEndpoint() {
-        final String userByIdEndpoint = String.format("%s%s%d", ADMIN_ENDPOINT, "/users/", USER_ID);
+        final String userByIdEndpoint = String.format("%s%s%d", ADMIN_RESOURCE_ENDPOINT, "/users/", USER_ID);
         return Stream.of(
                 dynamicTest("Test unauthorized access to admins endpoint",
                         () -> assertUnauthorizedAccess(mockMvc, GET, userByIdEndpoint, Role.ADMIN)),
@@ -148,7 +146,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins user courses by user id endpoint")
     Stream<DynamicTest> testAdminUserCoursesEndpoint() {
-        final String userCoursesEndpoint = String.format("%s%s%d%s", ADMIN_ENDPOINT, "/users/", USER_ID, "/courses");
+        final String userCoursesEndpoint = String.format("%s%s%d%s", ADMIN_RESOURCE_ENDPOINT, "/users/", USER_ID, "/courses");
         final Set<UserCourseDto> userCourses = Instancio.ofSet(UserCourseDto.class).create();
         return Stream.of(
                 dynamicTest("Test unauthorized access to admins endpoint",
@@ -173,7 +171,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins user course details by user id and course code endpoint")
     Stream<DynamicTest> testAdminUserCourseDetailsEndpoint() {
-        final String userCourseDetailsEndpoint = String.format("%s%s%d%s%d", ADMIN_ENDPOINT, "/users/", USER_ID, "/courses/", COURSE_CODE);
+        final String userCourseDetailsEndpoint = String.format("%s%s%d%s%d", ADMIN_RESOURCE_ENDPOINT, "/users/", USER_ID, "/courses/", COURSE_CODE);
         final UserCourseDetailsDto userCourseDetails = Instancio.of(UserCourseDetailsDto.class)
                 .set(field(UserCourseDetailsDto::courseCode), COURSE_CODE)
                 .create();
@@ -200,7 +198,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins student course mark endpoint")
     Stream<DynamicTest> testAdminStudentCourseMarkEndpoint() {
-        final String studentCourseMarkEndpoint = String.format("%s%s%d%s%d%s", ADMIN_ENDPOINT, "/users/", USER_ID, "/courses/", COURSE_CODE, "/final-mark");
+        final String studentCourseMarkEndpoint = String.format("%s%s%d%s%d%s", ADMIN_RESOURCE_ENDPOINT, "/users/", USER_ID, "/courses/", COURSE_CODE, "/final-mark");
         final CourseMark studentCourseMark = Instancio.of(CourseMark.class)
                 .set(field(CourseMark::getStudentId), USER_ID)
                 .set(field(CourseMark::getCourseCode), COURSE_CODE)
@@ -228,7 +226,7 @@ class AdminResourceTest {
     @TestFactory
     @DisplayName("Test admins student lessons per course endpoint")
     Stream<DynamicTest> testAdminStudentLessonsPerCourseEndpoint() {
-        final String studentLessonsEndpoint = String.format("%s%s%d%s%d%s", ADMIN_ENDPOINT, "/users/", USER_ID, "/courses/", COURSE_CODE, "/lessons");
+        final String studentLessonsEndpoint = String.format("%s%s%d%s%d%s", ADMIN_RESOURCE_ENDPOINT, "/users/", USER_ID, "/courses/", COURSE_CODE, "/lessons");
         final Set<UserLessonDto> studentLessons = Instancio.ofSet(UserLessonDto.class).create();
         return Stream.of(
                 dynamicTest("Test unauthorized access to admins endpoint",

@@ -1,15 +1,17 @@
 package com.coursemanagement.util;
 
-import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.User;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,11 +19,12 @@ import static com.coursemanagement.util.JsonUtil.asJsonString;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+@Component
 public class MvcUtil {
 
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
@@ -68,7 +71,6 @@ public class MvcUtil {
         final var requestBuilder = defineRequestBuilder(requestType, endpoint);
         addBodyIfExists(body, requestBuilder);
         addUserIfExists(user, requestBuilder);
-
         return mockMvc.perform(requestBuilder
                 .contentType(MediaType.APPLICATION_JSON)
                 .params(convertToMultiValueMap(params)));
@@ -96,12 +98,10 @@ public class MvcUtil {
 
     private static void addUserIfExists(final User user, final MockHttpServletRequestBuilder requestBuilder) {
         if (user != null) {
-            final String[] roles = user.getRoles().stream()
-                    .map(Role::name)
-                    .distinct()
-                    .toArray(String[]::new);
-
-            requestBuilder.with(user(user.getEmail()).roles(roles));
+            final List<GrantedAuthority> authorities = user.getRoles().stream()
+                    .map(role -> (GrantedAuthority) () -> "ROLE_" + role.name())
+                    .toList();
+            requestBuilder.with(jwt().jwt(j -> j.subject(user.getEmail())).authorities(authorities));
         }
     }
 

@@ -34,7 +34,9 @@ import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeseriali
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.COURSE_MANAGEMENT_ENDPOINT;
 import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
-import static com.coursemanagement.util.TestDataUtils.*;
+import static com.coursemanagement.util.TestDataUtils.ADMIN;
+import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
+import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.when;
@@ -93,7 +95,7 @@ class CourseManagementResourceTest {
                 dynamicTest("Test empty body request",
                         () -> makeMockMvcRequest(mockMvc, POST, courseEnrollmentsEndpoint, FIRST_STUDENT).andExpect(status().isBadRequest())),
                 dynamicTest("Test unauthorized access to endpoint",
-                        () -> assertUnauthorizedAccess(mockMvc, POST, courseEnrollmentsEndpoint, requestDto, Role.STUDENT)),
+                        () -> assertUnauthorizedAccess(mockMvc, POST, courseEnrollmentsEndpoint, requestDto)),
                 dynamicTest("Test valid course enrollment request",
                         () -> {
                             when(courseManagementService.enrollStudentInCourses(requestDto)).thenReturn(responseDto);
@@ -145,7 +147,7 @@ class CourseManagementResourceTest {
     @Order(4)
     @TestFactory
     @DisplayName("Test course completion endpoint")
-    Stream<DynamicTest> testCourseCompletion() {
+    Stream<DynamicTest> testCourseCompletionEndpoint() {
         final String courseCompletionEndpoint = COURSE_MANAGEMENT_ENDPOINT + "/complete";
         final CourseCompletionRequestDto requestDto = Instancio.create(CourseCompletionRequestDto.class);
         final UserCourseDetailsDto responseDto = Instancio.create(UserCourseDetailsDto.class);
@@ -153,7 +155,7 @@ class CourseManagementResourceTest {
                 dynamicTest("Test empty body request",
                         () -> makeMockMvcRequest(mockMvc, POST, courseCompletionEndpoint, FIRST_STUDENT).andExpect(status().isBadRequest())),
                 dynamicTest("Test unauthorized access to endpoint",
-                        () -> assertUnauthorizedAccess(mockMvc, POST, courseCompletionEndpoint, requestDto, Role.STUDENT)),
+                        () -> assertUnauthorizedAccess(mockMvc, POST, courseCompletionEndpoint, requestDto)),
                 dynamicTest("Test valid course completion request",
                         () -> {
                             when(courseManagementService.completeStudentCourse(requestDto)).thenReturn(responseDto);

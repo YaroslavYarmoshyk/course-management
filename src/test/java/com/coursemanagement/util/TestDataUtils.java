@@ -83,37 +83,47 @@ public final class TestDataUtils {
     }
 
     public static User getAdmin() {
-        return Instancio.of(USER_TEST_MODEL)
+        return Instancio.of(User.class)
                 .set(field(User::getId), 1L)
+                .set(field(User::getEmail), "john-smith@gmail.com")
                 .set(field(User::getRoles), Set.of(Role.ADMIN))
+                .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
     }
 
     public static User getInstructor() {
-        return Instancio.of(USER_TEST_MODEL)
+        return Instancio.of(User.class)
                 .set(field(User::getId), 2L)
+                .set(field(User::getEmail), "poppins@yahoo.com")
                 .set(field(User::getRoles), Set.of(Role.INSTRUCTOR))
+                .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
     }
 
     public static User getFistStudent() {
-        return Instancio.of(USER_TEST_MODEL)
+        return Instancio.of(User.class)
                 .set(field(User::getId), 3L)
+                .set(field(User::getEmail), "goldlannister@gmail.com")
                 .set(field(User::getRoles), Set.of(Role.STUDENT))
+                .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
     }
 
     public static User getSecondStudent() {
-        return Instancio.of(USER_TEST_MODEL)
+        return Instancio.of(User.class)
                 .set(field(User::getId), 4L)
+                .set(field(User::getEmail), "maria-montesory@gmail.com")
                 .set(field(User::getRoles), Set.of(Role.STUDENT))
+                .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
     }
 
     public static User getNewUser() {
-        return Instancio.of(USER_TEST_MODEL)
+        return Instancio.of(User.class)
                 .set(field(User::getId), 5L)
+                .set(field(User::getEmail), "thor-odinson96@gmail.com")
                 .set(field(User::getRoles), new HashSet<>())
+                .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
     }
 

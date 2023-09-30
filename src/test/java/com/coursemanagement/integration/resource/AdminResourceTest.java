@@ -1,6 +1,6 @@
 package com.coursemanagement.integration.resource;
 
-import com.coursemanagement.config.annotation.EnableSecurityConfiguration;
+import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;
@@ -15,16 +15,11 @@ import com.coursemanagement.service.RoleManagementService;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import org.instancio.Instancio;
-import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -44,10 +39,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(value = InstancioExtension.class)
-@WebMvcTest(controllers = AdminResource.class)
-@EnableSecurityConfiguration
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
+@SecuredResourceTest(value = AdminResource.class)
 class AdminResourceTest {
     @Autowired
     private MockMvc mockMvc;

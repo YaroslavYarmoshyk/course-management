@@ -1,6 +1,6 @@
 package com.coursemanagement.integration.resource;
 
-import com.coursemanagement.config.annotation.EnableSecurityConfiguration;
+import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.security.controller.ResetPasswordController;
 import com.coursemanagement.security.model.AuthenticationRequest;
@@ -8,17 +8,12 @@ import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.ResetPasswordService;
 import org.instancio.Instancio;
-import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,18 +27,12 @@ import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.mockito.Mockito.atMostOnce;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(value = InstancioExtension.class)
-@WebMvcTest(controllers = ResetPasswordController.class)
-@EnableSecurityConfiguration
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
+@SecuredResourceTest(value = ResetPasswordController.class)
 class ResetPasswordControllerTest {
     @Autowired
     private MockMvc mockMvc;

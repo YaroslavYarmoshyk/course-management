@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.coursemanagement.util.Constants.USERS_ENDPOINT;
+
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(USERS_ENDPOINT)
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;

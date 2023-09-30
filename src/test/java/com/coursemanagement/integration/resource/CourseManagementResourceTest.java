@@ -1,6 +1,6 @@
 package com.coursemanagement.integration.resource;
 
-import com.coursemanagement.config.annotation.EnableSecurityConfiguration;
+import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.rest.CourseManagementResource;
 import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
@@ -14,39 +14,31 @@ import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.FeedbackService;
 import org.instancio.Instancio;
-import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.config.ResponseBodyMatchers.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.COURSE_MANAGEMENT_ENDPOINT;
+import static com.coursemanagement.util.DateTimeUtils.formatDate;
 import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
-import static com.coursemanagement.util.TestDataUtils.ADMIN;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(value = InstancioExtension.class)
-@WebMvcTest(value = CourseManagementResource.class)
-@EnableSecurityConfiguration
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
+@SecuredResourceTest(value = CourseManagementResource.class)
 class CourseManagementResourceTest {
     @Autowired
     private MockMvc mockMvc;
@@ -120,7 +112,7 @@ class CourseManagementResourceTest {
         final String feedbackSubmissionEndpoint = COURSE_MANAGEMENT_ENDPOINT + "/provide-feedback";
         final FeedbackRequestDto requestDto = Instancio.create(FeedbackRequestDto.class);
         final FeedbackResponseDto responseDto = Instancio.of(FeedbackResponseDto.class)
-                .ignore(field(FeedbackResponseDto::feedbackSubmissionDate))
+                .set(field(FeedbackResponseDto::feedbackSubmissionDate), formatDate(LocalDateTime.now()))
                 .create();
         return Stream.of(
                 dynamicTest("Test empty body request",

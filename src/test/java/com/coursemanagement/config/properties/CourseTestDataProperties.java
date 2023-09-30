@@ -3,10 +3,10 @@ package com.coursemanagement.config.properties;
 import com.coursemanagement.model.Course;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.test.context.TestConfiguration;
 
 @Data
-@Configuration
+@TestConfiguration
 @ConfigurationProperties(prefix = "courses")
 public class CourseTestDataProperties {
     private Course mathematics;

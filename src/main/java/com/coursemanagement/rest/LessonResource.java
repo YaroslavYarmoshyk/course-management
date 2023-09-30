@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.coursemanagement.util.Constants.LESSONS_ENDPOINT;
+
 @RestController
-@RequestMapping("/api/v1/lessons")
+@RequestMapping(LESSONS_ENDPOINT)
 @RequiredArgsConstructor
 public class LessonResource {
     private final LessonService lessonService;
@@ -40,8 +42,8 @@ public class LessonResource {
     }
 
     @GetMapping(value = "/homework/download/{file-id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<byte[]> uploadHomework(@CurrentUserId final Long userId,
-                                                 @PathVariable(value = "file-id") final Long fileId) {
+    public ResponseEntity<byte[]> downloadHomework(@CurrentUserId final Long userId,
+                                                   @PathVariable(value = "file-id") final Long fileId) {
         final File homework = homeworkService.downloadHomework(userId, fileId);
         return ResponseEntity.ok(homework.getFileContent());
     }

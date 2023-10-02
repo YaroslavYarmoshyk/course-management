@@ -1,4 +1,4 @@
-package com.coursemanagement.config;
+package com.coursemanagement.util;
 
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.exeption.dto.ErrorDto;
@@ -19,12 +19,12 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResponseBodyMatchers {
+public class ResponseBodyMatcherUtils {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Map<Class<?>, String[]> FIELDS_TO_IGNORE_MAP = new HashMap<>();
 
-    public static ResponseBodyMatchers responseBody() {
-        return new ResponseBodyMatchers();
+    public static ResponseBodyMatcherUtils responseBody() {
+        return new ResponseBodyMatcherUtils();
     }
 
     {

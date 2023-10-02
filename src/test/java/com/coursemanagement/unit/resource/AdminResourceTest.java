@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.config.ResponseBodyMatchers.responseBody;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.ADMIN_RESOURCE_ENDPOINT;

@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.config.ResponseBodyMatchers.responseBody;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_ENDPOINT;
 import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;

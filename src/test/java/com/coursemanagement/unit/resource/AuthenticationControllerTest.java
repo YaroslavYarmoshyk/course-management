@@ -1,4 +1,4 @@
-package com.coursemanagement.integration.resource;
+package com.coursemanagement.unit.resource;
 
 import com.coursemanagement.config.annotation.EnableSecurityConfiguration;
 import com.coursemanagement.exeption.SystemException;

@@ -1,4 +1,4 @@
-package com.coursemanagement.integration.resource;
+package com.coursemanagement.unit.resource;
 
 import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.rest.UserResource;

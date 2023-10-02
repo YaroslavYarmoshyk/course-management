@@ -1,6 +1,6 @@
 package com.coursemanagement.integration.repository;
 
-import com.coursemanagement.config.DatabaseSetupExtension;
+import com.coursemanagement.config.annotation.RepositoryTest;
 import com.coursemanagement.config.properties.CourseTestDataProperties;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.repository.CourseRepository;
@@ -10,15 +10,10 @@ import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +26,8 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest(showSql = false)
-@ExtendWith(DatabaseSetupExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@RepositoryTest
 @EnableConfigurationProperties(CourseTestDataProperties.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CourseRepositoryTest {
     @Autowired
     private CourseRepository courseRepository;

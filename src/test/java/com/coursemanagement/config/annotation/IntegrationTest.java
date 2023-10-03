@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,9 +23,4 @@ import java.lang.annotation.Target;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public @interface IntegrationTest {
-    @AliasFor(annotation = ComponentScan.class, attribute = "basePackages")
-    String[] basePackages() default {};
-
-    @AliasFor(annotation = SpringBootTest.class, attribute = "classes")
-    Class<?>[] classes() default {};
 }

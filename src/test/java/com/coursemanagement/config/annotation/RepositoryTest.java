@@ -1,7 +1,6 @@
 package com.coursemanagement.config.annotation;
 
-import com.coursemanagement.config.DatabaseCleanupExtension;
-import com.coursemanagement.config.DatabaseSetupExtension;
+import com.coursemanagement.config.extension.DatabaseSetupExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @DataJpaTest(showSql = false)
-@ExtendWith({DatabaseSetupExtension.class, DatabaseCleanupExtension.class})
+@ExtendWith(DatabaseSetupExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public @interface RepositoryTest {

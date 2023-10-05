@@ -1,6 +1,8 @@
-package com.coursemanagement.config;
+package com.coursemanagement.config.extension;
 
+import com.coursemanagement.config.container.DatabaseTestContainer;
 import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -10,7 +12,19 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Statement;
 
-public class DatabaseCleanupExtension implements AfterEachCallback {
+public class DatabaseSetupExtension implements BeforeAllCallback, AfterEachCallback {
+
+    @Override
+    public void beforeAll(final ExtensionContext extensionContext) {
+        DatabaseTestContainer.container.start();
+        updateDataSourceProps(DatabaseTestContainer.container);
+    }
+
+    private void updateDataSourceProps(DatabaseTestContainer container) {
+        System.setProperty("spring.datasource.url", container.getJdbcUrl());
+        System.setProperty("spring.datasource.username", container.getUsername());
+        System.setProperty("spring.datasource.password", container.getPassword());
+    }
 
     @Override
     public void afterEach(final ExtensionContext extensionContext) throws Exception {

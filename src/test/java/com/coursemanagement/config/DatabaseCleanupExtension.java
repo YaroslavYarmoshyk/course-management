@@ -1,7 +1,6 @@
 package com.coursemanagement.config;
 
 import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -11,16 +10,10 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Statement;
 
-public class DatabaseCleanupExtension implements BeforeEachCallback, AfterEachCallback {
+public class DatabaseCleanupExtension implements AfterEachCallback {
 
     @Override
     public void afterEach(final ExtensionContext extensionContext) throws Exception {
-        final DataSource dataSource = SpringExtension.getApplicationContext(extensionContext).getBean(DataSource.class);
-        cleanupDatabaseTables(dataSource);
-    }
-
-    @Override
-    public void beforeEach(final ExtensionContext extensionContext) throws Exception {
         final DataSource dataSource = SpringExtension.getApplicationContext(extensionContext).getBean(DataSource.class);
         cleanupDatabaseTables(dataSource);
     }

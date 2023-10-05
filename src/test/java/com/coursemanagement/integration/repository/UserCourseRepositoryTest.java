@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryTest
 @EnableConfigurationProperties(value = {UserTestDataProperties.class, CourseTestDataProperties.class})
+@Sql("/scripts/add_users_to_courses.sql")
 class UserCourseRepositoryTest {
     @Autowired
     private UserCourseRepository userCourseRepository;
@@ -50,7 +51,6 @@ class UserCourseRepositoryTest {
     @Order(1)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user courses by user id with fetched user")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindUserCoursesByUserId_User_Is_Fetched() {
         final List<UserCourseEntity> userCoursesEntities = userCourseRepository.findByUserId(student.getId());
         final Set<String> userEmails = userCoursesEntities.stream()
@@ -64,7 +64,6 @@ class UserCourseRepositoryTest {
     @Order(2)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user courses by user id with fetched course")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindUserCoursesByUserId_Course_Is_Fetched() {
         final List<UserCourseEntity> userCoursesEntities = userCourseRepository.findByUserId(student.getId());
         final Set<String> courseDescriptions = userCoursesEntities.stream()
@@ -78,7 +77,6 @@ class UserCourseRepositoryTest {
     @Order(3)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user courses by course code with fetched students")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindStudentsByCourseCode_Users_Are_Fetched() {
         final List<UserCourseEntity> userCoursesEntities = userCourseRepository.findStudentsByCourseCode(history.getCode());
         final Set<UserEntity> userEntities = userCoursesEntities.stream()
@@ -91,7 +89,6 @@ class UserCourseRepositoryTest {
     @Order(4)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find students by course code should not contain other users")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindStudentsByCourseCode_Not_Students() {
         final List<UserCourseEntity> userCoursesEntities = userCourseRepository.findStudentsByCourseCode(history.getCode());
         final Set<UserEntity> userEntities = userCoursesEntities.stream()
@@ -105,7 +102,6 @@ class UserCourseRepositoryTest {
     @Order(5)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find students by course code should contain only students")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindStudentsByCourseCode_Only_Students() {
         final List<UserCourseEntity> userCoursesEntities = userCourseRepository.findStudentsByCourseCode(history.getCode());
         final Set<UserEntity> userEntities = userCoursesEntities.stream()
@@ -119,7 +115,6 @@ class UserCourseRepositoryTest {
     @Order(6)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user course by user id and course code with fetched user")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindUserCourseByUserIdAndCourseCode_User_Is_Fetched() {
         final Optional<UserCourseEntity> userCoursesEntity = userCourseRepository.findByUserIdAndCourseCode(
                 student.getId(),
@@ -133,7 +128,6 @@ class UserCourseRepositoryTest {
     @Order(7)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find user course by user id and course code with fetched course")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindUserCourseByUserIdAndCourseCode_Course_Is_Fetched() {
         final Optional<UserCourseEntity> userCoursesEntity = userCourseRepository.findByUserIdAndCourseCode(
                 student.getId(),

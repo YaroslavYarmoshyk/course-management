@@ -16,9 +16,7 @@ import static com.coursemanagement.util.Constants.REGISTRATION_ENDPOINT;
 import static com.coursemanagement.util.Constants.USERS_ENDPOINT;
 import static com.coursemanagement.util.MvcUtil.makeCall;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 

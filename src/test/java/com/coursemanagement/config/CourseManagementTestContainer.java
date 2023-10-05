@@ -16,5 +16,5 @@ public class CourseManagementTestContainer extends PostgreSQLContainer<CourseMan
             .withDatabaseName(DATABASE_NAME)
             .withUsername(USERNAME)
             .withPassword(PASSWORD)
-            .withInitScript("scripts/init_tables_with_test_data.sql");
+            .withInitScript("scripts/init_tables.sql");
 }

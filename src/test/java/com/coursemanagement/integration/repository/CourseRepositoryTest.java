@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RepositoryTest
 @EnableConfigurationProperties(CourseTestDataProperties.class)
+@Sql(value = "/scripts/add_users_to_courses.sql")
 class CourseRepositoryTest {
     @Autowired
     private CourseRepository courseRepository;
@@ -46,7 +47,6 @@ class CourseRepositoryTest {
     @Order(1)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find course by code with fetched user courses")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindCourseByCode_UserCourse_Is_Fetched() {
         final Optional<CourseEntity> courseEntityOptional = courseRepository.findByCode(mathematicsCourseCode);
         assertTrue(courseEntityOptional.isPresent());
@@ -60,7 +60,6 @@ class CourseRepositoryTest {
     @Order(2)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find course by code with fetched users")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindCourseByCode_Users_Are_Fetched() {
         final Optional<CourseEntity> courseEntityOptional = courseRepository.findByCode(mathematicsCourseCode);
         assertTrue(courseEntityOptional.isPresent());
@@ -79,7 +78,6 @@ class CourseRepositoryTest {
     @Order(3)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find course by code with fetched user roles")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindCourseByCode_User_Roles_Are_Fetched() {
         final Optional<CourseEntity> courseEntityOptional = courseRepository.findByCode(mathematicsCourseCode);
         assertTrue(courseEntityOptional.isPresent());
@@ -99,7 +97,6 @@ class CourseRepositoryTest {
     @Order(4)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find all courses by codes with fetched user courses")
-    @Sql(value = "/scripts/add_users_to_courses.sql")
     void testFindAllCoursesByCodeIn_UserCourses_Are_Fetched() {
         final Set<Long> courseCodes = Set.of(mathematicsCourseCode, historyCourseCode);
         final Set<UserCourseEntity> userCourseEntities = courseRepository.findAllByCodeIn(courseCodes).stream()

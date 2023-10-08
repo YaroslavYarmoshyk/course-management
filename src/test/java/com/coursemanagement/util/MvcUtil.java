@@ -1,15 +1,9 @@
 package com.coursemanagement.util;
 
 import com.coursemanagement.model.User;
-import com.coursemanagement.security.model.AuthenticationRequest;
-import com.coursemanagement.security.model.AuthenticationResponse;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -20,19 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.coursemanagement.util.Constants.LOGIN_ENDPOINT;
 import static com.coursemanagement.util.JsonUtil.asJsonString;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@Component
 public class MvcUtil {
-
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint) throws Exception {
@@ -118,49 +105,5 @@ public class MvcUtil {
         }
         actualParameters.forEach((key, value) -> multiValueMap.add(key, String.valueOf(value)));
         return multiValueMap;
-    }
-
-    public static <T> T makeCall(final TestRestTemplate restTemplate,
-                                 final HttpMethod httpMethod,
-                                 final String url,
-                                 final Class<T> responseType) {
-        return makeCall(restTemplate, httpMethod, url, null, responseType, null);
-    }
-
-    public static <T> T makeCall(final TestRestTemplate restTemplate,
-                                 final HttpMethod httpMethod,
-                                 final String url,
-                                 final Class<T> responseType,
-                                 final User user) {
-        return makeCall(restTemplate, httpMethod, url, null, responseType, new AuthenticationRequest(user));
-    }
-
-    public static <T, R> T makeCall(final TestRestTemplate restTemplate,
-                                    final HttpMethod httpMethod,
-                                    final String url,
-                                    final R body,
-                                    final Class<T> responseType) {
-        return makeCall(restTemplate, httpMethod, url, body, responseType, null);
-    }
-
-
-    public static <T, R> T makeCall(final TestRestTemplate restTemplate,
-                                    final HttpMethod httpMethod,
-                                    final String url,
-                                    final R body,
-                                    final Class<T> responseType,
-                                    final AuthenticationRequest authenticationRequest) {
-        final HttpEntity<R> httpEntity = getHttpEntity(restTemplate, body, authenticationRequest);
-        return restTemplate.exchange(url, httpMethod, httpEntity, responseType).getBody();
-    }
-
-    private static <R> HttpEntity<R> getHttpEntity(final TestRestTemplate restTemplate, final R body, final AuthenticationRequest authenticationRequest) {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        if (Objects.nonNull(authenticationRequest)) {
-            final var response = makeCall(restTemplate, POST, LOGIN_ENDPOINT, authenticationRequest, AuthenticationResponse.class);
-            headers.set("Authorization", "Bearer " + response.token());
-        }
-        return new HttpEntity<>(body, headers);
     }
 }

@@ -30,7 +30,7 @@ import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.ADMIN_RESOURCE_ENDPOINT;
-import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
+import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;

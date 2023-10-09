@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
-import static com.coursemanagement.util.AuthorizationUtil.userHasAnyRole;
+import static com.coursemanagement.util.AuthorizationUtils.userHasAnyRole;
 import static com.coursemanagement.util.Constants.*;
 import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
@@ -129,7 +129,7 @@ class CourseManagementServiceImplTest {
 
             final var responseDto = courseManagementService.assignInstructorToCourse(requestDto);
 
-            assertEquals(expectedRoleCountMap.get(Role.INSTRUCTOR), responseDto.instructors().size());
+            assertEquals(expectedRoleCountMap.getOrDefault(Role.INSTRUCTOR, 0L), responseDto.instructors().size());
             assertEquals(expectedRoleCountMap.getOrDefault(Role.STUDENT, 0L), responseDto.students().size());
         }
     }

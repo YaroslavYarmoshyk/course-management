@@ -26,7 +26,7 @@ import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
-import com.coursemanagement.util.AuthorizationUtil;
+import com.coursemanagement.util.AuthorizationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +78,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     private static void validateInstructorAssigment(final User potentialInstructor) {
-        if (!AuthorizationUtil.userHasAnyRole(potentialInstructor, Role.INSTRUCTOR)) {
+        if (!AuthorizationUtils.userHasAnyRole(potentialInstructor, Role.INSTRUCTOR)) {
             throw new SystemException("Cannot assign user to the course, the user is not an instructor", SystemErrorCode.BAD_REQUEST);
         }
     }

@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.USERS_ENDPOINT;
-import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
+import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.anyLong;

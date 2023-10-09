@@ -58,7 +58,6 @@ public class RegistrationTest {
                 dynamicTest("Test user registration with already existing email", () -> testFailureUserRegistration(validAuthRequest)),
                 dynamicTest("Test email confirmation receiving", () -> testEmailConfirmationReceiving(validAuthRequest.email())),
                 dynamicTest("Test user activation by confirmation token from email", () -> testUserActivationByConfirmationToken(validAuthRequest.email()))
-
         );
     }
 

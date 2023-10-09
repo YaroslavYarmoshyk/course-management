@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
-import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
+import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;

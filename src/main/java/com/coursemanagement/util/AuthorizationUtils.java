@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class AuthorizationUtil {
+public final class AuthorizationUtils {
 
     public static boolean isCurrentUserAdmin() {
         return currentUserHasRoles(Role.ADMIN);

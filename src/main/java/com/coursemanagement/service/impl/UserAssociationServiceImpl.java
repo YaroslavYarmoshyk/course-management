@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-import static com.coursemanagement.util.AuthorizationUtil.isCurrentUserAdmin;
+import static com.coursemanagement.util.AuthorizationUtils.isCurrentUserAdmin;
 
 @Service
 @RequiredArgsConstructor

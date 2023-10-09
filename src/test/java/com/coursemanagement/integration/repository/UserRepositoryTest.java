@@ -55,8 +55,7 @@ class UserRepositoryTest {
                 .map(RoleEntity::getRole)
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        final Set<Role> expectedRoles = Stream.of(Role.ADMIN, Role.STUDENT)
-                .sorted()
+        final Set<Role> expectedRoles = Stream.of(Role.ADMIN)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         assertIterableEquals(expectedRoles, actualRoles);
     }
@@ -75,8 +74,7 @@ class UserRepositoryTest {
                 .map(RoleEntity::getRole)
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        final Set<Role> expectedRoles = Stream.of(Role.ADMIN, Role.STUDENT)
-                .sorted()
+        final Set<Role> expectedRoles = Stream.of(Role.ADMIN)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         assertIterableEquals(expectedRoles, actualRoles);
     }

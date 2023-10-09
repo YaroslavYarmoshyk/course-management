@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.coursemanagement.util.JsonUtil.asJsonString;
+import static com.coursemanagement.util.JsonUtils.asJsonString;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-public class MvcUtil {
+public class MvcUtils {
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint) throws Exception {

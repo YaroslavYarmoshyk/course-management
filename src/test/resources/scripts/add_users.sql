@@ -7,6 +7,5 @@ ON CONFLICT (email) DO NOTHING;
 INSERT INTO user_role (user_id, role_id)
 VALUES (1, 1),
        (2, 2),
-       (3, 3),
-       (1, 3)
+       (3, 3)
 ON CONFLICT (user_id, role_id) DO NOTHING;

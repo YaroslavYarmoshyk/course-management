@@ -10,7 +10,7 @@ import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.UserAssociationServiceImpl;
-import com.coursemanagement.util.AuthorizationUtil;
+import com.coursemanagement.util.AuthorizationUtils;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.util.AuthorizationUtil.userHasAnyRole;
+import static com.coursemanagement.util.AuthorizationUtils.userHasAnyRole;
 import static com.coursemanagement.util.TestDataUtils.ADMIN;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.SECOND_STUDENT;
@@ -111,9 +111,9 @@ class UserAssociationServiceImplTest {
         final boolean currentUserIsRequestedOne = Objects.equals(currentUser.getId(), requestedUser.getId());
         final boolean hasAccess = currentUserAdmin || currentUserIsRequestedOne;
 
-        try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
+        try (final MockedStatic<AuthorizationUtils> mockedUtils = mockStatic(AuthorizationUtils.class)) {
             when(userService.resolveCurrentUser()).thenReturn(currentUser);
-            mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
+            mockedUtils.when(AuthorizationUtils::isCurrentUserAdmin).thenReturn(currentUserAdmin);
 
             assertEquals(hasAccess, userAssociationService.currentUserHasAccessTo(requestedUser.getId()));
         }
@@ -124,8 +124,8 @@ class UserAssociationServiceImplTest {
         final boolean currentUserAdmin = userHasAnyRole(currentUser, Role.ADMIN);
         final boolean hasAccess = currentUserAdmin || hasAccessToCourse;
 
-        try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
-            mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
+        try (final MockedStatic<AuthorizationUtils> mockedUtils = mockStatic(AuthorizationUtils.class)) {
+            mockedUtils.when(AuthorizationUtils::isCurrentUserAdmin).thenReturn(currentUserAdmin);
             when(courseRepository.existsByUserCoursesUserIdAndCode(anyLong(), anyLong())).thenReturn(hasAccessToCourse);
 
             assertEquals(hasAccess, userAssociationService.isUserAssociatedWithCourse(requestedUser.getId(), course.getCode()));
@@ -137,8 +137,8 @@ class UserAssociationServiceImplTest {
         final boolean currentUserAdmin = userHasAnyRole(currentUser, Role.ADMIN);
         final boolean hasAccess = currentUserAdmin || hasAccessToLesson;
 
-        try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
-            mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
+        try (final MockedStatic<AuthorizationUtils> mockedUtils = mockStatic(AuthorizationUtils.class)) {
+            mockedUtils.when(AuthorizationUtils::isCurrentUserAdmin).thenReturn(currentUserAdmin);
             when(lessonRepository.existsByCourseUserCoursesUserIdAndId(anyLong(), anyLong())).thenReturn(hasAccessToLesson);
 
             assertEquals(hasAccess, userAssociationService.isUserAssociatedWithLesson(requestedUser.getId(), lesson.getId()));
@@ -152,8 +152,8 @@ class UserAssociationServiceImplTest {
                 .set(field(LessonContent::getFileId), fileId)
                 .create();
 
-        try (final MockedStatic<AuthorizationUtil> mockedUtils = mockStatic(AuthorizationUtil.class)) {
-            mockedUtils.when(AuthorizationUtil::isCurrentUserAdmin).thenReturn(currentUserAdmin);
+        try (final MockedStatic<AuthorizationUtils> mockedUtils = mockStatic(AuthorizationUtils.class)) {
+            mockedUtils.when(AuthorizationUtils::isCurrentUserAdmin).thenReturn(currentUserAdmin);
             when(lessonContentRepository.findByFileId(fileId)).thenReturn(lessonContent);
             when(userAssociationService.isUserAssociatedWithLesson(requestedUser.getId(), lessonContent.getLessonId())).thenReturn(hasAccessToLesson);
 

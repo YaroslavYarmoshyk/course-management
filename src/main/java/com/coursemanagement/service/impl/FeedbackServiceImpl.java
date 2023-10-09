@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 
 import static com.coursemanagement.enumeration.Role.ADMIN;
 import static com.coursemanagement.enumeration.Role.INSTRUCTOR;
-import static com.coursemanagement.util.AuthorizationUtil.userHasAnyRole;
+import static com.coursemanagement.util.AuthorizationUtils.userHasAnyRole;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service

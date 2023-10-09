@@ -27,7 +27,7 @@ import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.COURSES_ENDPOINT;
-import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
+import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;

@@ -2,6 +2,7 @@ package com.coursemanagement.config.annotation;
 
 
 import com.coursemanagement.config.RestAssuredConfiguration;
+import com.coursemanagement.config.extension.AllureRestAssuredExtension;
 import com.coursemanagement.config.extension.DatabaseSetupExtension;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -20,7 +21,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ComponentScan
-@ExtendWith(DatabaseSetupExtension.class)
+@ExtendWith({DatabaseSetupExtension.class, AllureRestAssuredExtension.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(RestAssuredConfiguration.class)

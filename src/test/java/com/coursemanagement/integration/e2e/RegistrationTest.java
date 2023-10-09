@@ -1,18 +1,16 @@
 package com.coursemanagement.integration.e2e;
 
 import com.coursemanagement.config.annotation.IntegrationTest;
+import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.User;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.service.UserService;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.ServerSetup;
-import io.qameta.allure.restassured.AllureRestAssured;
-import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import jakarta.mail.internet.MimeMessage;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -24,6 +22,8 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_SUBJECT;
 import static com.coursemanagement.util.Constants.REGISTRATION_ENDPOINT;
+import static com.coursemanagement.util.MessageUtils.getFirstReceivedMimeMessage;
+import static com.coursemanagement.util.MessageUtils.getTokenFromConfirmationMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -41,11 +41,6 @@ public class RegistrationTest {
     @RegisterExtension
     public static final GreenMailExtension GREEN_MAIL = new GreenMailExtension(ServerSetup.SMTP);
 
-    @BeforeAll
-    static void beforeAll() {
-        RestAssured.filters(new AllureRestAssured());
-    }
-
     @TestFactory
     @DisplayName("Test user registration flow")
     Stream<DynamicTest> testRegistrationFlow() {
@@ -60,12 +55,14 @@ public class RegistrationTest {
                 dynamicTest("Test user registration with empty email", () -> testFailureUserRegistration(emptyEmailAuthRequest)),
                 dynamicTest("Test user registration with invalid email", () -> testFailureUserRegistration(invalidEmailAuthRequest)),
                 dynamicTest("Test user registration with empty password", () -> testFailureUserRegistration(emptyPassAuthRequest)),
-                dynamicTest("Test user registration with already existing email", () -> testFailureUserRegistration(validAuthRequest))
+                dynamicTest("Test user registration with already existing email", () -> testFailureUserRegistration(validAuthRequest)),
+                dynamicTest("Test email confirmation receiving", () -> testEmailConfirmationReceiving(validAuthRequest.email())),
+                dynamicTest("Test user activation by confirmation token from email", () -> testUserActivationByConfirmationToken(validAuthRequest.email()))
 
         );
     }
 
-    void testSuccessfulUserRegistration(final AuthenticationRequest authenticationRequest) throws Exception {
+    void testSuccessfulUserRegistration(final AuthenticationRequest authenticationRequest) {
         final String userEmail = authenticationRequest.email();
         given(requestSpecification)
                 .when()
@@ -75,17 +72,7 @@ public class RegistrationTest {
                 .spec(validResponseSpecification)
                 .assertThat()
                 .body(matchesJsonSchemaInClasspath("schemas/authenticationResponseSchema.json"));
-        validateEmailConfirmationSending(userEmail);
         assertNotNull(userService.getUserByEmail(userEmail));
-    }
-
-    void validateEmailConfirmationSending(final String email) throws Exception {
-        final MimeMessage[] receivedMessages = GREEN_MAIL.getReceivedMessages();
-        final MimeMessage receivedMessage = receivedMessages[0];
-        assertEquals(1, receivedMessages.length);
-        assertEquals(1, receivedMessage.getAllRecipients().length);
-        assertEquals(email, receivedMessage.getAllRecipients()[0].toString());
-        assertEquals(EMAIL_CONFIRMATION_SUBJECT, receivedMessage.getSubject());
     }
 
     void testFailureUserRegistration(final AuthenticationRequest authenticationRequest) {
@@ -95,5 +82,29 @@ public class RegistrationTest {
                 .post(REGISTRATION_ENDPOINT)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    private void testEmailConfirmationReceiving(final String email) throws Exception {
+        final MimeMessage receivedMessage = getFirstReceivedMimeMessage();
+        assertEquals(1, receivedMessage.getAllRecipients().length);
+        assertEquals(email, receivedMessage.getAllRecipients()[0].toString());
+        assertEquals(EMAIL_CONFIRMATION_SUBJECT, receivedMessage.getSubject());
+    }
+
+    private void testUserActivationByConfirmationToken(final String email) throws Exception {
+        final User userBeforeActivation = userService.getUserByEmail(email);
+        assertEquals(UserStatus.INACTIVE, userBeforeActivation.getStatus());
+
+        final MimeMessage firstReceivedMimeMessage = getFirstReceivedMimeMessage();
+        final String token = getTokenFromConfirmationMessage(firstReceivedMimeMessage);
+
+        given(requestSpecification)
+                .when()
+                .get("/api/v1/authentication/confirm-email?token=" + token)
+                .then()
+                .spec(validResponseSpecification);
+
+        final User userAfterConfirmation = userService.getUserByEmail(email);
+        assertEquals(UserStatus.ACTIVE, userAfterConfirmation.getStatus());
     }
 }

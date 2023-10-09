@@ -21,8 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
+import static com.coursemanagement.util.Endpoints.*;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.instancio.Select.field;
@@ -40,9 +41,6 @@ class ResetPasswordControllerTest {
     private ResetPasswordService resetPasswordService;
     @MockBean
     private ConfirmationTokenService confirmationTokenService;
-
-    private static final String RESET_PASSWORD_REQUEST_ENDPOINT = RESET_PASSWORD_ENDPOINT + "/request";
-    private static final String RESET_PASSWORD_CONFIRMATION_ENDPOINT = RESET_PASSWORD_ENDPOINT + "/confirm";
     private static final String VALID_TOKEN = "valid-token";
 
     @Order(1)

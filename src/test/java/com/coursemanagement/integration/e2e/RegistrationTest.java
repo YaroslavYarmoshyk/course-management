@@ -1,9 +1,12 @@
 package com.coursemanagement.integration.e2e;
 
 import com.coursemanagement.config.annotation.IntegrationTest;
+import com.coursemanagement.enumeration.TokenStatus;
+import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.enumeration.UserStatus;
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.model.User;
+import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.service.UserService;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
@@ -18,16 +21,19 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_SUBJECT;
 import static com.coursemanagement.util.Constants.REGISTRATION_ENDPOINT;
 import static com.coursemanagement.util.MessageUtils.getFirstReceivedMimeMessage;
-import static com.coursemanagement.util.MessageUtils.getTokenFromConfirmationMessage;
+import static com.coursemanagement.util.MessageUtils.getTokenFromMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @IntegrationTest
@@ -37,9 +43,11 @@ public class RegistrationTest {
     @Autowired
     private ResponseSpecification validResponseSpecification;
     @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
+    @Autowired
     private UserService userService;
     @RegisterExtension
-    public static final GreenMailExtension GREEN_MAIL = new GreenMailExtension(ServerSetup.SMTP);
+    private static final GreenMailExtension GREEN_MAIL_REGISTRATION = new GreenMailExtension(ServerSetup.SMTP);
 
     @TestFactory
     @DisplayName("Test user registration flow")
@@ -83,19 +91,26 @@ public class RegistrationTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    private void testEmailConfirmationReceiving(final String email) throws Exception {
-        final MimeMessage receivedMessage = getFirstReceivedMimeMessage();
+    void testEmailConfirmationReceiving(final String email) throws Exception {
+        final MimeMessage receivedMessage = getFirstReceivedMimeMessage(GREEN_MAIL_REGISTRATION);
         assertEquals(1, receivedMessage.getAllRecipients().length);
         assertEquals(email, receivedMessage.getAllRecipients()[0].toString());
         assertEquals(EMAIL_CONFIRMATION_SUBJECT, receivedMessage.getSubject());
     }
 
-    private void testUserActivationByConfirmationToken(final String email) throws Exception {
+    void testUserActivationByConfirmationToken(final String email) throws Exception {
         final User userBeforeActivation = userService.getUserByEmail(email);
         assertEquals(UserStatus.INACTIVE, userBeforeActivation.getStatus());
 
-        final MimeMessage firstReceivedMimeMessage = getFirstReceivedMimeMessage();
-        final String token = getTokenFromConfirmationMessage(firstReceivedMimeMessage);
+        final MimeMessage firstReceivedMimeMessage = getFirstReceivedMimeMessage(GREEN_MAIL_REGISTRATION);
+        final String token = getTokenFromMessage(firstReceivedMimeMessage);
+        final var tokenEntity = confirmationTokenRepository.findByTokenAndType(
+                URLEncoder.encode(token, StandardCharsets.UTF_8),
+                TokenType.EMAIL_CONFIRMATION
+        );
+
+        assumeTrue(tokenEntity.isPresent());
+        assertEquals(TokenStatus.NOT_ACTIVATED, tokenEntity.get().getStatus());
 
         given(requestSpecification)
                 .when()
@@ -104,6 +119,13 @@ public class RegistrationTest {
                 .spec(validResponseSpecification);
 
         final User userAfterConfirmation = userService.getUserByEmail(email);
+        final var activatedToken = confirmationTokenRepository.findByTokenAndType(
+                URLEncoder.encode(token, StandardCharsets.UTF_8),
+                TokenType.EMAIL_CONFIRMATION
+        );
+
+        assumeTrue(activatedToken.isPresent());
+        assertEquals(TokenStatus.ACTIVATED, activatedToken.get().getStatus());
         assertEquals(UserStatus.ACTIVE, userAfterConfirmation.getStatus());
     }
 }

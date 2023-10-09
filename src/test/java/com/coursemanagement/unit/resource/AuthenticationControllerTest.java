@@ -30,9 +30,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
-import static com.coursemanagement.util.Constants.EMAIL_CONFIRMATION_ENDPOINT;
+import static com.coursemanagement.util.Constants.*;
 import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.getAuthenticationRequest;
 import static org.instancio.Select.field;
@@ -55,8 +55,6 @@ class AuthenticationControllerTest {
     @MockBean
     private ConfirmationTokenService confirmationTokenService;
 
-    public static final String REGISTRATION_ENDPOINT = "/api/v1/authentication/register";
-    private static final String LOGIN_ENDPOINT = "/api/v1/authentication/login";
     private static final String CONFIRMATION_ENDPOINT = "/api/v1/authentication" + EMAIL_CONFIRMATION_ENDPOINT;
     private static final String TEST_AUTHENTICATION_TOKEN = "testEncodedToken";
     private static final AuthenticationRequest AUTHENTICATION_REQUEST = getAuthenticationRequest();

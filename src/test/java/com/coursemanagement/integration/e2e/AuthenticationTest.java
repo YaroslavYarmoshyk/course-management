@@ -61,7 +61,7 @@ public class AuthenticationTest {
         );
     }
 
-    private void testSuccessfulUserLogin(final User user) {
+    void testSuccessfulUserLogin(final User user) {
         final AuthenticationResponse response = given(requestSpecification)
                 .when()
                 .body(new AuthenticationRequest(user))

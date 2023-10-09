@@ -2,6 +2,7 @@ package com.coursemanagement.util;
 
 import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
 import jakarta.mail.Multipart;
 import jakarta.mail.Part;
 import jakarta.mail.internet.MimeMessage;
@@ -11,16 +12,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.coursemanagement.integration.e2e.RegistrationTest.GREEN_MAIL;
-
 public class MessageUtils {
 
-    public static MimeMessage getFirstReceivedMimeMessage() {
-        final MimeMessage[] receivedMessages = GREEN_MAIL.getReceivedMessages();
+    public static MimeMessage getFirstReceivedMimeMessage(final GreenMailExtension greenMailExtension) {
+        final MimeMessage[] receivedMessages = greenMailExtension.getReceivedMessages();
         return receivedMessages[0];
     }
 
-    public static String getTokenFromConfirmationMessage(final MimeMessage mimeMessage) throws Exception {
+
+    public static String getTokenFromMessage(final MimeMessage mimeMessage) throws Exception {
         final Pattern pattern = Pattern.compile("token=(.*?)\"");
         final String htmlContent = extractHtmlFromMimeMessage(mimeMessage);
         final Matcher matcher = pattern.matcher(htmlContent);

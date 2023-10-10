@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
-import static com.coursemanagement.util.Endpoints.*;
+import static com.coursemanagement.util.BaseEndpoints.*;
 import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;

@@ -25,8 +25,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.Constants.*;
-import static com.coursemanagement.util.Endpoints.RESET_PASSWORD_CONFIRMATION_ENDPOINT;
-import static com.coursemanagement.util.Endpoints.RESET_PASSWORD_REQUEST_ENDPOINT;
+import static com.coursemanagement.util.BaseEndpoints.RESET_PASSWORD_CONFIRMATION_ENDPOINT;
+import static com.coursemanagement.util.BaseEndpoints.RESET_PASSWORD_REQUEST_ENDPOINT;
 import static com.coursemanagement.util.MessageUtils.getFirstReceivedMimeMessage;
 import static com.coursemanagement.util.MessageUtils.getTokenFromMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.stream.Stream;
 
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @IntegrationTest
-@Sql("/scripts/add_users.sql")
 public class AuthenticationTest {
     @Autowired
     private RequestSpecification requestSpecification;
@@ -35,7 +33,7 @@ public class AuthenticationTest {
 
     @TestFactory
     @DisplayName("Test user authentication via login flow")
-    Stream<DynamicTest> testUserAuthentication() {
+    Stream<DynamicTest> testUserAuthenticationFlow() {
         final AuthenticationRequest authRequestWithoutEmail = Instancio.of(AuthenticationRequest.class)
                 .ignore(field(AuthenticationRequest::email))
                 .create();
@@ -61,7 +59,7 @@ public class AuthenticationTest {
         );
     }
 
-    void testSuccessfulUserLogin(final User user) {
+    private void testSuccessfulUserLogin(final User user) {
         final AuthenticationResponse response = given(requestSpecification)
                 .when()
                 .body(new AuthenticationRequest(user))
@@ -86,7 +84,7 @@ public class AuthenticationTest {
         assertTrue(CollectionUtils.isEqualCollection(user.getRoles(), loggedInUser.getRoles()));
     }
 
-    void testFailureUserLogin(final AuthenticationRequest authenticationRequest, final HttpStatus expectedStatus) {
+    private void testFailureUserLogin(final AuthenticationRequest authenticationRequest, final HttpStatus expectedStatus) {
         given(requestSpecification)
                 .when()
                 .body(authenticationRequest)

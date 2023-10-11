@@ -20,6 +20,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -49,6 +50,7 @@ public class RegistrationTest {
     @RegisterExtension
     private static final GreenMailExtension GREEN_MAIL_REGISTRATION = new GreenMailExtension(ServerSetup.SMTP);
 
+    @Sql("/scripts/remove_users.sql")
     @TestFactory
     @DisplayName("Test user registration flow")
     Stream<DynamicTest> testRegistrationFlow() {
@@ -69,7 +71,7 @@ public class RegistrationTest {
         );
     }
 
-    void testSuccessfulUserRegistration(final AuthenticationRequest authenticationRequest) {
+    private void testSuccessfulUserRegistration(final AuthenticationRequest authenticationRequest) {
         final String userEmail = authenticationRequest.email();
         given(requestSpecification)
                 .when()
@@ -82,7 +84,7 @@ public class RegistrationTest {
         assertNotNull(userService.getUserByEmail(userEmail));
     }
 
-    void testFailureUserRegistration(final AuthenticationRequest authenticationRequest) {
+    private void testFailureUserRegistration(final AuthenticationRequest authenticationRequest) {
         given(requestSpecification)
                 .when()
                 .body(authenticationRequest)
@@ -91,14 +93,14 @@ public class RegistrationTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    void testEmailConfirmationReceiving(final String email) throws Exception {
+    private void testEmailConfirmationReceiving(final String email) throws Exception {
         final MimeMessage receivedMessage = getFirstReceivedMimeMessage(GREEN_MAIL_REGISTRATION);
         assertEquals(1, receivedMessage.getAllRecipients().length);
         assertEquals(email, receivedMessage.getAllRecipients()[0].toString());
         assertEquals(EMAIL_CONFIRMATION_SUBJECT, receivedMessage.getSubject());
     }
 
-    void testUserActivationByConfirmationToken(final String email) throws Exception {
+    private void testUserActivationByConfirmationToken(final String email) throws Exception {
         final User userBeforeActivation = userService.getUserByEmail(email);
         assertEquals(UserStatus.INACTIVE, userBeforeActivation.getStatus());
 

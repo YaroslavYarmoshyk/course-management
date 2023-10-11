@@ -18,15 +18,14 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.util.Constants.*;
 import static com.coursemanagement.util.BaseEndpoints.RESET_PASSWORD_CONFIRMATION_ENDPOINT;
 import static com.coursemanagement.util.BaseEndpoints.RESET_PASSWORD_REQUEST_ENDPOINT;
+import static com.coursemanagement.util.Constants.*;
 import static com.coursemanagement.util.MessageUtils.getFirstReceivedMimeMessage;
 import static com.coursemanagement.util.MessageUtils.getTokenFromMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
@@ -37,7 +36,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @IntegrationTest
-@Sql("/scripts/add_users.sql")
 public class ResetPasswordTest {
     @Autowired
     private RequestSpecification requestSpecification;
@@ -69,7 +67,7 @@ public class ResetPasswordTest {
         );
     }
 
-    void testResetPasswordRequestSending() throws Exception {
+    private void testResetPasswordRequestSending() throws Exception {
         final String email = FIRST_STUDENT.getEmail();
         final String response = given(requestSpecification)
                 .when()
@@ -89,7 +87,7 @@ public class ResetPasswordTest {
 
     }
 
-    void testConfirmationTokenCreation() throws Exception {
+    private void testConfirmationTokenCreation() throws Exception {
         final MimeMessage receivedMessage = getFirstReceivedMimeMessage(GREEN_MAIL_RESET_PASSWORD);
         final String confirmationToken = URLEncoder.encode(getTokenFromMessage(receivedMessage), StandardCharsets.UTF_8);
         final var tokenEntity = confirmationTokenRepository.findByTokenAndType(confirmationToken, TokenType.RESET_PASSWORD);
@@ -98,7 +96,7 @@ public class ResetPasswordTest {
         assertEquals(TokenStatus.NOT_ACTIVATED, tokenEntity.get().getStatus());
     }
 
-    void testResetPasswordRequestConfirmation() throws Exception {
+    private void testResetPasswordRequestConfirmation() throws Exception {
         final MimeMessage receivedMessage = getFirstReceivedMimeMessage(GREEN_MAIL_RESET_PASSWORD);
         final String confirmationToken = getTokenFromMessage(receivedMessage);
 
@@ -121,7 +119,7 @@ public class ResetPasswordTest {
         assertEquals(TokenStatus.ACTIVATED, tokenEntity.get().getStatus());
     }
 
-    void testSuccessfulPasswordResetting() {
+    private void testSuccessfulPasswordResetting() {
         final User userBeforeUpdate = userService.getUserByEmail(FIRST_STUDENT.getEmail());
         final String oldPassword = "passw@rd-3";
         final String newPassword = "new-strong-passw0rd!";
@@ -140,7 +138,7 @@ public class ResetPasswordTest {
         successfulLoginWithNewPasswordAfterResettingStep(requestWithNewPass);
     }
 
-    void testFailureResetPassword(final AuthenticationRequest request) {
+    private void testFailureResetPassword(final AuthenticationRequest request) {
         given(requestSpecification)
                 .when()
                 .body(request)
@@ -149,7 +147,7 @@ public class ResetPasswordTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    void successfulLoginWithOldPasswordStep(final AuthenticationRequest requestWithOldPass) {
+    private void successfulLoginWithOldPasswordStep(final AuthenticationRequest requestWithOldPass) {
         given(requestSpecification)
                 .when()
                 .body(requestWithOldPass)
@@ -160,7 +158,7 @@ public class ResetPasswordTest {
                 .body(matchesJsonSchemaInClasspath("schemas/authenticationResponseSchema.json"));
     }
 
-    void failureLoginWithNewPasswordBeforeResettingStep(final AuthenticationRequest requestWithNewPass) {
+    private void failureLoginWithNewPasswordBeforeResettingStep(final AuthenticationRequest requestWithNewPass) {
         given(requestSpecification)
                 .when()
                 .body(requestWithNewPass)
@@ -169,7 +167,7 @@ public class ResetPasswordTest {
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
-    void successfulResettingPasswordStep(final AuthenticationRequest requestWithNewPass) {
+    private void successfulResettingPasswordStep(final AuthenticationRequest requestWithNewPass) {
         given(requestSpecification)
                 .when()
                 .body(requestWithNewPass)
@@ -180,7 +178,7 @@ public class ResetPasswordTest {
                 .body(matchesJsonSchemaInClasspath("schemas/authenticationResponseSchema.json"));
     }
 
-    void successfulLoginWithNewPasswordAfterResettingStep(final AuthenticationRequest requestWithOldPass) {
+    private void successfulLoginWithNewPasswordAfterResettingStep(final AuthenticationRequest requestWithOldPass) {
         given(requestSpecification)
                 .when()
                 .body(requestWithOldPass)

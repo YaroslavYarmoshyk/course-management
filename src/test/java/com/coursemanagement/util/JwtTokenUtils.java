@@ -18,7 +18,7 @@ import static io.restassured.RestAssured.given;
 public class JwtTokenUtils {
     private static final Map<String, String> TOKENS = new HashMap<>();
 
-    public static String getTokenByEmail(final User user, final RequestSpecification requestSpecification) {
+    public static String getTokenForUser(final User user, final RequestSpecification requestSpecification) {
         final String email = user.getEmail();
         final String currentToken = TOKENS.get(email);
         if (tokenExpired(currentToken)) {

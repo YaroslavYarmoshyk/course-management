@@ -12,6 +12,7 @@ import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.RoleManagementService;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +37,7 @@ public class AdminResource {
     private final LessonService lessonService;
 
     @PostMapping(value = "/assign-role")
-    public User assignRoleToUser(@RequestBody final RoleAssignmentDto roleAssignmentDto) {
+    public User assignRoleToUser(@Valid @RequestBody final RoleAssignmentDto roleAssignmentDto) {
         return roleManagementService.assignRoleToUser(roleAssignmentDto);
     }
 

@@ -191,7 +191,7 @@ class AuthenticationControllerTest {
         );
     }
 
-    void testInvalidAuthenticationRequest(final AuthenticationRequest authenticationRequest, final String endpointUrl) throws Exception {
+    private void testInvalidAuthenticationRequest(final AuthenticationRequest authenticationRequest, final String endpointUrl) throws Exception {
         makeMockMvcRequest(mockMvc, POST, endpointUrl, authenticationRequest)
                 .andExpect(status().isBadRequest());
     }

@@ -5,7 +5,7 @@ import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonUtil {
+public class JsonUtils {
     public static String asJsonString(final Object obj) {
         try {
             final ObjectMapper objectMapper = new ObjectMapper();

@@ -86,6 +86,7 @@ public final class TestDataUtils {
         return Instancio.of(User.class)
                 .set(field(User::getId), 1L)
                 .set(field(User::getEmail), "john-smith@gmail.com")
+                .set(field(User::getPassword), "passw@rd-1")
                 .set(field(User::getRoles), Set.of(Role.ADMIN))
                 .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
@@ -95,6 +96,7 @@ public final class TestDataUtils {
         return Instancio.of(User.class)
                 .set(field(User::getId), 2L)
                 .set(field(User::getEmail), "poppins@yahoo.com")
+                .set(field(User::getPassword), "passw@rd-2")
                 .set(field(User::getRoles), Set.of(Role.INSTRUCTOR))
                 .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
@@ -104,6 +106,7 @@ public final class TestDataUtils {
         return Instancio.of(User.class)
                 .set(field(User::getId), 3L)
                 .set(field(User::getEmail), "goldlannister@gmail.com")
+                .set(field(User::getPassword), "passw@rd-3")
                 .set(field(User::getRoles), Set.of(Role.STUDENT))
                 .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
@@ -113,6 +116,7 @@ public final class TestDataUtils {
         return Instancio.of(User.class)
                 .set(field(User::getId), 4L)
                 .set(field(User::getEmail), "maria-montesory@gmail.com")
+                .set(field(User::getPassword), "passw@rd-3")
                 .set(field(User::getRoles), Set.of(Role.STUDENT))
                 .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();
@@ -122,6 +126,7 @@ public final class TestDataUtils {
         return Instancio.of(User.class)
                 .set(field(User::getId), 5L)
                 .set(field(User::getEmail), "thor-odinson96@gmail.com")
+                .set(field(User::getPassword), "glory-to-Ukr@ine")
                 .set(field(User::getRoles), new HashSet<>())
                 .set(field(User::getStatus), UserStatus.ACTIVE)
                 .create();

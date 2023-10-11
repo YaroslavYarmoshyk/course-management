@@ -1,4 +1,4 @@
-package com.coursemanagement.integration.resource;
+package com.coursemanagement.unit.resource;
 
 import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.Role;
@@ -26,11 +26,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.config.ResponseBodyMatchers.responseBody;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.ADMIN_RESOURCE_ENDPOINT;
-import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
+import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;

@@ -1,6 +1,6 @@
 package com.coursemanagement.integration.repository;
 
-import com.coursemanagement.config.DatabaseSetupExtension;
+import com.coursemanagement.config.annotation.RepositoryTest;
 import com.coursemanagement.config.properties.UserTestDataProperties;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.LessonMarkRepository;
@@ -9,15 +9,10 @@ import com.coursemanagement.repository.entity.LessonMarkEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataJpaTest(showSql = false)
-@ExtendWith(DatabaseSetupExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@RepositoryTest
 @EnableConfigurationProperties(UserTestDataProperties.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql("/scripts/add_lesson_marks.sql")
 class LessonMarkRepositoryTest {
     @Autowired
     private LessonMarkRepository lessonMarkRepository;
@@ -48,7 +41,6 @@ class LessonMarkRepositoryTest {
     @Order(1)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find lesson mark by id with fetched student")
-    @Sql(value = "/scripts/add_lesson_marks.sql")
     void testFindLessonMarkById_Student_Is_Fetched() {
         final LessonMarkEntity lessonMarkEntity = lessonMarkRepository.findLessonMarkById(1L);
         assertNotNull(lessonMarkEntity);
@@ -61,7 +53,6 @@ class LessonMarkRepositoryTest {
     @Order(2)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find lesson mark by id with fetched lesson")
-    @Sql(value = "/scripts/add_lesson_marks.sql")
     void testFindLessonMarkById_Lesson_Is_Fetched() {
         final LessonMarkEntity lessonMarkEntity = lessonMarkRepository.findLessonMarkById(1L);
         assertNotNull(lessonMarkEntity);
@@ -74,7 +65,6 @@ class LessonMarkRepositoryTest {
     @Order(3)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     @DisplayName(value = "Test find lesson mark by id with fetched instructor")
-    @Sql(value = "/scripts/add_lesson_marks.sql")
     void testFindLessonMarkById_Instructor_Is_Fetched() {
         final LessonMarkEntity lessonMarkEntity = lessonMarkRepository.findLessonMarkById(1L);
         assertNotNull(lessonMarkEntity);

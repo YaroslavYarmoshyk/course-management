@@ -35,9 +35,9 @@ spring:
     port: 587
     protocol: smtp
     properties:
-      "mail.transport.protocol": smtp
-      "mail.smtp.auth": true
-      "mail.smtp.starttls.enable": true
+      mail.transport.protocol: smtp
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 course-management:
   base-url: http://localhost:8080

@@ -1,4 +1,4 @@
-package com.coursemanagement.integration.resource;
+package com.coursemanagement.unit.resource;
 
 import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.Role;
@@ -24,12 +24,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.coursemanagement.config.ResponseBodyMatchers.responseBody;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.AssertionsUtils.assertExceptionDeserialization;
 import static com.coursemanagement.util.AssertionsUtils.assertUnauthorizedAccess;
 import static com.coursemanagement.util.Constants.LESSONS_ENDPOINT;
 import static com.coursemanagement.util.DateTimeUtils.formatDate;
-import static com.coursemanagement.util.MvcUtil.makeMockMvcRequest;
+import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
 import static org.instancio.Select.field;

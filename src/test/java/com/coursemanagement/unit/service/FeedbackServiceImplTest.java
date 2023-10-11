@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
-import static com.coursemanagement.util.AuthorizationUtil.userHasAnyRole;
+import static com.coursemanagement.util.AuthorizationUtils.userHasAnyRole;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
 import static com.coursemanagement.util.TestDataUtils.USER_TEST_MODEL;

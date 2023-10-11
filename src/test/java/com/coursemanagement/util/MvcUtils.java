@@ -4,7 +4,6 @@ import com.coursemanagement.model.User;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -15,18 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.coursemanagement.util.JsonUtil.asJsonString;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static com.coursemanagement.util.JsonUtils.asJsonString;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@Component
-public class MvcUtil {
-
+public class MvcUtils {
     public static ResultActions makeMockMvcRequest(final MockMvc mockMvc,
                                                    final HttpMethod requestType,
                                                    final String endpoint) throws Exception {

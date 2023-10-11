@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 public final class Constants {
     public static final String ROLES_CLAIM = "roles";
     public static final String AUTHENTICATION_ENDPOINT = "/api/v1/authentication";
+    public static final String REGISTRATION_ENDPOINT = AUTHENTICATION_ENDPOINT + "/register";
+    public static final String LOGIN_ENDPOINT = AUTHENTICATION_ENDPOINT + "/login";
     public static final String RESET_PASSWORD_ENDPOINT = "/api/v1/reset-password";
     public static final String ADMIN_RESOURCE_ENDPOINT = "/api/v1/admin";
     public static final String COURSE_MANAGEMENT_ENDPOINT = "/api/v1/course-management";

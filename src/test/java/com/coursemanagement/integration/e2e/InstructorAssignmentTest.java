@@ -48,8 +48,8 @@ public class InstructorAssignmentTest {
     private UserCourseService userCourseService;
 
     @TestFactory
-    @DisplayName("Test failure instructor assignment flow")
-    Stream<DynamicTest> testFailureRoleAssignmentFlow() {
+    @DisplayName("Test instructor assignment flow")
+    Stream<DynamicTest> testInstructorAssignmentFlow() {
         final Long existingCourseCode = 22324L;
         final Long nonExistingCourseCode = 3L;
         final String adminsJwt = getTokenForUser(ADMIN, requestSpecification);

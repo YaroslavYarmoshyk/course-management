@@ -11,8 +11,8 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
-import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
-import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
+import com.coursemanagement.rest.dto.InstructorAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
@@ -59,9 +59,9 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
     @Override
     @Transactional
-    public CourseAssignmentResponseDto assignInstructorToCourse(final CourseAssignmentRequestDto courseAssignmentRequestDto) {
-        final Long instructorId = courseAssignmentRequestDto.instructorId();
-        final Long courseCode = courseAssignmentRequestDto.courseCode();
+    public InstructorAssignmentResponseDto assignInstructorToCourse(final InstructorAssignmentRequestDto instructorAssignmentRequestDto) {
+        final Long instructorId = instructorAssignmentRequestDto.instructorId();
+        final Long courseCode = instructorAssignmentRequestDto.courseCode();
         final User potentialInstructor = userService.getUserById(instructorId);
         validateInstructorAssigment(potentialInstructor);
 
@@ -69,7 +69,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
         final Course course = courseService.getCourseByCode(courseCode);
         final Map<Role, Set<UserDto>> usersByRole = getGroupedUsersByRole(course);
-        return new CourseAssignmentResponseDto(
+        return new InstructorAssignmentResponseDto(
                 course.getCode(),
                 course.getSubject(),
                 usersByRole.getOrDefault(Role.INSTRUCTOR, Set.of()),

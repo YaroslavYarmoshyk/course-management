@@ -3,8 +3,8 @@ package com.coursemanagement.unit.resource;
 import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.rest.CourseManagementResource;
-import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
-import com.coursemanagement.rest.dto.CourseAssignmentResponseDto;
+import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
+import com.coursemanagement.rest.dto.InstructorAssignmentResponseDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
@@ -52,8 +52,8 @@ class CourseManagementResourceTest {
     @DisplayName("Test admins assign instructor to course endpoint")
     Stream<DynamicTest> testAssignInstructorToCourseEndpoint() {
         final String assignInstructorEndpoint = COURSE_MANAGEMENT_ENDPOINT + "/assign-instructor";
-        final CourseAssignmentRequestDto requestDto = Instancio.create(CourseAssignmentRequestDto.class);
-        final CourseAssignmentResponseDto responseDto = Instancio.create(CourseAssignmentResponseDto.class);
+        final InstructorAssignmentRequestDto requestDto = Instancio.create(InstructorAssignmentRequestDto.class);
+        final InstructorAssignmentResponseDto responseDto = Instancio.create(InstructorAssignmentResponseDto.class);
         return Stream.of(
                 dynamicTest("Test empty body request",
                         () -> makeMockMvcRequest(mockMvc, POST, assignInstructorEndpoint, ADMIN).andExpect(status().isBadRequest())),
@@ -63,7 +63,7 @@ class CourseManagementResourceTest {
                         () -> {
                             when(courseManagementService.assignInstructorToCourse(requestDto)).thenReturn(responseDto);
                             makeMockMvcRequest(mockMvc, POST, assignInstructorEndpoint, requestDto, ADMIN)
-                                    .andExpect(responseBody().containsObjectAsJson(responseDto, CourseAssignmentResponseDto.class));
+                                    .andExpect(responseBody().containsObjectAsJson(responseDto, InstructorAssignmentResponseDto.class));
                         }),
                 dynamicTest("Test exception deserialization", () -> assertExceptionDeserialization(
                                 mockMvc,

@@ -10,7 +10,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
-import com.coursemanagement.rest.dto.CourseAssignmentRequestDto;
+import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
@@ -94,7 +94,7 @@ class CourseManagementServiceImplTest {
             doReturn(RANDOM_COURSE).when(courseService).getCourseByCode(any());
             when(userService.getUserById(INSTRUCTOR.getId())).thenReturn(INSTRUCTOR);
 
-            courseManagementService.assignInstructorToCourse(new CourseAssignmentRequestDto(INSTRUCTOR.getId(), RANDOM_COURSE.getCode()));
+            courseManagementService.assignInstructorToCourse(new InstructorAssignmentRequestDto(INSTRUCTOR.getId(), RANDOM_COURSE.getCode()));
 
             verify(courseService).addUserToCourses(INSTRUCTOR, Set.of(RANDOM_COURSE.getCode()));
         }
@@ -103,7 +103,7 @@ class CourseManagementServiceImplTest {
         @Test
         @DisplayName("Test throwing exception when expected user is not instructor")
         void testShouldThrowException_InvalidUserRole() {
-            final var requestDto = new CourseAssignmentRequestDto(FIRST_STUDENT.getId(), RANDOM_COURSE.getCode());
+            final var requestDto = new InstructorAssignmentRequestDto(FIRST_STUDENT.getId(), RANDOM_COURSE.getCode());
 
             when(userService.getUserById(FIRST_STUDENT.getId())).thenReturn(FIRST_STUDENT);
 
@@ -121,7 +121,7 @@ class CourseManagementServiceImplTest {
                             role -> role,
                             Collectors.counting()
                     ));
-            final var requestDto = new CourseAssignmentRequestDto(INSTRUCTOR.getId(), RANDOM_COURSE.getCode());
+            final var requestDto = new InstructorAssignmentRequestDto(INSTRUCTOR.getId(), RANDOM_COURSE.getCode());
 
             when(userService.getUserById(INSTRUCTOR.getId())).thenReturn(INSTRUCTOR);
             doNothing().when(courseService).addUserToCourses(any(), anyCollection());

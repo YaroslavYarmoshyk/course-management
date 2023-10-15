@@ -11,13 +11,13 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
 import com.coursemanagement.rest.dto.InstructorAssignmentResponseDto;
-import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
-import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
+import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
@@ -40,9 +40,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.coursemanagement.util.Constants.HUNDRED;
-import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
-import static com.coursemanagement.util.Constants.MARK_ROUNDING_SCALE;
+import static com.coursemanagement.util.Constants.*;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 
 @Service

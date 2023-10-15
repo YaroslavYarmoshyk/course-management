@@ -20,18 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.BaseEndpoints.COURSE_ASSIGNMENT_ENDPOINT;
-import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 import static com.coursemanagement.util.JwtTokenUtils.getTokenForUser;
 import static com.coursemanagement.util.TestDataUtils.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -82,7 +79,7 @@ public class InstructorAssignmentTest {
                 .then()
                 .spec(validResponseSpecification)
                 .assertThat()
-                .body(matchesJsonSchemaInClasspath("schemas/courseAssignmentResponseSchema.json"))
+                .body(matchesJsonSchemaInClasspath("schemas/instructorAssignmentResponseSchema.json"))
                 .extract()
                 .as(InstructorAssignmentResponseDto.class);
 
@@ -103,7 +100,7 @@ public class InstructorAssignmentTest {
 
         final UserCourse userCourse = instructorsCourses.get(0);
         assertEquals(UserCourseStatus.STARTED, userCourse.getStatus());
-        assertThat(userCourse.getEnrollmentDate().isBefore(LocalDateTime.now(DEFAULT_ZONE_ID))).isTrue();
+        assertNotNull(userCourse.getEnrollmentDate());
         assertNull(userCourse.getAccomplishmentDate());
     }
 

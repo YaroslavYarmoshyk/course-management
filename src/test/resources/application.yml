@@ -65,8 +65,7 @@ courses:
 course-management:
   url:
     base: http://localhost:8080
-  student:
-    course-limit: 5
+  student-course-limit: 5
 
 token:
   jwt:

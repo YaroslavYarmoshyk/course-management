@@ -35,7 +35,7 @@ public class CourseManagementResource {
     }
 
     @PostMapping(value = "/enrollments")
-    public StudentEnrollInCourseResponseDto enrollInCourse(@RequestBody final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
+    public StudentEnrollInCourseResponseDto enrollInCourse(@Valid @RequestBody final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
         return courseManagementService.enrollStudentInCourses(studentEnrollInCourseRequestDto);
     }
 

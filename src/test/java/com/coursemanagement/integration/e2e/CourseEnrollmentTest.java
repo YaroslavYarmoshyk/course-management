@@ -59,11 +59,11 @@ public class CourseEnrollmentTest {
     }
 
     private void testUnauthorizedAccess(final StudentEnrollInCourseRequestDto requestDto) {
-        final String anotherStudentJwt = getTokenForUser(SECOND_STUDENT, requestSpecification);
+        final String secondStudentJwt = getTokenForUser(SECOND_STUDENT, requestSpecification);
         final String instructorJwt = getTokenForUser(INSTRUCTOR, requestSpecification);
 
         given(requestSpecification)
-                .header("Authorization", "Bearer " + anotherStudentJwt)
+                .header("Authorization", "Bearer " + secondStudentJwt)
                 .body(requestDto)
                 .post(COURSE_ENROLLMENT_ENDPOINT)
                 .then()

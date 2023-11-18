@@ -1,7 +1,7 @@
 package com.coursemanagement.rest.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
-public record UploadHomeworkDto(@NotBlank Long lessonId, @NotBlank MultipartFile file) {
+public record UploadHomeworkDto(@NotNull Long lessonId, @NotNull MultipartFile file) {
 }

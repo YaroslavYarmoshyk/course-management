@@ -13,7 +13,7 @@ public interface CourseService {
 
     Set<Course> getCoursesByCodes(final Collection<Long> codes);
 
-    void addUserToCourses(final User student, final Collection<Long> courses);
+    void addUserToCourses(final User student, final Collection<Long> courseCodes);
 
     CourseMark getStudentCourseFinalMark(final Long studentId, final Long courseCode);
 }

@@ -10,7 +10,6 @@ import com.coursemanagement.repository.HomeworkRepository;
 import com.coursemanagement.repository.entity.FileEntity;
 import com.coursemanagement.repository.entity.HomeworkEntity;
 import com.coursemanagement.rest.dto.UploadHomeworkDto;
-import com.coursemanagement.service.CourseService;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -20,6 +19,7 @@ import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,45 +30,43 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.coursemanagement.util.BaseEndpoints.HOMEWORK_DOWNLOAD_ENDPOINT;
 import static com.coursemanagement.util.BaseEndpoints.HOMEWORK_UPLOAD_ENDPOINT;
 import static com.coursemanagement.util.JwtTokenUtils.getTokenForUser;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.SECOND_STUDENT;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @IntegrationTest
-@Sql("/scripts/add_lessons_with_marks.sql")
+@Sql(value = "/scripts/add_homework.sql")
 public class HomeworkManagementTest {
     @Autowired
     private RequestSpecification requestSpecification;
     @Autowired
     private ResponseSpecification validResponseSpecification;
     @Autowired
-    private CourseService courseService;
-    @Autowired
     private HomeworkRepository homeworkRepository;
     @Autowired
     private FileRepository fileRepository;
 
+    @Order(1)
     @TestFactory
-    @DisplayName("Test course enrollment flow")
-    Stream<DynamicTest> testCourseEnrollmentFlow() {
-        courseService.addUserToCourses(FIRST_STUDENT, Set.of(22324L));
-
+    @DisplayName("Test homework uploading flow")
+    Stream<DynamicTest> testHomeworkUploadingFlow() {
         final MultipartFile textFile = getMultipartFile("text/plain");
         final MultipartFile imageFile = getMultipartFile("image/jpeg");
         final UploadHomeworkDto uploadTextHomeworkDto = new UploadHomeworkDto(1L, textFile);
 
         return Stream.of(
                 dynamicTest("Test homework uploading to not associated lesson",
-                        () -> testUnauthorizedAccess(FIRST_STUDENT, new UploadHomeworkDto(10L, textFile))),
+                        () -> testUploadingUnauthorizedAccess(FIRST_STUDENT, new UploadHomeworkDto(10L, textFile))),
                 dynamicTest("Test homework uploading to by another student",
-                        () -> testUnauthorizedAccess(SECOND_STUDENT, uploadTextHomeworkDto)),
+                        () -> testUploadingUnauthorizedAccess(SECOND_STUDENT, uploadTextHomeworkDto)),
                 dynamicTest("Test homework uploading without lesson id",
                         () -> testBadHomeworkUploadingRequest(new UploadHomeworkDto(null, textFile))),
                 dynamicTest("Test valid homework uploading request with text file",
@@ -78,8 +76,29 @@ public class HomeworkManagementTest {
         );
     }
 
-    private void testUnauthorizedAccess(final User user, final UploadHomeworkDto uploadHomeworkDto) {
+    @Order(2)
+    @TestFactory
+    @DisplayName("Test homework downloading flow")
+    Stream<DynamicTest> testHomeworkDownloadingFlow() {
+        final Long fileId = 3L;
+        return Stream.of(
+                dynamicTest("Test homework downloading by another student",
+                        () -> testDownloadingUnauthorizedAccess(SECOND_STUDENT, fileId)),
+                dynamicTest("Test homework downloading from not associated lesson",
+                        () -> testDownloadingUnauthorizedAccess(FIRST_STUDENT, 4L)),
+                dynamicTest("Test valid homework downloading",
+                        () -> testValidLessonDownloadingRequest(fileId))
+        );
+    }
+
+    private void testUploadingUnauthorizedAccess(final User user, final UploadHomeworkDto uploadHomeworkDto) {
         makeHomeworkUploadingRequest(user, uploadHomeworkDto)
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    private void testDownloadingUnauthorizedAccess(final User user, final Long fileId) {
+        makeHomeworkDownloadingRequest(user, fileId)
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
@@ -111,6 +130,18 @@ public class HomeworkManagementTest {
         assertArrayEquals(savedFileEntity.getFileContent(), fileToUpload.getBytes());
     }
 
+    private void testValidLessonDownloadingRequest(final Long fileId) {
+        final String fileContent = fileRepository.findById(fileId)
+                .map(FileEntity::getFileContent)
+                .map(String::new)
+                .orElseThrow();
+        makeHomeworkDownloadingRequest(FIRST_STUDENT, fileId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.BINARY)
+                .body(equalTo(fileContent));
+    }
+
     private Response makeHomeworkUploadingRequest(final User user, final UploadHomeworkDto uploadHomeworkDto) {
         final String jwt = getTokenForUser(user, requestSpecification);
         return given(requestSpecification)
@@ -121,8 +152,16 @@ public class HomeworkManagementTest {
                 .post(HOMEWORK_UPLOAD_ENDPOINT);
     }
 
+    private Response makeHomeworkDownloadingRequest(final User user, final Long fileId) {
+        final String jwt = getTokenForUser(user, requestSpecification);
+        final String homeworkDownloadingEndpoint = HOMEWORK_DOWNLOAD_ENDPOINT + "/" + fileId;
+        return given(requestSpecification)
+                .header("Authorization", "Bearer " + jwt)
+                .get(homeworkDownloadingEndpoint);
+    }
+
     private static MockMultipartFile getMultipartFile(final String filetype) {
-        return new MockMultipartFile("file", "fileName", filetype, "Sample content" .getBytes());
+        return new MockMultipartFile("file", "fileName", filetype, "Sample content".getBytes());
     }
 
     private static MultiPartSpecification getMultipartSpec(final MultipartFile multipartFile) {

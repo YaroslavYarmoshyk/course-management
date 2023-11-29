@@ -12,4 +12,5 @@ public final class BaseEndpoints {
     public static final String COURSE_ENROLLMENT_ENDPOINT = COURSE_MANAGEMENT_ENDPOINT + "/enrollments";
     public static final String HOMEWORK_UPLOAD_ENDPOINT = HOMEWORK_ENDPOINT + "/upload";
     public static final String HOMEWORK_DOWNLOAD_ENDPOINT = HOMEWORK_ENDPOINT + "/download";
+    public static final String MARK_ASSIGNMENT_ENDPOINT = LESSONS_ENDPOINT + "/assign-mark";
 }

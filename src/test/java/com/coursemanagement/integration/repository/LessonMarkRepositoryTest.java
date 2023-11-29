@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RepositoryTest
 @EnableConfigurationProperties(UserTestDataProperties.class)
-@Sql("/scripts/add_lesson_marks.sql")
+@Sql("/scripts/add_lessons_with_marks.sql")
 class LessonMarkRepositoryTest {
     @Autowired
     private LessonMarkRepository lessonMarkRepository;

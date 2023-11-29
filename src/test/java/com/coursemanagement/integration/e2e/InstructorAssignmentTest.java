@@ -49,9 +49,6 @@ public class InstructorAssignmentTest {
     Stream<DynamicTest> testInstructorAssignmentFlow() {
         final Long existingCourseCode = 22324L;
         final Long nonExistingCourseCode = 3L;
-        final String adminsJwt = getTokenForUser(ADMIN, requestSpecification);
-        requestSpecification.header("Authorization", "Bearer " + adminsJwt);
-
         return Stream.of(
                 dynamicTest("Test potential instructor doesn't have respective role",
                         () -> testBadRequestInstructorAssignment(getCourseAssignment(FIRST_STUDENT.getId(), existingCourseCode))),
@@ -66,6 +63,7 @@ public class InstructorAssignmentTest {
 
     private void testBadRequestInstructorAssignment(final InstructorAssignmentRequestDto requestDto) {
         given(requestSpecification)
+                .header("Authorization", "Bearer " + getTokenForUser(ADMIN, requestSpecification))
                 .body(requestDto)
                 .post(COURSE_ASSIGNMENT_ENDPOINT)
                 .then()
@@ -74,6 +72,7 @@ public class InstructorAssignmentTest {
 
     private void testValidRequestInstructorAssignment(final InstructorAssignmentRequestDto requestDto) {
         final InstructorAssignmentResponseDto responseDto = given(requestSpecification)
+                .header("Authorization", "Bearer " + getTokenForUser(ADMIN, requestSpecification))
                 .body(requestDto)
                 .post(COURSE_ASSIGNMENT_ENDPOINT)
                 .then()

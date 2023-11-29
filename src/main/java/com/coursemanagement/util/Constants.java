@@ -13,6 +13,7 @@ public final class Constants {
     public static final String COURSE_MANAGEMENT_ENDPOINT = "/api/v1/course-management";
     public static final String COURSES_ENDPOINT = "/api/v1/courses";
     public static final String LESSONS_ENDPOINT = "/api/v1/lessons";
+    public static final String HOMEWORK_ENDPOINT = "/api/v1/homework";
     public static final String USERS_ENDPOINT = "/api/v1/users";
     public static final String ERROR_ENDPOINT = "/error";
     public static final String FAVICON = "/favicon.ico";

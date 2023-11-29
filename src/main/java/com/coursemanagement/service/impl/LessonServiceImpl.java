@@ -6,7 +6,7 @@ import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.LessonContent;
 import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
-import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.LessonService;
@@ -78,16 +78,16 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        validateLessonMarkAssignment(markAssigmentRequestDto);
-        return markService.assignMarkToStudentLesson(markAssigmentRequestDto);
+    public MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssignmentRequestDto markAssignmentRequestDto) {
+        validateLessonMarkAssignment(markAssignmentRequestDto);
+        return markService.assignMarkToStudentLesson(markAssignmentRequestDto);
     }
 
-    private void validateLessonMarkAssignment(final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        if (!userAssociationService.currentUserHasAccessTo(markAssigmentRequestDto.instructorId())) {
+    private void validateLessonMarkAssignment(final MarkAssignmentRequestDto markAssignmentRequestDto) {
+        if (!userAssociationService.currentUserHasAccessTo(markAssignmentRequestDto.instructorId())) {
             throw new SystemException("Current user cannot assign mark to lesson", SystemErrorCode.FORBIDDEN);
         }
-        if (!userAssociationService.isUserAssociatedWithLesson(markAssigmentRequestDto.studentId(), markAssigmentRequestDto.lessonId())) {
+        if (!userAssociationService.isUserAssociatedWithLesson(markAssignmentRequestDto.studentId(), markAssignmentRequestDto.lessonId())) {
             throw new SystemException("Student is not associated with lesson", SystemErrorCode.FORBIDDEN);
         }
     }

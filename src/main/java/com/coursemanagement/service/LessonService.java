@@ -1,7 +1,7 @@
 package com.coursemanagement.service;
 
 import com.coursemanagement.model.Lesson;
-import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 
@@ -13,5 +13,5 @@ public interface LessonService {
 
     Set<UserLessonDto> getUserLessonsWithContentPerCourse(final Long userId, final Long courseCode);
 
-    MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssigmentRequestDto markAssigmentRequestDto);
+    MarkAssignmentResponseDto assignMarkToUserLesson(final MarkAssignmentRequestDto markAssignmentRequestDto);
 }

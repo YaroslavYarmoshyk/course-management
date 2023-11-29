@@ -6,7 +6,7 @@ import com.coursemanagement.model.LessonMark;
 import com.coursemanagement.repository.LessonMarkRepository;
 import com.coursemanagement.repository.entity.LessonMarkEntity;
 import com.coursemanagement.rest.dto.LessonDto;
-import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.MarkService;
@@ -29,12 +29,12 @@ public class MarkServiceImpl implements MarkService {
     private final ModelMapper mapper;
 
     @Override
-    public MarkAssignmentResponseDto assignMarkToStudentLesson(final MarkAssigmentRequestDto markAssigmentRequestDto) {
-        final Long instructorId = markAssigmentRequestDto.instructorId();
-        final Long studentId = markAssigmentRequestDto.studentId();
-        final Long lessonId = markAssigmentRequestDto.lessonId();
+    public MarkAssignmentResponseDto assignMarkToStudentLesson(final MarkAssignmentRequestDto markAssignmentRequestDto) {
+        final Long instructorId = markAssignmentRequestDto.instructorId();
+        final Long studentId = markAssignmentRequestDto.studentId();
+        final Long lessonId = markAssignmentRequestDto.lessonId();
 
-        final Mark mark = markAssigmentRequestDto.mark();
+        final Mark mark = markAssignmentRequestDto.mark();
         final LessonMark lessonMark = new LessonMark().setStudentId(studentId)
                 .setLessonId(lessonId)
                 .setMark(mark)

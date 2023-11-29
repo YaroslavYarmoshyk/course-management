@@ -5,7 +5,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.repository.LessonMarkRepository;
 import com.coursemanagement.repository.entity.LessonEntity;
 import com.coursemanagement.repository.entity.LessonMarkEntity;
-import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.impl.MarkServiceImpl;
 import org.instancio.Instancio;
@@ -84,7 +84,7 @@ class MarkServiceImplTest {
         final Long studentId = lessonMarkEntity.getStudent().getId();
         final Long lessonId = lessonMarkEntity.getLesson().getId();
         final Mark mark = lessonMarkEntity.getMark();
-        final var requestDto = new MarkAssigmentRequestDto(instructorId, studentId, lessonId, mark);
+        final var requestDto = new MarkAssignmentRequestDto(instructorId, studentId, lessonId, mark);
 
         when(lessonMarkRepository.save(argThat(entity -> {
             assertEquals(instructorId, entity.getInstructor().getId());

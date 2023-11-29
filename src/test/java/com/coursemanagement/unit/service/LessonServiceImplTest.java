@@ -9,7 +9,7 @@ import com.coursemanagement.repository.LessonContentRepository;
 import com.coursemanagement.repository.LessonRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.LessonEntity;
-import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserAssociationService;
@@ -105,7 +105,7 @@ class LessonServiceImplTest {
         when(userAssociationService.isUserAssociatedWithLesson(anyLong(), anyLong())).thenReturn(studentHasAccessToLesson);
 
         assertThrowsWithMessage(
-                () -> lessonService.assignMarkToUserLesson(new MarkAssigmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, Mark.EXCELLENT)),
+                () -> lessonService.assignMarkToUserLesson(new MarkAssignmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, Mark.EXCELLENT)),
                 SystemException.class,
                 expectedMessage
         );
@@ -180,7 +180,7 @@ class LessonServiceImplTest {
     }
 
     private void testLessonMarkAssigment() {
-        final var requestDto = new MarkAssigmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, Mark.AVERAGE);
+        final var requestDto = new MarkAssignmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, Mark.AVERAGE);
 
         when(userAssociationService.currentUserHasAccessTo(requestDto.instructorId())).thenReturn(true);
         when(userAssociationService.isUserAssociatedWithLesson(requestDto.studentId(), requestDto.lessonId())).thenReturn(true);

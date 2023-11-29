@@ -3,7 +3,7 @@ package com.coursemanagement.unit.resource;
 import com.coursemanagement.config.annotation.SecuredResourceTest;
 import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.rest.LessonResource;
-import com.coursemanagement.rest.dto.MarkAssigmentRequestDto;
+import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.LessonService;
 import org.instancio.Instancio;
@@ -42,7 +42,7 @@ class LessonResourceTest {
     @TestFactory
     @DisplayName("Test instructor's assign mark endpoint")
     Stream<DynamicTest> testAssignMarkEndpoint() {
-        final MarkAssigmentRequestDto requestDto = Instancio.create(MarkAssigmentRequestDto.class);
+        final MarkAssignmentRequestDto requestDto = Instancio.create(MarkAssignmentRequestDto.class);
         final MarkAssignmentResponseDto responseDto = Instancio.of(MarkAssignmentResponseDto.class)
                 .set(field(MarkAssignmentResponseDto::markSubmissionDate), formatDate(LocalDateTime.now()))
                 .create();

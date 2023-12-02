@@ -34,10 +34,9 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.BaseEndpoints.HOMEWORK_DOWNLOAD_ENDPOINT;
 import static com.coursemanagement.util.BaseEndpoints.HOMEWORK_UPLOAD_ENDPOINT;
-import static com.coursemanagement.util.JwtTokenUtils.getTokenForUser;
+import static com.coursemanagement.util.JwtTokenUtils.getAuthTokenRequestSpec;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.SECOND_STUDENT;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -143,9 +142,7 @@ public class HomeworkManagementTest {
     }
 
     private Response makeHomeworkUploadingRequest(final User user, final UploadHomeworkDto uploadHomeworkDto) {
-        final String jwt = getTokenForUser(user, requestSpecification);
-        return given(requestSpecification)
-                .header("Authorization", "Bearer " + jwt)
+        return getAuthTokenRequestSpec(user, requestSpecification)
                 .contentType(ContentType.MULTIPART)
                 .multiPart("lessonId", uploadHomeworkDto.lessonId())
                 .multiPart(getMultipartSpec(uploadHomeworkDto.file()))
@@ -153,10 +150,8 @@ public class HomeworkManagementTest {
     }
 
     private Response makeHomeworkDownloadingRequest(final User user, final Long fileId) {
-        final String jwt = getTokenForUser(user, requestSpecification);
         final String homeworkDownloadingEndpoint = HOMEWORK_DOWNLOAD_ENDPOINT + "/" + fileId;
-        return given(requestSpecification)
-                .header("Authorization", "Bearer " + jwt)
+        return getAuthTokenRequestSpec(user, requestSpecification)
                 .get(homeworkDownloadingEndpoint);
     }
 

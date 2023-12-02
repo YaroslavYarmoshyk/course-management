@@ -32,9 +32,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.BaseEndpoints.MARK_ASSIGNMENT_ENDPOINT;
-import static com.coursemanagement.util.JwtTokenUtils.getTokenForUser;
+import static com.coursemanagement.util.JwtTokenUtils.getAuthTokenRequestSpec;
 import static com.coursemanagement.util.TestDataUtils.*;
-import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -124,9 +123,7 @@ public class MarkAssignmentTest {
     }
 
     private Response makeMarkAssignmentRequest(final User user, final MarkAssignmentRequestDto markAssignmentRequestDto) {
-        final String jwt = getTokenForUser(user, requestSpecification);
-        return given(requestSpecification)
-                .header("Authorization", "Bearer " + jwt)
+        return getAuthTokenRequestSpec(user, requestSpecification)
                 .body(markAssignmentRequestDto)
                 .post(MARK_ASSIGNMENT_ENDPOINT);
     }

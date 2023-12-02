@@ -25,9 +25,8 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.BaseEndpoints.COURSE_ASSIGNMENT_ENDPOINT;
-import static com.coursemanagement.util.JwtTokenUtils.getTokenForUser;
+import static com.coursemanagement.util.JwtTokenUtils.getAuthTokenRequestSpec;
 import static com.coursemanagement.util.TestDataUtils.*;
-import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -62,8 +61,7 @@ public class InstructorAssignmentTest {
     }
 
     private void testBadRequestInstructorAssignment(final InstructorAssignmentRequestDto requestDto) {
-        given(requestSpecification)
-                .header("Authorization", "Bearer " + getTokenForUser(ADMIN, requestSpecification))
+        getAuthTokenRequestSpec(ADMIN, requestSpecification)
                 .body(requestDto)
                 .post(COURSE_ASSIGNMENT_ENDPOINT)
                 .then()
@@ -71,8 +69,7 @@ public class InstructorAssignmentTest {
     }
 
     private void testValidRequestInstructorAssignment(final InstructorAssignmentRequestDto requestDto) {
-        final InstructorAssignmentResponseDto responseDto = given(requestSpecification)
-                .header("Authorization", "Bearer " + getTokenForUser(ADMIN, requestSpecification))
+        final InstructorAssignmentResponseDto responseDto = getAuthTokenRequestSpec(ADMIN, requestSpecification)
                 .body(requestDto)
                 .post(COURSE_ASSIGNMENT_ENDPOINT)
                 .then()

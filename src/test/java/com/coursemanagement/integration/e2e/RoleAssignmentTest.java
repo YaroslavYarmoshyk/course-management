@@ -23,9 +23,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.BaseEndpoints.ROLE_ASSIGNMENT_ENDPOINT;
-import static com.coursemanagement.util.JwtTokenUtils.getTokenForUser;
+import static com.coursemanagement.util.JwtTokenUtils.getAuthTokenRequestSpec;
 import static com.coursemanagement.util.TestDataUtils.*;
-import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -45,10 +44,8 @@ public class RoleAssignmentTest {
     @DisplayName("Test successful role assignment flow")
     void testSuccessfulRoleAssignmentFlow(final RoleAssignmentDto roleAssignmentDto) {
         final User userBeforeAssignment = userService.getUserById(roleAssignmentDto.userId());
-        final String jwt = getTokenForUser(ADMIN, requestSpecification);
 
-        final User userFromResponse = given(requestSpecification)
-                .header("Authorization", "Bearer " + jwt)
+        final User userFromResponse = getAuthTokenRequestSpec(ADMIN, requestSpecification)
                 .body(roleAssignmentDto)
                 .post(ROLE_ASSIGNMENT_ENDPOINT)
                 .then()
@@ -92,13 +89,11 @@ public class RoleAssignmentTest {
     }
 
     private void testBadRequestRoleAssignment(final RoleAssignmentDto roleAssignmentDto) {
-        final String jwt = getTokenForUser(ADMIN, requestSpecification);
         if (Objects.nonNull(roleAssignmentDto)) {
             requestSpecification.body(roleAssignmentDto);
         }
 
-        given(requestSpecification)
-                .header("Authorization", "Bearer " + jwt)
+        getAuthTokenRequestSpec(ADMIN, requestSpecification)
                 .post(ROLE_ASSIGNMENT_ENDPOINT)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

@@ -18,6 +18,11 @@ import static io.restassured.RestAssured.given;
 public class JwtTokenUtils {
     private static final Map<String, String> TOKENS = new HashMap<>();
 
+    public static RequestSpecification getAuthTokenRequestSpec(final User user, final RequestSpecification requestSpecification) {
+        return given(requestSpecification)
+                .header("Authorization", "Bearer " + getTokenForUser(user, requestSpecification));
+    }
+
     public static String getTokenForUser(final User user, final RequestSpecification requestSpecification) {
         final String email = user.getEmail();
         final String currentToken = TOKENS.get(email);

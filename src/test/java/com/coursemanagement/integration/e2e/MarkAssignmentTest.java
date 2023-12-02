@@ -14,6 +14,7 @@ import com.coursemanagement.service.UserService;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.instancio.GetMethodSelector;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -54,7 +55,7 @@ public class MarkAssignmentTest {
 
     @TestFactory
     @DisplayName("Test invalid mark assignment flow")
-    Stream<DynamicTest> testMarkAssignmentFlow() {
+    Stream<DynamicTest> testBadMarkAssignmentFlow() {
         return Stream.of(
                 dynamicTest("Test unauthorized mark assignment new user access",
                         () -> testUnauthorizedMarkAssignment(NEW_USER, Instancio.create(MarkAssignmentRequestDto.class))),
@@ -63,13 +64,13 @@ public class MarkAssignmentTest {
                 dynamicTest("Test unauthorized mark assignment when student is not associated with lesson",
                         () -> testUnauthorizedMarkAssignment(INSTRUCTOR, new MarkAssignmentRequestDto(2L, 3L, 25L, Mark.EXCELLENT))),
                 dynamicTest("Test mark assignment without specifying an instructor",
-                        () -> testBadMarkAssignmentRequest(new MarkAssignmentRequestDto(null, 1L, 1L, Mark.EXCELLENT))),
+                        () -> testBadMarkAssignmentRequest(getMarkAssignmentDtoIgnoring(MarkAssignmentRequestDto::instructorId))),
                 dynamicTest("Test mark assignment without specifying a student",
-                        () -> testBadMarkAssignmentRequest(new MarkAssignmentRequestDto(2L, null, 1L, Mark.EXCELLENT))),
+                        () -> testBadMarkAssignmentRequest(getMarkAssignmentDtoIgnoring(MarkAssignmentRequestDto::studentId))),
                 dynamicTest("Test mark assignment without specifying a lesson",
-                        () -> testBadMarkAssignmentRequest(new MarkAssignmentRequestDto(2L, 1L, null, Mark.EXCELLENT))),
+                        () -> testBadMarkAssignmentRequest(getMarkAssignmentDtoIgnoring(MarkAssignmentRequestDto::lessonId))),
                 dynamicTest("Test mark assignment without specifying mark",
-                        () -> testBadMarkAssignmentRequest(new MarkAssignmentRequestDto(2L, 1L, 1L, null)))
+                        () -> testBadMarkAssignmentRequest(getMarkAssignmentDtoIgnoring(MarkAssignmentRequestDto::mark)))
         );
     }
 
@@ -126,5 +127,9 @@ public class MarkAssignmentTest {
         return getAuthTokenRequestSpec(user, requestSpecification)
                 .body(markAssignmentRequestDto)
                 .post(MARK_ASSIGNMENT_ENDPOINT);
+    }
+
+    private static MarkAssignmentRequestDto getMarkAssignmentDtoIgnoring(final GetMethodSelector<MarkAssignmentRequestDto, ?> methodSelector) {
+        return getModelIgnoringFields(MarkAssignmentRequestDto.class, methodSelector);
     }
 }

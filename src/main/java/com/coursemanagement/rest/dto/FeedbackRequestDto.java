@@ -1,7 +1,9 @@
 package com.coursemanagement.rest.dto;
 
-public record FeedbackRequestDto(Long instructorId,
-                                 Long studentId,
-                                 Long courseCode,
-                                 String feedback) {
+import jakarta.validation.constraints.NotNull;
+
+public record FeedbackRequestDto(@NotNull Long instructorId,
+                                 @NotNull Long studentId,
+                                 @NotNull Long courseCode,
+                                 @NotNull String feedback) {
 }

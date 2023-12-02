@@ -41,7 +41,7 @@ public class CourseManagementResource {
 
     @InstructorAccessLevel
     @PostMapping(value = "/provide-feedback")
-    public FeedbackResponseDto provideFeedback(@RequestBody final FeedbackRequestDto feedbackRequestDto) {
+    public FeedbackResponseDto provideFeedback(@Valid @RequestBody final FeedbackRequestDto feedbackRequestDto) {
         return feedbackService.provideFeedbackToUserCourse(feedbackRequestDto);
     }
 

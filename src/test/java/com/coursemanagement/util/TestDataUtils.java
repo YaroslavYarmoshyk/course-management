@@ -8,10 +8,13 @@ import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.security.model.AuthenticationRequest;
+import org.instancio.GetMethodSelector;
 import org.instancio.Instancio;
+import org.instancio.InstancioOfClassApi;
 import org.instancio.Model;
 import org.instancio.When;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -186,5 +189,12 @@ public final class TestDataUtils {
                         .supply(field(Lesson::getTitle), () -> "Computer Science Lesson №" + START_LESSON_ID.get())
                         .supply(field(Lesson::getDescription), () -> "Lesson on Computer Science concepts №" + START_LESSON_ID.get()))
                 .create();
+    }
+
+    @SafeVarargs
+    public static <T> T getModelIgnoringFields(final Class<T> clazz, final GetMethodSelector<T, ?>... methodSelectors) {
+        final InstancioOfClassApi<T> instApi = Instancio.of(clazz);
+        Arrays.stream(methodSelectors).forEach(instApi::ignore);
+        return instApi.create();
     }
 }

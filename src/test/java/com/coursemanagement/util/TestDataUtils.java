@@ -7,6 +7,7 @@ import com.coursemanagement.model.Course;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import org.instancio.GetMethodSelector;
 import org.instancio.Instancio;
@@ -14,11 +15,13 @@ import org.instancio.InstancioOfClassApi;
 import org.instancio.Model;
 import org.instancio.When;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.coursemanagement.util.JsonUtils.asObjectsCollection;
 import static org.instancio.Assign.given;
 import static org.instancio.Select.field;
 
@@ -46,25 +49,6 @@ public final class TestDataUtils {
     public static final Model<Course> COURSE_TEST_MODEL = Instancio.of(Course.class)
             .supply(field(Course::getCode), () -> START_COURSE_CODE.getAndSet(START_COURSE_CODE.get() + COURSE_CDE_INCREMENT_STEP))
             .generate(field(Course::getSubject), gen -> gen.oneOf("Mathematics", "History", "Literature", "Physics", "Computer Science"))
-            .assign(given(field(Course::getSubject), field(Course::getDescription))
-                    .set(When.is("Mathematics"), "Introductory course on mathematics")
-                    .set(When.is("History"), "Overview of world history")
-                    .set(When.is("Literature"), "Study of classical literature")
-                    .set(When.is("Physics"), "Fundamentals of physics")
-                    .set(When.is("Computer Science"), "Introduction to computer programming"))
-            .supply(field(Course::getUsers), gen -> createDefaultUsers())
-            .toModel();
-
-    public static final Model<Lesson> LESSON_TEST_MODEL = Instancio.of(Lesson.class)
-            .supply(field(Lesson::getId), () -> START_LESSON_ID.getAndSet(START_LESSON_ID.get() + DEFAULT_INCREMENT_STEP))
-            .supply(field(Course::getCode), () -> START_COURSE_CODE.getAndSet(START_COURSE_CODE.get() + COURSE_CDE_INCREMENT_STEP))
-            .generate(field(Course::getSubject), gen -> gen.oneOf("Mathematics", "History", "Literature", "Physics", "Computer Science"))
-            .assign(given(field(Course::getSubject), field(Lesson::getTitle))
-                    .set(When.is("Mathematics"), "Math Lesson")
-                    .set(When.is("History"), "History Lesson")
-                    .set(When.is("Literature"), "Literature Lesson")
-                    .set(When.is("Physics"), "Physics Lesson")
-                    .set(When.is("Computer Science"), "Computer Science Lesson"))
             .assign(given(field(Course::getSubject), field(Course::getDescription))
                     .set(When.is("Mathematics"), "Introductory course on mathematics")
                     .set(When.is("History"), "Overview of world history")
@@ -167,6 +151,15 @@ public final class TestDataUtils {
                         .create())
                 .set(field(UserCourse::getStatus), UserCourseStatus.STARTED)
                 .create();
+    }
+
+    public static Set<UserLessonDto> getFistStudentLessons() {
+        return getUserLessons("src/test/resources/jsons/firstStudentLessons.json");
+    }
+
+    public static Set<UserLessonDto> getUserLessons(final String jsonPath) {
+        final File file = new File(jsonPath);
+        return new HashSet<>(asObjectsCollection(file, UserLessonDto.class));
     }
 
     public static Set<Lesson> getRandomLessonsByCourse(final Course course) {

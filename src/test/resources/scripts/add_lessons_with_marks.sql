@@ -1,35 +1,28 @@
+INSERT INTO "user" (id, first_name, last_name, email, "password", phone, status)
+VALUES (1, 'John', 'Smith', 'john-smith@gmail.com', '$2a$10$2DXHDU2uYMrlIiRHVb2CletM6kMjhLmvHzgyfOHQlV2SrLzE17hSK', '+380974309331', 'A'),
+       (2, 'Marry', 'Poppins', 'poppins@yahoo.com', '$2a$10$Zd/kQRuvnJ2br8dN5OyWt.LskBDAHL1UpZoRdbdOz7QcmNPJYJdYe', '+380971668744', 'A'),
+       (3, 'Tyrion', 'Lannister', 'goldlannister@gmail.com', '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m', '+380971205151', 'A'),
+       (4, 'Maria', 'Montesory', 'maria-montesory@gmail.com', '$2a$12$VVcHTTxoQHMoliJw.e/7I.rHQ5mfwj45TrDuUwx2jkhzr8mj0s9zi', '+38068333341', 'A'),
+       (5, 'Thor', 'Odinson', 'thor-odinson96@gmail.com', '$2a$12$27wtXbRuvH0m5hzwY5QJwOKAFuhbPziXUDW9Ijse5n0.7XaFvbH2q', '+380985225152', 'A')
+ON CONFLICT (email) DO NOTHING;
+
 INSERT INTO course (code, subject, description)
 VALUES (22324, 'Mathematics', 'Introductory course on mathematics'),
        (34432, 'History', 'Overview of world history'),
        (99831, 'Literature', 'Study of classical literature'),
        (56548, 'Physics', 'Fundamentals of physics'),
-       (76552, 'Computer Science', 'Introduction to computer programming'),
-       (65432, 'Biology', 'Introduction to Genetics and Evolution'),
-       (34568, 'Economics', 'Microeconomics: Principles and Applications'),
-       (67891, 'Environmental Science', 'Environmental Sustainability and Conservation')
+       (76552, 'Computer Science', 'Introduction to computer programming')
 ON CONFLICT (code) DO NOTHING;
-
-INSERT INTO "user" (id, first_name, last_name, email, "password", phone, status)
-VALUES (1, 'John', 'Smith', 'john-smith@gmail.com', '$2a$10$2DXHDU2uYMrlIiRHVb2CletM6kMjhLmvHzgyfOHQlV2SrLzE17hSK', '+380974309331', 'A'),
-       (2, 'Marry', 'Poppins', 'poppins@yahoo.com', '$2a$10$Zd/kQRuvnJ2br8dN5OyWt.LskBDAHL1UpZoRdbdOz7QcmNPJYJdYe', '+380971668744', 'A'),
-       (3, 'Tyrion', 'Lannister', 'goldlannister@gmail.com', '$2a$10$hbhWFqEqpikKav8uAGP7WOzTUxAz..TJkVnloLn0bS6vbw4aGqD/m', '+380971205151', 'A'),
-       (4, 'Maria', 'Montesory', 'maria-montesory@gmail.com', '$2a$12$thFntc9W.Qwx5BZAs0xl6.vO7jbU6bCO3yASgxisRttIWX5rj9RpW', '+380971203332', 'A'),
-       (5, 'Thor', 'Odinson', 'thor-odinson96@gmail.com', '$2a$12$LHFNdCdyogUckK8FTdgFKeX0UFC35U5UM/uVxo8A1oBtpykr0JyIm', '+380971204444', 'A')
-ON CONFLICT (email) DO NOTHING;
-
-INSERT INTO user_role (user_id, role_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3),
-       (4, 3)
-ON CONFLICT (user_id, role_id) DO NOTHING;
 
 INSERT INTO user_course (user_id, course_code, status, enrollment_date)
 VALUES (2, 22324, 'S', NOW()),
        (3, 22324, 'S', NOW()),
        (3, 34432, 'S', NOW()),
        (3, 56548, 'S', NOW()),
-       (2, 76552, 'S', NOW())
+       (2, 76552, 'S', NOW()),
+       (2, 56548, 'S', NOW()),
+       (4, 99831, 'S', NOW()),
+       (5, 56548, 'S', NOW())
 ON CONFLICT (user_id, course_code) DO NOTHING;
 
 INSERT INTO lesson (id, course_code, title, description)
@@ -62,32 +55,7 @@ VALUES (1, 22324, 'Introduction to Algebra', 'Basic concepts and operations in a
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO file (id, file_name, file_type, file_content)
-VALUES (3, 'Lesson - Introduction to Algebra', 1, 'Dear Students,
-
-Congratulations on completing our lesson on "Introduction to Algebra"! To reinforce your understanding of the concepts we covered, please complete the following homework assignment. Take your time to solve each problem carefully and show your work for full credit.
-
-Simplify the following expressions by combining like terms:
-a) 5x + 3x - 2x
-b) 7y - 2y + 3y - y
-c) 2a + 4b - 3a + 5b
-
-Solve the following equations for the given variable:
-a) 2x + 7 = 15 (solve for x)
-b) 3y - 5 = 16 (solve for y)
-c) 4z + 9 = 25 (solve for z)
-
-Write an algebraic expression for the following word problems:
-a) The sum of a number and 8.
-b) Twice the difference between a number and 5.
-c) Five less than the product of a number and 3.
-
-Evaluate the following expressions for the given values of the variables:
-a) 3x^2 - 2y, when x = 4 and y = 6
-b) 2a + b^2, when a = 5 and b = 2
-c) 4(x + y) - 3z, when x = 2, y = 3, and z = 1');
-
-INSERT INTO file (id, file_name, file_type, file_content)
-VALUES (4, 'Lesson - Data Structures and Algorithms', 1, 'Dear Students,
+VALUES (3, 'Lesson - Data Structures and Algorithms', 1, 'Dear Students,
 
 Congratulations on completing our lesson on "Data Structures and Algorithms"! To reinforce your understanding of data structures and algorithmic concepts, please complete the following homework assignment. Take your time to work through the problems and provide clear and concise solutions.
 
@@ -119,6 +87,18 @@ Good luck with your data structures and algorithms tasks!')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO lesson_content (id, lesson_part, file_id, lesson_id)
-VALUES (1, 4, 3, 1),
-       (2, 4, 4, 25)
+VALUES (1, 4, 3, 1)
 ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO lesson_mark (id, mark, mark_submission_date, lesson_id, student_id, instructor_id)
+VALUES (1, 5, NOW(), 1, 3, 2),
+       (2, 4, NOW(), 2, 3, 2),
+       (3, 5, NOW(), 2, 3, 2),
+       (4, 5, NOW(), 3, 3, 2),
+       (5, 5, NOW(), 4, 3, 2),
+       (6, 4, NOW(), 5, 3, 2),
+       (11, 3, NOW(), 5, 4, 2),
+       (12, 4, NOW(), 5, 4, 2),
+       (13, 4, NOW(), 5, 4, 2),
+       (14, 5, NOW(), 5, 4, 2)
+ON CONFLICT DO NOTHING;

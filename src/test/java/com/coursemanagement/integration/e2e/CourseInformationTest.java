@@ -5,6 +5,7 @@ import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.UserService;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -24,14 +25,13 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.Constants.COURSES_ENDPOINT;
 import static com.coursemanagement.util.JwtTokenUtils.getAuthTokenRequestSpec;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @IntegrationTest
-@Sql(value = "/scripts/add_users_to_courses.sql")
+@Sql(value = "/scripts/add_lessons_with_marks.sql")
 public class CourseInformationTest {
     @Autowired
     private RequestSpecification requestSpecification;
@@ -48,8 +48,8 @@ public class CourseInformationTest {
                 dynamicTest("Test instructor courses", () -> testCourseRequest(INSTRUCTOR, getInstructorCourses())),
                 dynamicTest("Test student courses", () -> testCourseRequest(FIRST_STUDENT, getFirstStudentCourses())),
                 dynamicTest("Test get students per course unauthorized request", () -> testStudentsPerCourseUnauthorizedRequest(instructorsCourseCode)),
-                dynamicTest("Test get students per course valid request",
-                        () -> testStudentsPerCourseValidRequest(instructorsCourseCode, getPhysicsCourseStudents()))
+                dynamicTest("Test get students per course valid request", () -> testStudentsPerCourseValidRequest(instructorsCourseCode, getPhysicsCourseStudents())),
+                dynamicTest("Test getting student lesson information with content", () -> testStudentLessonsRequest(getFistStudentLessons()))
         );
     }
 
@@ -81,6 +81,18 @@ public class CourseInformationTest {
         assertTrue(CollectionUtils.isEqualCollection(expectedUsers, actualUsers));
     }
 
+    private void testStudentLessonsRequest(final Set<UserLessonDto> expectedLessons) {
+        final List<UserLessonDto> actualUserLessons = Arrays.stream(getAuthTokenRequestSpec(FIRST_STUDENT, requestSpecification)
+                .get(String.format("%s%s%s%s", COURSES_ENDPOINT, "/", 22324, "/lessons"))
+                .then()
+                .spec(validResponseSpecification)
+                .body(matchesJsonSchemaInClasspath("schemas/studentLessonResponseSchema.json"))
+                .extract()
+                .as(UserLessonDto[].class)).toList();
+
+        assertTrue(CollectionUtils.isEqualCollection(expectedLessons, actualUserLessons));
+    }
+
     private Response getCourseRequest(final User user) {
         return getAuthTokenRequestSpec(user, requestSpecification)
                 .get(COURSES_ENDPOINT);
@@ -102,7 +114,8 @@ public class CourseInformationTest {
     private static Set<UserCourseDto> getFirstStudentCourses() {
         return Set.of(
                 new UserCourseDto(34432L, "History", "Overview of world history", UserCourseStatus.STARTED),
-                new UserCourseDto(56548L, "Physics", "Fundamentals of physics", UserCourseStatus.STARTED)
+                new UserCourseDto(56548L, "Physics", "Fundamentals of physics", UserCourseStatus.STARTED),
+                new UserCourseDto(22324L, "Mathematics", "Introductory course on mathematics", UserCourseStatus.STARTED)
         );
     }
 

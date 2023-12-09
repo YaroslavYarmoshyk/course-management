@@ -32,6 +32,7 @@ public class ResponseBodyMatcherUtils {
         objectMapper.registerModule(new JavaTimeModule());
         FIELDS_TO_IGNORE_MAP.put(User.class, new String[]{"password"});
         FIELDS_TO_IGNORE_MAP.put(UserCourseDetailsDto.class, new String[]{
+                "courseFeedback.feedbackSubmissionDate",
                 "courseMark.courseCode",
                 "courseMark.studentId",
                 "accomplishmentDate",

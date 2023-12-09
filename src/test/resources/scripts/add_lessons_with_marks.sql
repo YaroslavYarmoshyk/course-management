@@ -97,8 +97,24 @@ VALUES (1, 5, NOW(), 1, 3, 2),
        (4, 5, NOW(), 3, 3, 2),
        (5, 5, NOW(), 4, 3, 2),
        (6, 4, NOW(), 5, 3, 2),
-       (11, 3, NOW(), 5, 4, 2),
-       (12, 4, NOW(), 5, 4, 2),
-       (13, 4, NOW(), 5, 4, 2),
-       (14, 5, NOW(), 5, 4, 2)
+       (7, 4, NOW(), 6, 3, 2),
+       (8, 4, NOW(), 7, 3, 2),
+       (9, 4, NOW(), 8, 3, 2),
+       (10, 4, NOW(), 9, 3, 2),
+       (11, 4, NOW(), 10, 3, 2),
+       (12, 4, NOW(), 16, 3, 2),
+       (13, 4, NOW(), 17, 3, 2),
+       (14, 4, NOW(), 18, 3, 2),
+       (15, 4, NOW(), 19, 3, 2),
+       (16, 3, NOW(), 20, 3, 2),
+       (17, 5, NOW(), 11, 4, 2),
+       (18, 5, NOW(), 12, 4, 2),
+       (19, 5, NOW(), 11, 4, 2),
+       (20, 5, NOW(), 13, 4, 2),
+       (21, 5, NOW(), 14, 4, 2)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO course_feedback (id, feedback, feedback_submission_date, course_code, student_id, instructor_id)
+VALUES (1, 'Good job!', NOW(), 22324, 3, 2),
+       (2, 'Awesome job actually!', NOW(), 22324, 3, 2)
 ON CONFLICT DO NOTHING;

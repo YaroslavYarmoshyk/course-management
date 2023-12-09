@@ -10,9 +10,11 @@ import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.impl.UserCourseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
@@ -60,6 +62,8 @@ class UserCourseServiceImplTest {
     private UserCourseServiceImpl userCourseService;
     @Mock
     private UserCourseRepository userCourseRepository;
+    @Mock
+    private FeedbackService feedbackService;
     @Mock
     private MarkService markService;
     @Spy
@@ -177,9 +181,11 @@ class UserCourseServiceImplTest {
                 .set(field(CourseMark::getStudentId), userId)
                 .set(field(CourseMark::getCourseCode), courseCode)
                 .create();
+        final Set<CourseFeedbackDto> feedback = Instancio.ofSet(CourseFeedbackDto.class).create();
         final CourseEntity courseEntity = userCourseEntity.getCourse();
 
         when(markService.getStudentCourseMark(userId, courseCode)).thenReturn(courseMark);
+        when(feedbackService.getTotalCourseFeedback(userId, courseCode)).thenReturn(feedback);
 
         final UserCourseDetailsDto userCourseDetails = userCourseService.getUserCourseDetails(userId, courseCode);
 
@@ -188,6 +194,7 @@ class UserCourseServiceImplTest {
         assertEquals(courseEntity.getDescription(), userCourseDetails.description());
         assertEquals(userCourseEntity.getStatus(), userCourseDetails.status());
         assertEquals(courseMark, userCourseDetails.courseMark());
+        assertEquals(feedback, userCourseDetails.courseFeedback());
     }
 
     private Set<UserCourseEntity> getUserCourseEntitiesForFirstStudent() {

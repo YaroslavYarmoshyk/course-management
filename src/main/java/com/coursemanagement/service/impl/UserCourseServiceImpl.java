@@ -6,9 +6,11 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.UserCourseRepository;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserCourseServiceImpl implements UserCourseService {
     private final UserCourseRepository userCourseRepository;
+    private final FeedbackService feedbackService;
     private final MarkService markService;
     private final ModelMapper mapper;
 
@@ -68,6 +71,7 @@ public class UserCourseServiceImpl implements UserCourseService {
     public UserCourseDetailsDto getUserCourseDetails(final Long userId, final Long courseCode) {
         final UserCourse userCourse = getUserCourse(userId, courseCode);
         final CourseMark courseMark = markService.getStudentCourseMark(userId, courseCode);
-        return new UserCourseDetailsDto(userCourse, courseMark);
+        final Set<CourseFeedbackDto> feedback = feedbackService.getTotalCourseFeedback(userId, courseCode);
+        return new UserCourseDetailsDto(userCourse, courseMark, feedback);
     }
 }

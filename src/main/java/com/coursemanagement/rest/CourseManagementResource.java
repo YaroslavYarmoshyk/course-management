@@ -46,7 +46,7 @@ public class CourseManagementResource {
     }
 
     @PostMapping(value = "/complete")
-    public UserCourseDetailsDto completeCourse(@RequestBody final CourseCompletionRequestDto courseCompletionRequestDto) {
+    public UserCourseDetailsDto completeCourse(@Valid @RequestBody final CourseCompletionRequestDto courseCompletionRequestDto) {
         return courseManagementService.completeStudentCourse(courseCompletionRequestDto);
     }
 }

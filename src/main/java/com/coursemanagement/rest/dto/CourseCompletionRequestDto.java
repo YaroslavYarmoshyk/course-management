@@ -1,7 +1,9 @@
 package com.coursemanagement.rest.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public record CourseCompletionRequestDto(
-        Long studentId,
-        Long courseCode
+        @NotNull Long studentId,
+        @NotNull Long courseCode
 ) {
 }

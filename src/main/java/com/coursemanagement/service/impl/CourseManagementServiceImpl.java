@@ -12,6 +12,7 @@ import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
+import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
 import com.coursemanagement.rest.dto.InstructorAssignmentResponseDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
@@ -21,6 +22,7 @@ import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.CourseManagementService;
 import com.coursemanagement.service.CourseService;
+import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserAssociationService;
@@ -50,6 +52,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     private final UserAssociationService userAssociationService;
     private final CourseService courseService;
     private final UserCourseService userCourseService;
+    private final FeedbackService feedbackService;
     private final LessonService lessonService;
     private final MarkService markService;
     private final CourseProperties courseProperties;
@@ -163,7 +166,8 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         studentCourse.setStatus(UserCourseStatus.COMPLETED);
         studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
         final UserCourse completedStudentCourse = userCourseService.saveUserCourse(studentCourse);
-        return new UserCourseDetailsDto(completedStudentCourse, courseMark);
+        final Set<CourseFeedbackDto> feedback = feedbackService.getTotalCourseFeedback(studentId, courseCode);
+        return new UserCourseDetailsDto(completedStudentCourse, courseMark, feedback);
     }
 
     private void validateStudentCourseCompletion(final Set<Lesson> lessonsPerCourse,

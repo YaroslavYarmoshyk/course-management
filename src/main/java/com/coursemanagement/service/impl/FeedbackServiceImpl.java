@@ -4,16 +4,14 @@ import com.coursemanagement.exeption.SystemException;
 import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.model.CourseFeedback;
 import com.coursemanagement.model.User;
-import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;
 import com.coursemanagement.repository.entity.CourseFeedbackEntity;
+import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
-import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.UserAssociationService;
-import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.coursemanagement.enumeration.Role.ADMIN;
 import static com.coursemanagement.enumeration.Role.INSTRUCTOR;
@@ -32,7 +32,6 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
 public class FeedbackServiceImpl implements FeedbackService {
     private final CourseFeedbackRepository feedbackRepository;
     private final UserAssociationService userAssociationService;
-    private final UserCourseService userCourseService;
     private final UserService userService;
     private final ModelMapper mapper;
 
@@ -40,11 +39,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Transactional
     public FeedbackResponseDto provideFeedbackToUserCourse(final FeedbackRequestDto feedbackRequestDto) {
         final User instructor = userService.getUserById(feedbackRequestDto.instructorId());
+        final User student = userService.getUserById(feedbackRequestDto.studentId());
         final Long studentId = feedbackRequestDto.studentId();
         final Long courseCode = feedbackRequestDto.courseCode();
         validateFeedbackSubmission(instructor, studentId, courseCode);
 
-        final UserCourse studentCourse = userCourseService.getUserCourse(studentId, courseCode);
+
         final CourseFeedback courseFeedback = CourseFeedback.builder()
                 .withStudentId(studentId)
                 .withCourseCode(courseCode)
@@ -55,12 +55,19 @@ public class FeedbackServiceImpl implements FeedbackService {
         final CourseFeedbackEntity savedEntity = feedbackRepository.save(mapper.map(courseFeedback, CourseFeedbackEntity.class));
 
         return FeedbackResponseDto.builder()
-                .withStudent(new UserDto(studentCourse.getUser()))
-                .withUserCourse(new UserCourseDto(studentCourse))
+                .withCourseCode(courseCode)
+                .withStudent(new UserDto(student))
                 .withInstructor(new UserDto(instructor))
                 .withFeedback(savedEntity.getFeedback())
                 .withFeedbackSubmissionDate(savedEntity.getFeedbackSubmissionDate())
                 .build();
+    }
+
+    @Override
+    public Set<CourseFeedbackDto> getTotalCourseFeedback(final Long studentId, final Long courseCode) {
+        return feedbackRepository.findAllByStudentIdAndCourseCode(studentId, courseCode).stream()
+                .map(CourseFeedbackDto::new)
+                .collect(Collectors.toSet());
     }
 
     private void validateFeedbackSubmission(final User instructor, final Long studentId, final Long courseCode) {

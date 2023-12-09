@@ -63,7 +63,7 @@ public class HomeworkManagementTest {
 
         return Stream.of(
                 dynamicTest("Test homework uploading to not associated lesson",
-                        () -> testUploadingUnauthorizedAccess(FIRST_STUDENT, new UploadHomeworkDto(10L, textFile))),
+                        () -> testUploadingUnauthorizedAccess(FIRST_STUDENT, new UploadHomeworkDto(11L, textFile))),
                 dynamicTest("Test homework uploading to by another student",
                         () -> testUploadingUnauthorizedAccess(SECOND_STUDENT, uploadTextHomeworkDto)),
                 dynamicTest("Test homework uploading without lesson id",
@@ -71,7 +71,7 @@ public class HomeworkManagementTest {
                 dynamicTest("Test valid homework uploading request with text file",
                         () -> testValidLessonUploadingRequest(uploadTextHomeworkDto)),
                 dynamicTest("Test valid homework uploading request with image file",
-                        () -> testValidLessonUploadingRequest(new UploadHomeworkDto(2L, imageFile)))
+                        () -> testValidLessonUploadingRequest(new UploadHomeworkDto(3L, imageFile)))
         );
     }
 

@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "courseCode": {
+      "type": "integer"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "courseMark": {
+      "type": "object",
+      "properties": {
+        "lessonMarks": {
+          "type": "object",
+          "properties": {
+            "6": {
+              "type": "number"
+            },
+            "7": {
+              "type": "number"
+            },
+            "8": {
+              "type": "number"
+            },
+            "9": {
+              "type": "number"
+            },
+            "10": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        },
+        "markValue": {
+          "type": "number"
+        },
+        "mark": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "lessonMarks",
+        "markValue",
+        "mark"
+      ]
+    },
+    "courseFeedback": {
+      "type": "array",
+      "items": {}
+    },
+    "status": {
+      "type": "string"
+    },
+    "enrollmentDate": {
+      "type": "string"
+    },
+    "accomplishmentDate": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "courseCode",
+    "subject",
+    "description",
+    "courseMark",
+    "courseFeedback",
+    "status",
+    "enrollmentDate",
+    "accomplishmentDate"
+  ]
+}

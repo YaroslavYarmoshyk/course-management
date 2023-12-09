@@ -5,7 +5,6 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
-import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
@@ -105,7 +104,7 @@ public class FeedbackSubmissionTest {
 
         assertEquals(new UserDto(feedbackSubmitter), feedbackResponseDto.instructor());
         assertEquals(new UserDto(student), feedbackResponseDto.student());
-        assertEquals(new UserCourseDto(userCourse), feedbackResponseDto.userCourse());
+        assertEquals(userCourse.getCourse().getCode(), feedbackResponseDto.courseCode());
         assertEquals(feedbackRequestDto.feedback(), feedbackResponseDto.feedback());
     }
 

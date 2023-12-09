@@ -10,11 +10,13 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
 import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
 import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
 import com.coursemanagement.service.CourseService;
+import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.LessonService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserAssociationService;
@@ -72,6 +74,8 @@ class CourseManagementServiceImplTest {
     private CourseService courseService;
     @Mock
     private UserCourseService userCourseService;
+    @Mock
+    private FeedbackService feedbackService;
     @Mock
     private LessonService lessonService;
     @Mock
@@ -306,6 +310,9 @@ class CourseManagementServiceImplTest {
         }
 
         private void testCourseCompletion(final Long studentId, final Long courseCode, final CourseMark courseMark) {
+            final Set<CourseFeedbackDto> courseFeedback = Instancio.ofSet(CourseFeedbackDto.class).create();
+
+            when(feedbackService.getTotalCourseFeedback(anyLong(), anyLong())).thenReturn(courseFeedback);
             when(markService.getStudentCourseMark(anyLong(), anyLong())).thenReturn(courseMark);
 
             courseManagementService.completeStudentCourse(new CourseCompletionRequestDto(studentId, courseCode));

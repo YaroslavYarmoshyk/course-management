@@ -29,29 +29,6 @@
         "phone"
       ]
     },
-    "userCourse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer"
-        },
-        "subject": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "code",
-        "subject",
-        "description",
-        "status"
-      ]
-    },
     "instructor": {
       "type": "object",
       "properties": {
@@ -79,6 +56,9 @@
         "phone"
       ]
     },
+    "courseCode": {
+      "type": "integer"
+    },
     "feedback": {
       "type": "string"
     },
@@ -88,8 +68,8 @@
   },
   "required": [
     "student",
-    "userCourse",
     "instructor",
+    "courseCode",
     "feedback",
     "feedbackSubmissionDate"
   ]

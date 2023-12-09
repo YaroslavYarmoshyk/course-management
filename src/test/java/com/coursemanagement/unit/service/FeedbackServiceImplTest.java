@@ -6,15 +6,17 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;
 import com.coursemanagement.repository.entity.CourseFeedbackEntity;
+import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
 import com.coursemanagement.service.UserAssociationService;
-import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.FeedbackServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,20 +27,17 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.AuthorizationUtils.userHasAnyRole;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.INSTRUCTOR;
-import static com.coursemanagement.util.TestDataUtils.USER_TEST_MODEL;
-import static com.coursemanagement.util.TestDataUtils.getRandomUserCourseByUser;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,8 +49,6 @@ class FeedbackServiceImplTest {
     private CourseFeedbackRepository feedbackRepository;
     @Mock
     private UserAssociationService userAssociationService;
-    @Mock
-    private UserCourseService userCourseService;
     @Mock
     private UserService userService;
     @Spy
@@ -97,6 +94,24 @@ class FeedbackServiceImplTest {
         );
     }
 
+    @Test
+    @DisplayName("Test get feedback for student course")
+    void testGetStudentCourseFeedback() {
+        final UserCourse userCourse = getRandomUserCourseByUser(FIRST_STUDENT);
+        final Long studentId = userCourse.getUser().getId();
+        final Long courseCode = userCourse.getCourse().getCode();
+        final Set<CourseFeedbackEntity> feedbackEntities = Instancio.ofSet(CourseFeedbackEntity.class).create();
+        final Set<CourseFeedbackDto> expectedFeedback = feedbackEntities.stream()
+                .map(CourseFeedbackDto::new)
+                .collect(Collectors.toSet());
+
+        when(feedbackRepository.findAllByStudentIdAndCourseCode(studentId, courseCode)).thenReturn(feedbackEntities);
+
+        final Set<CourseFeedbackDto> actualFeedback = feedbackService.getTotalCourseFeedback(studentId, courseCode);
+
+        assertTrue(CollectionUtils.isEqualCollection(expectedFeedback, actualFeedback));
+    }
+
     void testFeedbackValidation(final User currentUser,
                                 final FeedbackRequestDto feedbackRequestDto,
                                 final boolean studentAssociatedWithCourse,
@@ -108,6 +123,7 @@ class FeedbackServiceImplTest {
         final boolean sameUserWithInstructorRole = Objects.equals(currentUser.getId(), feedbackRequestDto.instructorId()) && userHasAnyRole(currentUser, Role.INSTRUCTOR);
 
         when(userService.getUserById(INSTRUCTOR.getId())).thenReturn(INSTRUCTOR);
+        when(userService.getUserById(FIRST_STUDENT.getId())).thenReturn(FIRST_STUDENT);
         when(userAssociationService.currentUserHasAccessTo(instructorId)).thenReturn(currentAdmin || sameUserWithInstructorRole);
         when(userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)).thenReturn(studentAssociatedWithCourse);
 
@@ -132,7 +148,6 @@ class FeedbackServiceImplTest {
 
         when(userAssociationService.currentUserHasAccessTo(anyLong())).thenReturn(true);
         when(userAssociationService.isUserAssociatedWithCourse(studentId, courseCode)).thenReturn(true);
-        when(userCourseService.getUserCourse(studentId, courseCode)).thenReturn(userCourse);
         when(feedbackRepository.save(any(CourseFeedbackEntity.class))).thenReturn(courseFeedbackEntity);
 
         final FeedbackResponseDto feedbackResponseDto = feedbackService.provideFeedbackToUserCourse(feedbackRequestDto);
@@ -146,7 +161,7 @@ class FeedbackServiceImplTest {
         }));
         assertEquals(instructorId, feedbackResponseDto.instructor().id());
         assertEquals(studentId, feedbackResponseDto.student().id());
-        assertEquals(userCourse.getCourse().getCode(), feedbackResponseDto.userCourse().code());
+        assertEquals(userCourse.getCourse().getCode(), feedbackResponseDto.courseCode());
         assertEquals(feedback, feedbackResponseDto.feedback());
     }
 

@@ -64,9 +64,9 @@ courses:
     description: Overview of world history
 
 course-management:
-  url:
-    base: http://localhost:8080
+  base-url: http://localhost:8080
   student-course-limit: 5
+  course-passing-percentage: 80
 
 token:
   jwt:

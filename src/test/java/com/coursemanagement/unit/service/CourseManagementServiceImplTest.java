@@ -149,7 +149,7 @@ class CourseManagementServiceImplTest {
         Stream<DynamicTest> testEnrollStudentCourseAccessControl_ThrowException() {
             return Stream.of(
                     dynamicTest("Requested by admin for user without roles",
-                            () -> testStudentEnrollmentAccessThrowsException(ADMIN, NEW_USER, "Only students can enroll courses")),
+                            () -> testStudentEnrollmentAccessThrowsException(ADMIN, new User(), "Only students can enroll courses")),
                     dynamicTest("Requested by admin for instructor",
                             () -> testStudentEnrollmentAccessThrowsException(ADMIN, INSTRUCTOR, "Only students can enroll courses")),
                     dynamicTest("Requested by instructor for student",

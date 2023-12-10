@@ -1,4 +1,5 @@
 FROM maven:3.8.4-openjdk-17-slim AS build
+ENV DOCKER_HOST=tcp://host.docker.internal:2375
 WORKDIR /app
 
 # First, copy only the pom.xml file and resolve dependencies
@@ -7,9 +8,9 @@ RUN mvn dependency:go-offline -B
 
 # Next, copy the source code and build the application
 COPY src/ ./src/
-RUN mvn package --no-transfer-progress -DskipTests=true
+RUN mvn package --no-transfer-progress
 
-FROM eclipse-temurin:17-jdk-jammy
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar ./course-management.jar
 ENTRYPOINT ["java", "-jar", "/app/course-management.jar"]

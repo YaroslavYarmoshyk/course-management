@@ -6,10 +6,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: openjdk:17-jdk-slim
     steps:
       - name: Get code
         uses: actions/checkout@v4
+
+      - name: Set up JDK and Maven
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
       - name: Cache local Maven repository
         id: cache
         uses: actions/cache@v3
@@ -18,8 +24,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: mvn package
+
       - name: Run the Maven verify phase
         run: mvn --batch-mode verify

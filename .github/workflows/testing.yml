@@ -33,8 +33,13 @@ jobs:
       - name: Check maven version
         run: mvn -version
 
+      - nam: Grant permissions
+        run: |
+          sudo setcap 'cap_net_bind_service=+ep' mvnw
+          sudo setcap 'cap_net_bind_service=+ep' mvnw.cmd
+
       - name: Run the Maven verify phase
-        continue-on-error: true
+#        continue-on-error: true
         run: mvn --batch-mode test -X -Dtest=RegistrationTest
 #          docker run -d -p 25:3025 greenmail/standalone:2.1.0-alpha-3
 #          mvn --batch-mode test -X -Dtest=RegistrationTest -Dgreenmail.startup.timeout=10000

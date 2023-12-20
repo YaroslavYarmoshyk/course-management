@@ -10,9 +10,6 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
 
-      - name: Run greenmail container
-        run: docker run -p 25:3025 greenmail/standalone:2.1.0-alpha-3
-
       - name: Set up JDK and Maven
         uses: actions/setup-java@v3
         with:
@@ -34,5 +31,7 @@ jobs:
 #        run: mvn package -DskipTests=true
 
       - name: Run the Maven verify phase
-        run: mvn --batch-mode test -X -Dtest=RegistrationTest
+        run: |
+          docker run -p 25:3025 greenmail/standalone:2.1.0-alpha-3
+          mvn --batch-mode test -X -Dtest=RegistrationTest
 #        run: mvn --batch-mode test -X -Dtest=FeedbackSubmissionTest

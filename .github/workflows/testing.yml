@@ -2,7 +2,7 @@ name: Test Project
 on:
   workflow_dispatch:
   push:
-    branches: develop
+    branches: [develop, release]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,8 +15,7 @@ jobs:
       COMMIT: ${{ github.workflow_sha }}
       EVENT: ${{ github.event_name}}
     steps:
-      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event from $SOURCE_BRANCH branch with commit $COMMIT"
-      - run: echo "Github object ${{ toJSON(github) }}"
+      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event to $SOURCE_BRANCH branch with commit $COMMIT"
 
       - name: Install Maven
         run: |

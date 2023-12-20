@@ -58,7 +58,7 @@ class FileServiceImplTest {
         assertEquals(fileId, file.getId());
         assertEquals(fileEntity.getFileName(), file.getFileName());
         assertEquals(fileEntity.getFileType(), file.getFileType());
-        assertEquals(fileEntity.getFileContent().length + 1, file.getFileContent().length);
+        assertEquals(fileEntity.getFileContent().length, file.getFileContent().length);
         assertThrowsWithMessage(
                 () -> fileService.getFileById(nonExistingFileId),
                 SystemException.class,

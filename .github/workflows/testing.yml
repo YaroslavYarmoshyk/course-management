@@ -13,8 +13,7 @@ jobs:
       - name: Set up JDK and Maven
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          maven-version: '3.9.1'
+          java-version: '21'
           distribution: 'oracle'
 #          cache: maven
 

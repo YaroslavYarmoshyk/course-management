@@ -35,8 +35,10 @@ jobs:
 
       - name: Grant permissions
         run: |
-          sudo setcap 'cap_net_bind_service=+ep' mvnw
-          sudo setcap 'cap_net_bind_service=+ep' mvnw.cmd
+          chown root mvnw
+          chmod +S mvnw
+          chown root mvnw.cmd
+          chmod +S mvnw.cmd
 
       - name: Run the Maven verify phase
 #        continue-on-error: true

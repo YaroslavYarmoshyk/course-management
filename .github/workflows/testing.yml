@@ -20,7 +20,7 @@ jobs:
           apt-get update -qy
           apt-get install -y maven
           mvn -version
-      - run: echo "Testing code on ${{ env.ENV }} environment"
+      - run: echo "Testing code on $ENV environment"
       - name: Get code
         uses: actions/checkout@v4
       - name: Cache dependencies

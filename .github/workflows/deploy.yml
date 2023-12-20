@@ -6,8 +6,6 @@ on:
         description: The name of environment
         required: true
         type: string
-env:
-  ENV: ${{ inputs.env }}
 jobs:
   job-information:
     uses: ./.github/workflows/job-information.yml
@@ -15,7 +13,7 @@ jobs:
     needs: job-information
     uses: ./.github/workflows/testing.yml
     with:
-      env: $ENV
+      env: ${{ inputs.env }}
   build:
     needs: test
     runs-on: ubuntu-latest

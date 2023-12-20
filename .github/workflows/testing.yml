@@ -6,6 +6,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      greenmail:
+        image: java:8
+        ports:
+          - 25:3025
+        options: --name greenmail-container
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -31,5 +37,5 @@ jobs:
 #        run: mvn package -DskipTests=true
 
       - name: Run the Maven verify phase
-#        run: mvn --batch-mode test -X -Dtest=RegistrationTest
-        run: mvn --batch-mode test -X -Dtest=FeedbackSubmissionTest
+        run: mvn --batch-mode test -X -Dtest=RegistrationTest
+#        run: mvn --batch-mode test -X -Dtest=FeedbackSubmissionTest

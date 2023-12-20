@@ -5,7 +5,7 @@ on:
     branches: develop
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -30,8 +30,19 @@ jobs:
 #        if: steps.cache.outputs.cache-hit != 'true'
 #        run: mvn package -DskipTests=true
 
-      - name: Run the Maven verify phase
-        run: mvn --batch-mode test -X -Dtest=RegistrationTest
+#      - name: Run the Maven verify phase
+#        run: mvn --batch-mode test -X -Dtest=RegistrationTest
 #          docker run -d -p 25:3025 greenmail/standalone:2.1.0-alpha-3
 #          mvn --batch-mode test -X -Dtest=RegistrationTest -Dgreenmail.startup.timeout=10000
 #        run: mvn --batch-mode test -X -Dtest=FeedbackSubmissionTest
+
+
+
+      - name: Grant execute permissions (example)
+        run: chmod +x mvnw
+          # Adjust the above line based on your specific needs.
+
+      - name: Run the Maven verify phase
+        # Instead of using sudo, ensure that the GitHub Actions environment has the
+        # necessary permissions for running Maven and executing your tests.
+        run: ./mvnw --batch-mode test -X -Dtest=RegistrationTest

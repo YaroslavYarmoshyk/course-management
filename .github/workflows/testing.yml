@@ -33,7 +33,7 @@ jobs:
       - name: Check maven version
         run: mvn -version
 
-      - nam: Grant permissions
+      - name: Grant permissions
         run: |
           sudo setcap 'cap_net_bind_service=+ep' mvnw
           sudo setcap 'cap_net_bind_service=+ep' mvnw.cmd

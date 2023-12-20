@@ -15,7 +15,8 @@ jobs:
       COMMIT: ${{ github.workflow_sha }}
       EVENT: ${{ github.event_name}}
     steps:
-      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event from $SOURCE_BRANCH with commit $COMMIT"
+      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event from $SOURCE_BRANCH branch with commit $COMMIT"
+      - run: echo "Github object ${{ toJSON(github) }}"
 
       - name: Install Maven
         run: |

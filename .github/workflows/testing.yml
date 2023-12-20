@@ -35,7 +35,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Package dependencies
+      - name: Resolve dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: mvn dependency:go-offline -B
 

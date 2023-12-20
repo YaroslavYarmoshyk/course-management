@@ -1,0 +1,7 @@
+name: Deploy to QAT
+on: workflow_dispatch
+jobs:
+  deploy-to-dev:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      env: qat

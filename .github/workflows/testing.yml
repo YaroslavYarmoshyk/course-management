@@ -12,21 +12,21 @@ jobs:
       maven:
         image: maven:3.9.1
     steps:
-      - run: The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
       - name: Get code
         uses: actions/checkout@v4
 
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: "🖥️ The workflow is now ready to test your code on the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
 
-      - name: Set up JDK and Maven
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'adopt'
+#      - name: Set up JDK and Maven
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '17'
+#          distribution: 'adopt'
 #          cache: maven
 
 #      - name: Cache local Maven repository

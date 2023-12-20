@@ -34,10 +34,6 @@ spring:
     password: ${SMTP_PASSWORD}
     port: 587
     protocol: smtp
-    properties:
-      mail.transport.protocol: smtp
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
 
 course-management:
   student-course-limit: 5

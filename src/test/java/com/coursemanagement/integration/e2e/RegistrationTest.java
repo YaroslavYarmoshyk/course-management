@@ -48,7 +48,7 @@ public class RegistrationTest {
     @Autowired
     private UserService userService;
     @RegisterExtension
-    private static final GreenMailExtension GREEN_MAIL_REGISTRATION = new GreenMailExtension(ServerSetup.SMTP);
+    private static final GreenMailExtension GREEN_MAIL_REGISTRATION = new GreenMailExtension(new ServerSetup(25, "0.0.0.0", "smtp"));
 
     @Sql("/scripts/remove_users.sql")
     @TestFactory

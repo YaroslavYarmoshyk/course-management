@@ -11,9 +11,7 @@ env:
   EVENT: ${{ github.event_name}}
 jobs:
   job-information:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event to $SOURCE_BRANCH branch with commit $COMMIT"
+    uses: ./.github/workflows/job-information.yml
   test:
     needs: job-information
     uses: ./.github/workflows/testing.yml

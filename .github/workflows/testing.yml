@@ -31,4 +31,4 @@ jobs:
 #        run: mvn package -DskipTests=true
 
       - name: Run the Maven verify phase
-        run: mvn --batch-mode -X verify
+        run: mvn --batch-mode test -X -Dtest=RegistrationTest

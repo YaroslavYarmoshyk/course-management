@@ -5,7 +5,6 @@ import com.coursemanagement.config.annotation.InstructorTestUser;
 import com.coursemanagement.config.annotation.NewTestUser;
 import com.coursemanagement.config.annotation.StudentTestUser;
 import com.coursemanagement.model.User;
-import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -42,8 +41,7 @@ public class UserProviderExtension implements ParameterResolver {
     }
 
     public UserProviderExtension() {
-        final String env = System.getenv("ENV");
-        final String applicationConfigFile = Strings.isBlank(env) ? "application.yml" : "application-" + env + ".yml";
+        final String applicationConfigFile = "application.yml";
         final Yaml yaml = new Yaml();
         final InputStream inputStream = this.getClass()
                 .getClassLoader()

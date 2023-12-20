@@ -10,6 +10,10 @@ spring:
     host: 127.0.0.1
     port: 25
     protocol: smtp
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: true
 
 users:
   admin:

@@ -53,7 +53,14 @@ jobs:
   test-report:
 #    needs: test
     runs-on: ubuntu-latest
+    container:
+      image: openjdk:17-jdk-slim
     steps:
+      - name: Install Maven
+        run: |
+          apt-get update -qy
+          apt-get install -y maven
+          mvn -version
       - name: Get Allure history
         uses: actions/checkout@v3
         if: always()

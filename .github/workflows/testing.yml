@@ -14,8 +14,8 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adopt'
-          cache: maven
+          distribution: 'oracle'
+#          cache: maven
 
 #      - name: Cache local Maven repository
 #        id: cache
@@ -34,7 +34,7 @@ jobs:
         run: mvn -version
 
       - name: Run the Maven verify phase
-        run: sudo mvn --batch-mode test -X -Dtest=RegistrationTest
+        run: sudo mvn --batch-mode clean package test -X -Dtest=RegistrationTest
 #          docker run -d -p 25:3025 greenmail/standalone:2.1.0-alpha-3
 #          mvn --batch-mode test -X -Dtest=RegistrationTest -Dgreenmail.startup.timeout=10000
 #        run: mvn --batch-mode test -X -Dtest=FeedbackSubmissionTest

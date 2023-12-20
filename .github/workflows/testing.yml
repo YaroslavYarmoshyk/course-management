@@ -17,7 +17,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Check ports
-        run: netstat -an | find "25"
+        run: sudo netstat -an | grep "25"
 
 #      - name: Cache local Maven repository
 #        id: cache

@@ -9,6 +9,7 @@ import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.service.UserService;
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.ServerSetup;
 import io.restassured.specification.RequestSpecification;
@@ -48,7 +49,7 @@ public class RegistrationTest {
     @Autowired
     private UserService userService;
     @RegisterExtension
-    private static final GreenMailExtension GREEN_MAIL_REGISTRATION = new GreenMailExtension(ServerSetup.SMTP);
+    private static final GreenMailExtension GREEN_MAIL_REGISTRATION = new GreenMailExtension(ServerSetup.SMTP).withConfiguration(new GreenMailConfiguration().withDisabledAuthentication());
 
     @Sql("/scripts/remove_users.sql")
     @TestFactory

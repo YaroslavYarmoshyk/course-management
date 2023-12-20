@@ -13,12 +13,9 @@ jobs:
       TRIGGERING_ACTOR: ${{ github.triggering_actor }}
       SOURCE_BRANCH: ${{ github.ref_name }}
       COMMIT: ${{ github.workflow_sha }}
-      COMMIT_URL: ${{ github.event.commits.url }}
       EVENT: ${{ github.event_name}}
     steps:
-      - run: |
-          echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event from $SOURCE_BRANCH with commit $COMMIT"
-          echo "You can find the commit by link: $COMMIT_URL"
+      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event from $SOURCE_BRANCH with commit $COMMIT"
 
       - name: Install Maven
         run: |

@@ -3,23 +3,23 @@ on:
   workflow_dispatch:
   push:
     branches: develop
-  jobs:
-    test:
-      runs-on: ubuntu-latest
-      container: openjdk:17-jdk-slim
-      steps:
-        - name: Get code
-          using: actions/checkout@v4
-        - name: Cache local Maven repository
-          id: cache
-          uses: actions/cache@v3
-          with:
-            path: ~/.m2/repository
-            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-            restore-keys: |
-              ${{ runner.os }}-maven-
-        - name: Install dependencies
-          if: steps.cache.outputs.cache-hit != 'true'
-          run: mvn package
-        - name: Run the Maven verify phase
-          run: mvn --batch-mode verify
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: openjdk:17-jdk-slim
+    steps:
+      - name: Get code
+        using: actions/checkout@v4
+      - name: Cache local Maven repository
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: mvn package
+      - name: Run the Maven verify phase
+        run: mvn --batch-mode verify

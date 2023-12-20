@@ -33,6 +33,9 @@ jobs:
       - name: Check maven version
         run: mvn -version
 
+      - name: Check folders
+        run: ls
+
       - name: Run the Maven verify phase
         run: mvn --batch-mode test -X -Dtest=RegistrationTest
 #          docker run -d -p 25:3025 greenmail/standalone:2.1.0-alpha-3

@@ -208,7 +208,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
-                        <greenmail.startup.timeout>5000</greenmail.startup.timeout>
+                        <greenmail.startup.timeout>500000</greenmail.startup.timeout>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

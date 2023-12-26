@@ -2,7 +2,7 @@ spring:
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/course-management
+    url: jdbc:postgresql://postgresql.yarmoshyk-redhat-dev.svc.cluster.local:5432/course-management
   mail:
     username: ${SMTP_USERNAME}
     password: ${SMTP_PASSWORD}

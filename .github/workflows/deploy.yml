@@ -29,3 +29,5 @@ jobs:
   deploy:
     needs: build
     uses: ./.github/workflows/deploying.yml
+    with:
+      env: ${{ inputs.env }}

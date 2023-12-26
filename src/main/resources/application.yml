@@ -5,9 +5,6 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    url: jdbc:postgresql://course-management-db:5432/course-management
   jpa:
     open-in-view: false
     show-sql: true
@@ -30,8 +27,6 @@ spring:
     baseline-version: 0
   mail:
     host: smtp.gmail.com
-    username: ${SMTP_USERNAME}
-    password: ${SMTP_PASSWORD}
     port: 587
     protocol: smtp
 
@@ -46,6 +41,3 @@ token:
     expiration-time:
       email: 2 # hours
       reset-password: 90 # minutes
-
-encryption:
-  key: ${ENCRYPTION_KEY}

@@ -5,6 +5,7 @@ on:
     branches: [develop, release]
 jobs:
   deploy-to-dev:
+    secrets: inherit
     uses: ./.github/workflows/deploy.yml
     with:
       env: dev

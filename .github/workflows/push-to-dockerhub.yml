@@ -1,0 +1,33 @@
+name: Push image to Docker Hub
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: The environment name
+        required: true
+        type: string
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  REGISTRY_URL: "docker.io"
+jobs:
+  push-to-dockerhub:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+      - name: Build application with Maven
+        run: mvn package -DskipTests=true --file pom.xml -B
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+      - name: Build container image
+        run: docker build -t ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ inputs.env }} .
+      - name: Docker Login
+        run: docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_TOKEN }} ${{ env.REGISTRY_URL }}
+      - name: Push image to Docker Hub
+        run: docker push ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ inputs.env }}

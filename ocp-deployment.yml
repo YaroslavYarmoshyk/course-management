@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${APP_NAME}
+  name: course-management-dev
   labels:
-    app: ${APP_NAME}
+    app: course-management-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${APP_NAME}
+      app: course-management-dev
   template:
     metadata:
       labels:
-        app: ${APP_NAME}
+        app: course-management-dev
     spec:
       containers:
         - name: ${APP_NAME}
@@ -23,12 +23,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${APP_NAME}
+  name: course-management-dev
   labels:
-    app: ${APP_NAME}
+    app: course-management-dev
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: ${APP_NAME}
+    app: course-management-dev

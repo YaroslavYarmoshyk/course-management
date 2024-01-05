@@ -18,7 +18,7 @@ spec:
         - name: ${APP_NAME}
           image: ${IMAGE_REGISTRY}/${APP_NAME}:${IMAGE_TAGS}
           ports:
-            - containerPort: ${APP_PORT}
+            - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -28,7 +28,7 @@ metadata:
     app: ${APP_NAME}
 spec:
   ports:
-    - port: ${APP_PORT}
-      targetPort: ${APP_PORT}
+    - port: 8080
+      targetPort: 8080
   selector:
     app: ${APP_NAME}

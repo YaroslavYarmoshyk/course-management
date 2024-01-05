@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+  labels:
+    app: ${APP_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      containers:
+        - name: ${APP_NAME}
+          image: ${IMAGE_REGISTRY}/${APP_NAME}:${IMAGE_TAGS}
+          ports:
+            - containerPort: ${APP_PORT}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP_NAME}
+  labels:
+    app: ${APP_NAME}
+spec:
+  ports:
+    - port: ${APP_PORT}
+      targetPort: ${APP_PORT}
+  selector:
+    app: ${APP_NAME}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ${APP_NAME}
+  labels:
+    app: ${APP_NAME}
+spec:
+  to:
+    kind: Service
+    name: ${APP_NAME}
+    weight: 100
+  port:
+    targetPort: ${APP_PORT}

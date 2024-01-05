@@ -33,4 +33,4 @@ jobs:
           openshift_token: ${{ env.OPENSHIFT_TOKEN }}
           namespace: ${{ env.OPENSHIFT_NAMESPACE }}
       - name: Deploy to OpenShift 4
-        run: oc apply -f deploy-to-ocp.yml
+        run: oc apply -f ocp-deployment.yml

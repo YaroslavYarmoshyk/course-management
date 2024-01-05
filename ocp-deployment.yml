@@ -15,8 +15,8 @@ spec:
         app: course-management-dev
     spec:
       containers:
-        - name: ${APP_NAME}
-          image: ${IMAGE_REGISTRY}/${APP_NAME}:${IMAGE_TAGS}
+        - name: course-management-dev
+          image: docker.io/yaroslavyarmoshyk/course-management:dev
           ports:
             - containerPort: 8080
 ---

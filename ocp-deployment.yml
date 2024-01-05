@@ -32,17 +32,3 @@ spec:
       targetPort: ${APP_PORT}
   selector:
     app: ${APP_NAME}
----
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  name: ${APP_NAME}
-  labels:
-    app: ${APP_NAME}
-spec:
-  to:
-    kind: Service
-    name: ${APP_NAME}
-    weight: 100
-  port:
-    targetPort: ${APP_PORT}

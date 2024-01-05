@@ -23,7 +23,6 @@ jobs:
     environment: ${{ inputs.env }}
     name: Deploy application to OpenShift 4
     steps:
-      - run: echo "The app name is $APP_NAME"
       - uses: actions/checkout@v4
       - name: OpenShift login
         uses: redhat-actions/oc-login@v1

@@ -1,34 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: course-management-dev
+  name: ${APP_NAME}
   labels:
-    app: course-management-dev
+    app: ${APP_NAME}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: course-management-dev
+      app: ${APP_NAME}
   template:
     metadata:
       labels:
-        app: course-management-dev
+        app: ${APP_NAME}
     spec:
       containers:
-        - name: course-management-dev
-          image: docker.io/yaroslavyarmoshyk/course-management:dev
+        - name: ${APP_NAME}
+          image: ${IMAGE_REGISTRY}:${IMAGE_TAGS}
           ports:
-            - containerPort: 8080
+            - containerPort: ${APP_PORT}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: course-management-dev
+  name: ${APP_NAME}
   labels:
-    app: course-management-dev
+    app: ${APP_NAME}
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: ${APP_PORT}
+      targetPort: ${APP_PORT}
   selector:
-    app: course-management-dev
+    app: ${APP_NAME}
+
+parameters:
+  - name: APP_NAME
+    description: Application name to use for the buildconfig, deploymentconfig, and pods.
+    required: true
+  - name: APP_PORT
+    description: Application running port
+    required: true
+  - name: IMAGE_REGISTRY
+    description: Docker image registry
+    required: true
+  - name: IMAGE_TAGS
+    description: Docker image tags
+    required: true

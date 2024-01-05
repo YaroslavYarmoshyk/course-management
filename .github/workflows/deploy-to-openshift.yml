@@ -20,6 +20,7 @@ env:
 jobs:
   deploy-to-openshift:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.env }}
     name: Deploy application to OpenShift 4
     steps:
       - run: echo "The app name is $APP_NAME"

@@ -20,3 +20,9 @@ jobs:
     uses: ./.github/workflows/push-to-dockerhub.yml
     with:
       env: ${{ inputs.env }}
+  deploy-to-openshift:
+    needs: push-to-docker-hub
+    secrets: inherit
+    uses: ./.github/workflows/deploy-to-openshift.yml
+    with:
+      env: ${{ inputs.env }}

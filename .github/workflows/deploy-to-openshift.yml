@@ -1,0 +1,36 @@
+name: Deploy application to OpenShift 4
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      env:
+        description: The environment name
+        required: true
+        type: string
+env:
+  OPENSHIFT_SERVER_URL: ${{ secrets.OPENSHIFT_SERVER_URL }}
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+  OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
+  APP_NAME: "course-management-" ${{ inputs.env }}
+  APP_PORT: 8080
+  IMAGE_REGISTRY: docker.io/yaroslavyarmoshyk/course-management
+  IMAGE_REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+  IMAGE_REGISTRY_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+  IMAGE_TAGS: ${{ inputs.env }}
+jobs:
+  deploy-to-openshift:
+    runs-on: ubuntu-latest
+    name: Deploy application to OpenShift 4
+    outputs:
+      ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+      SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: OpenShift login
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ env.OPENSHIFT_SERVER_URL }}
+          openshift_token: ${{ env.OPENSHIFT_TOKEN }}
+          namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+      - name: Deploy to OpenShift 4
+        run: oc apply -f deploy-to-ocp.yml

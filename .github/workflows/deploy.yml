@@ -8,19 +8,23 @@ on:
         type: string
 jobs:
   job-information:
+    name:
     uses: ./.github/workflows/job-information.yml
   test:
+    name:
     needs: job-information
     uses: ./.github/workflows/testing.yml
     with:
       env: ${{ inputs.env }}
   push-to-docker-hub:
+    name:
     needs: test
     secrets: inherit
     uses: ./.github/workflows/push-to-dockerhub.yml
     with:
       env: ${{ inputs.env }}
   deploy-to-openshift:
+    name:
     needs: push-to-docker-hub
     secrets: inherit
     uses: ./.github/workflows/deploy-to-openshift.yml

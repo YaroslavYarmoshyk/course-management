@@ -1,6 +1,6 @@
 services:
   course-management:
-    image: 'yarmoshyk/course-management:1'
+    image: yaroslavyarmoshyk/course-management:dev
     build:
       context: .
     container_name: course-management-app

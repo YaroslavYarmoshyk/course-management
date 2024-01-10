@@ -10,6 +10,12 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://course-management-db:5432/course-management
       - SPRING_DATASOURCE_USERNAME=cm-admin
       - SPRING_DATASOURCE_PASSWORD=alonso-321
+      - SPRING_PROFILES_ACTIVE=local
+      - DB_USERNAME=cm-admin
+      - DB_PASSWORD=alonso-321
+      - SMTP_USERNAME=iryna19890909@gmail.com
+      - SMTP_PASSWORD=eofhvaklswvejhto
+      - ENCRYPTION_KEY=strong-$$key$$1991
 
   course-management-db:
     image: 'postgres:15.2-alpine'

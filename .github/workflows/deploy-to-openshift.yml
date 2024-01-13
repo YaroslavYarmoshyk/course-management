@@ -29,7 +29,7 @@ jobs:
           openshift_server_url: ${{ env.OPENSHIFT_SERVER_URL }}
           openshift_token: ${{ env.OPENSHIFT_TOKEN }}
           namespace: ${{ env.OPENSHIFT_NAMESPACE }}
-      - name: Pass environment variables to openshift manifest file
-        run: envsubst < ocp-deployment.yml > deployment.yml
+#      - name: Pass environment variables to openshift manifest file
+#        run: envsubst < ocp-deployment.yml > deployment.yml
       - name: Deploy to OpenShift 4
-        run: oc apply -f ./deployment.yml
+        run: oc apply -f ./openshift

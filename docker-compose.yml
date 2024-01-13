@@ -9,8 +9,8 @@ services:
     depends_on:
       - course-management-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://course-management-db:5432/course-management
       - SPRING_PROFILES_ACTIVE=local
+      - DB_URL=jdbc:postgresql://course-management-db:5432/course-management
       - DB_USERNAME=cm-admin
       - DB_PASSWORD=alonso-321
       - SMTP_USERNAME=iryna19890909@gmail.com

@@ -2,7 +2,7 @@ spring:
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/course-management
+    url: ${DB_URL}
   mail:
     username: ${SMTP_USERNAME}
     password: ${SMTP_PASSWORD}

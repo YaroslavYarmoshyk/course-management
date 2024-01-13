@@ -10,8 +10,6 @@ services:
       - course-management-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://course-management-db:5432/course-management
-      - SPRING_DATASOURCE_USERNAME=cm-admin
-      - SPRING_DATASOURCE_PASSWORD=alonso-321
       - SPRING_PROFILES_ACTIVE=local
       - DB_USERNAME=cm-admin
       - DB_PASSWORD=alonso-321

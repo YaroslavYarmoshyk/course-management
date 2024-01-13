@@ -4,6 +4,8 @@ services:
     build:
       context: .
     container_name: course-management-app
+    ports:
+      - 8080:8080
     depends_on:
       - course-management-db
     environment:
@@ -18,7 +20,7 @@ services:
       - ENCRYPTION_KEY=strong-$$key$$1991
 
   course-management-db:
-    image: 'postgres:15.2-alpine'
+    image: postgres:15.2-alpine
     container_name: course-management-db
     ports:
       - 5432:5432

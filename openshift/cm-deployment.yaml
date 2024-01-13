@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cm-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: cm-backend
+  template:
+    metadata:
+      labels:
+        component: cm-backend
+    spec:
+      containers:
+        - name: course-management
+          image: yaroslavyarmoshyk/course-management:dev
+          env:
+            - name: ENCRYPTION_KEY
+              value: strong-$$key$$1991
+            - name: SMTP_USERNAME
+              value: iryna19890909@gmail.com
+            - name: SMTP_PASSWORD
+              value: eofhvaklswvejhto
+            - name: DB_URL
+              value: jdbc:postgresql://postgres-cluster-ip-service:5432/course-management
+            - name: DB_USERNAME
+              value: cm-admin
+            - name: DB_PASSWORD
+              value: alonso-321
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+          ports:
+            - containerPort: 8080

@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: cm-ingress
 spec:
-  ingressClassName: external-nginx
+  ingressClassName: nginx
   rules:
     - host: cm.yarmoshyk.io
       http:

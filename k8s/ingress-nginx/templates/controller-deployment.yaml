@@ -48,7 +48,7 @@ spec:
             - --publish-service=$(POD_NAMESPACE)/my-ing-ingress-nginx-controller
             - --election-id=my-ing-ingress-nginx-leader
             - --controller-class=k8s.io/ingress-nginx
-            - --ingress-class=external-nginx
+            - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/my-ing-ingress-nginx-controller
             - --validating-webhook=:8443
             - --validating-webhook-certificate=/usr/local/certificates/cert

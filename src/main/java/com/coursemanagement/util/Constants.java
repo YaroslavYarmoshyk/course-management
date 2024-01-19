@@ -21,8 +21,8 @@ public final class Constants {
     public static final String EMAIL_CONFIRMATION_ENDPOINT = "/confirm-email";
     public static final String TOKEN_CONFIRMATION_ENDPOINT_PARAMETER = "token";
 
-    public static final String EMAIL_CONFIRMATION_TEMPLATE_PATH = "src/main/resources/templates/email-confirmation.html";
-    public static final String RESET_PASSWORD_CONFIRMATION_TEMPLATE_PATH = "src/main/resources/templates/reset-password-confirmation.html";
+    public static final String EMAIL_CONFIRMATION_TEMPLATE_PATH = "/templates/email-confirmation.html";
+    public static final String RESET_PASSWORD_CONFIRMATION_TEMPLATE_PATH = "/templates/reset-password-confirmation.html";
 
     public static final String EMAIL_CONFIRMATION_SUBJECT = "Confirm your email";
     public static final String RESET_PASSWORD_CONFIRMATION_SUBJECT = "Password Reset Request";

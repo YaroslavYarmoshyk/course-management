@@ -15,6 +15,7 @@ spec:
       containers:
         - name: course-management
           image: yaroslavyarmoshyk/course-management:dev
+          imagePullPolicy: Always
           env:
             - name: ENCRYPTION_KEY
               value: strong-$$key$$1991

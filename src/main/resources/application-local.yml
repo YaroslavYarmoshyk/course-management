@@ -9,3 +9,6 @@ spring:
 
 encryption:
   key: ${ENCRYPTION_KEY}
+
+course-management:
+  base-url: http://localhost:8080

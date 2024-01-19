@@ -1,12 +1,14 @@
 package com.coursemanagement.util;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 
-import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -26,8 +28,9 @@ public final class EmailUtils {
     }
 
     private static String getTemplate(final String confirmationUrl, final String filePath, final String elementId) {
-        try {
-            final Document document = Jsoup.parse(new File(filePath), StandardCharsets.UTF_8.name());
+        try (final InputStream inputStream = EmailUtils.class.getResourceAsStream(filePath)) {
+            final String htmlContent = IOUtils.toString(Objects.requireNonNull(inputStream), StandardCharsets.UTF_8);
+            final Document document = Jsoup.parse(htmlContent, "", Parser.xmlParser());
             final Element link = document.getElementById(elementId);
             if (Objects.nonNull(link)) {
                 link.attr("href", confirmationUrl);

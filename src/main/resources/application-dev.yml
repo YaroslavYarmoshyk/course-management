@@ -9,3 +9,6 @@ spring:
 
 encryption:
   key: ${ENCRYPTION_KEY}
+
+course-management:
+  base-url: https://dev.cm-yarmoshyk.com

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cm-ingress
+  namespace: course-management-prod
+  annotations:
+    cert-manager.io/issuer: letsencrypt-http01-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - dev.cm-yarmoshyk.com
+      secretName: prod-cm-yarmoshyk-com-key-pair
+  rules:
+    - host: dev.cm-yarmoshyk.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: cm-cluster-ip-service-prod
+                port:
+                  number: 80
+            pathType: Prefix
+            path: /

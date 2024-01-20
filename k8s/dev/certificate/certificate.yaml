@@ -7,7 +7,7 @@ spec:
   secretName: dev-cm-yarmoshyk-com-key-pair
   issuerRef:
     name: letsencrypt-http01-prod
-    kind: ClusterIssuer
+    kind: Issuer
   commonName: dev.cm-yarmoshyk.com
   dnsNames:
     - dev.cm-yarmoshyk.com

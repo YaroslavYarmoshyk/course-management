@@ -2,10 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cm-ingress
+  namespace: course-management-dev
   annotations:
-#    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-2:992382731666:certificate/17a702cc-e3fb-4af2-a562-e7c88f95d9dd
-#    alb.ingress.kubernetes.io/listen-ports: '[{HTTPS:443}]'
-#    alb.ingress.kubernetes.io/scheme: internet-facing
     cert-manager.io/issuer: letsencrypt-http01-prod
 spec:
   ingressClassName: nginx
@@ -19,7 +17,7 @@ spec:
         paths:
           - backend:
               service:
-                name: cm-cluster-ip-service
+                name: cm-cluster-ip-service-dev
                 port:
                   number: 80
             pathType: Prefix

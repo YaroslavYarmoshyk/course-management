@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: course-management-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes:
+        - name: efs-pvc-prod
+          persistentVolumeClaim:
+            claimName: efs-pvc-prod-db-claim
+      containers:
+        - name: postgres-prod
+          image: postgres:15.2-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: efs-pvc-prod
+              subPath: postgres
+          env:
+            - name: POSTGRES_USER
+              value: cm-admin
+            - name: POSTGRES_PASSWORD
+              value: alonso-321
+            - name: POSTGRES_DB
+              value: course-management

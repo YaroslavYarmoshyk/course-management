@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dev-cm-yarmoshyk-com-key-pair
+  namespace: course-management-dev
+spec:
+  secretName: dev-cm-yarmoshyk-com-key-pair
+  issuerRef:
+    name: letsencrypt-http01-prod
+    kind: ClusterIssuer
+  commonName: dev.cm-yarmoshyk.com
+  dnsNames:
+    - dev.cm-yarmoshyk.com

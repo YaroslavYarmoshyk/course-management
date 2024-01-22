@@ -8,6 +8,6 @@ spec:
   issuerRef:
     name: letsencrypt-http01-prod
     kind: Issuer
-  commonName: dev.cm-yarmoshyk.com
+  commonName: prod.cm-yarmoshyk.com
   dnsNames:
-    - dev.cm-yarmoshyk.com
+    - prod.cm-yarmoshyk.com

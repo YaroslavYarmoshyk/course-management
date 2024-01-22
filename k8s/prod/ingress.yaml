@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - dev.cm-yarmoshyk.com
+        - prod.cm-yarmoshyk.com
       secretName: prod-cm-yarmoshyk-com-key-pair
   rules:
-    - host: dev.cm-yarmoshyk.com
+    - host: prod.cm-yarmoshyk.com
       http:
         paths:
           - backend:

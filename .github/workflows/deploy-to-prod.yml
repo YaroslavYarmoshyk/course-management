@@ -1,8 +1,105 @@
-name: Deploy to PROD
-on: workflow_dispatch
+name: Deploy to DEV
+on:
+  workflow_dispatch:
+  push:
+    branches: [develop, release]
+env:
+  ENV: dev
+  REPOSITORY: ${{ github.repository }}
+  TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+  SOURCE_BRANCH: ${{ github.ref_name }}
+  COMMIT: ${{ github.workflow_sha }}
+  EVENT: ${{ github.event_name}}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+  REGISTRY_URL: "docker.io"
+  PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  deploy-to-prod:
-    secrets: inherit
-    uses: ./.github/workflows/deploy.yml
-    with:
-      env: prod
+  job-information:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event to $SOURCE_BRANCH branch with commit $COMMIT"
+
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: openjdk:17-jdk-slim
+    steps:
+      - name: Install Maven
+        run: |
+          apt-get update -qy
+          apt-get install -y maven
+          mvn -version
+      - run: echo "Testing code on $ENV environment"
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: /root/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Resolve dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: mvn dependency:go-offline -B
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: Run tests
+        run: mvn test -B
+      - name: Upload allure-results
+        if: failure() || env.ENV == 'prod'
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: target/allure-results
+
+  generate-allure-report:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download allure-results
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.allure-results-artifact-name }}
+          path: allure-results
+      - name: Allure Report action from marketplace
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        id: allure-report
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+      - name: Allure history information
+        run: ls
+      - name: Deploy report to Github Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ env.PERSONAL_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
+
+  push-to-dockerhub:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+      - name: Build application with Maven
+        run: mvn package -DskipTests=true --file pom.xml -B
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+      - name: Build container image
+        run: docker build -t ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.ENV }} .
+      - name: Docker Login
+        run: docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_TOKEN }} ${{ env.REGISTRY_URL }}
+      - name: Push image to Docker Hub
+        run: docker push ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.ENV }}

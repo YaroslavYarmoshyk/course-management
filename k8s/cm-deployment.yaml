@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cm-deployment
-  namespace: course-management-prod
+  namespace: course-management-${ENV}
 spec:
   replicas: 1
   selector:
@@ -15,22 +15,22 @@ spec:
     spec:
       containers:
         - name: course-management
-          image: yaroslavyarmoshyk/course-management:dev
+          image: yaroslavyarmoshyk/course-management:${GIT_HASH}
           imagePullPolicy: Always
           env:
             - name: ENCRYPTION_KEY
-              value: strong-$$key$$1991
+              value: ${ENCRYPTION_KEY}
             - name: SMTP_USERNAME
-              value: iryna19890909@gmail.com
+              value: ${SMTP_USERNAME}
             - name: SMTP_PASSWORD
-              value: eofhvaklswvejhto
+              value: ${SMTP_PASSWORD}
             - name: DB_URL
-              value: jdbc:postgresql://postgres-cluster-ip-service:5432/course-management
+              value: ${DB_URL}
             - name: DB_USERNAME
-              value: cm-admin
+              value: ${DB_USERNAME}
             - name: DB_PASSWORD
-              value: alonso-321
+              value: ${DB_PASSWORD}
             - name: SPRING_PROFILES_ACTIVE
-              value: dev
+              value: ${ENV}
           ports:
             - containerPort: 8080

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+  mail:
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+
+encryption:
+  key: ${ENCRYPTION_KEY}
+
+course-management:
+  base-url: https://prod.cm-yarmoshyk.com

@@ -28,8 +28,8 @@ spec:
               subPath: postgres
           env:
             - name: POSTGRES_USER
-              value: cm-admin
+              value: ${DB_USERNAME}
             - name: POSTGRES_PASSWORD
-              value: alonso-321
+              value: ${DB_PASSWORD}
             - name: POSTGRES_DB
               value: course-management

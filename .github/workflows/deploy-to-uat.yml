@@ -1,8 +1,0 @@
-name: Deploy to UAT
-on: workflow_dispatch
-jobs:
-  deploy-to-uat:
-    secrets: inherit
-    uses: ./.github/workflows/deploy.yml
-    with:
-      env: uat

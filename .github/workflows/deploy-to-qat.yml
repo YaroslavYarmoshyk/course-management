@@ -1,8 +1,0 @@
-name: Deploy to QAT
-on: workflow_dispatch
-jobs:
-  deploy-to-qat:
-    secrets: inherit
-    uses: ./.github/workflows/deploy.yml
-    with:
-      env: qat

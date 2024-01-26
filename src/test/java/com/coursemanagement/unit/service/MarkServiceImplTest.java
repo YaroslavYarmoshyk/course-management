@@ -10,6 +10,7 @@ import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.impl.MarkServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.Seed;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer;
@@ -56,6 +57,7 @@ class MarkServiceImplTest {
     @Order(1)
     @TestFactory
     @DisplayName("Test getting marks")
+    @Seed(value = 34076264812558532L)
     Stream<DynamicTest> testGetMarks() {
         final Long studentId = FIRST_STUDENT.getId();
         final Long courseCode = 103L;

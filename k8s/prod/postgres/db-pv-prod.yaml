@@ -9,7 +9,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  storageClassName: efs
+  storageClassName: efs-prod
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: fs-00cdb954a926467ed
+    volumeHandle: fs-0d176309e0702be40

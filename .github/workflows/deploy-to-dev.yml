@@ -82,24 +82,24 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
 
-#  push-to-dockerhub:
-#    needs: generate-allure-report
-#    runs-on: ubuntu-latest
-#    environment: dev
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-java@v4
-#        with:
-#          distribution: temurin
-#          java-version: 17
-#          cache: maven
-#      - name: Build application with Maven
-#        run: mvn package -DskipTests=true --file pom.xml -B
-#      - uses: satackey/action-docker-layer-caching@v0.0.11
-#        continue-on-error: true
-#      - name: Build container image
-#        run: docker build -t ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.ENV }} .
-#      - name: Docker Login
-#        run: docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_TOKEN }} ${{ env.REGISTRY_URL }}
-#      - name: Push image to Docker Hub
-#        run: docker push ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.ENV }}
+  push-to-dockerhub:
+    needs: generate-allure-report
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+      - name: Build application with Maven
+        run: mvn package -DskipTests=true --file pom.xml -B
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+      - name: Build container image
+        run: docker build -t ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.ENV }} .
+      - name: Docker Login
+        run: docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_TOKEN }} ${{ env.REGISTRY_URL }}
+      - name: Push image to Docker Hub
+        run: docker push ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.ENV }}

@@ -46,8 +46,8 @@ jobs:
         run: mvn dependency:go-offline -B
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Run tests
-#        run: mvn test -B
-        run: mvn test -Dtest=FeedbackSubmissionTest
+        run: mvn test -B -x
+#        run: mvn test -Dtest=FeedbackSubmissionTest
 #      - name: Upload allure-results
 #        if: failure() || env.ENV == 'prod'
 #        uses: actions/upload-artifact@v3

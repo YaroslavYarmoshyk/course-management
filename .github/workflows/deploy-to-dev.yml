@@ -83,7 +83,7 @@ jobs:
           PUBLISH_DIR: allure-history
 
   push-to-dockerhub:
-    needs: generate-allure-report
+    needs: test
     runs-on: ubuntu-latest
     environment: dev
     steps:

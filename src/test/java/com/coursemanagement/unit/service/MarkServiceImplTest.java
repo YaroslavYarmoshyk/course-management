@@ -9,6 +9,7 @@ import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.impl.MarkServiceImpl;
 import org.instancio.Instancio;
+import org.instancio.InstancioOfClassApi;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.Seed;
 import org.junit.jupiter.api.DisplayName;
@@ -80,6 +81,7 @@ class MarkServiceImplTest {
     @Order(2)
     @Test
     @DisplayName("Test student mark assignment")
+    @Seed(value = 21342343243243L)
     void testStudentMarkAssignment() {
         final LessonMarkEntity lessonMarkEntity = Instancio.create(LessonMarkEntity.class);
         final Long instructorId = lessonMarkEntity.getInstructor().getId();

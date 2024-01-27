@@ -21,6 +21,7 @@ jobs:
       - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event to $SOURCE_BRANCH branch with commit $COMMIT"
 
   test:
+    needs: job-information
     runs-on: ubuntu-latest
 #    container:
 #      image: openjdk:17-jdk-slim
@@ -30,10 +31,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          maven-version: '3.8.2'
           cache: 'maven'
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+#      - name: Build with Maven
+#        run: mvn -B package --file pom.xml
 #      - name: Install Maven
 #        run: |
 #          apt-get update -qy
@@ -54,12 +54,12 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Run tests
         run: mvn test -B
-      - name: Upload allure-results
-        if: failure() || env.ENV == 'prod'
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-results
-          path: target/allure-results
+#      - name: Upload allure-results
+#        if: failure() || env.ENV == 'prod'
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: allure-results
+#          path: target/allure-results
 
 #  generate-allure-report:
 #    needs: test

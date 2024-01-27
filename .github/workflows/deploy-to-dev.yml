@@ -22,14 +22,19 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    container:
-      image: openjdk:17-jdk-slim
+#    container:
+#      image: openjdk:17-jdk-slim
     steps:
-      - name: Install Maven
-        run: |
-          apt-get update -qy
-          apt-get install -y maven
-          mvn -version
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          maven-version: 3.8.2
+#      - name: Install Maven
+#        run: |
+#          apt-get update -qy
+#          apt-get install -y maven
+#          mvn -version
       - run: echo "Testing code on $ENV environment"
       - name: Get code
         uses: actions/checkout@v4

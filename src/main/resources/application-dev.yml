@@ -11,4 +11,4 @@ encryption:
   key: ${ENCRYPTION_KEY}
 
 course-management:
-  base-url: http://localhost:8080
+  base-url: https://dev.cm-yarmoshyk.com

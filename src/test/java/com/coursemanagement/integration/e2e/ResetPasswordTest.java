@@ -12,9 +12,7 @@ import com.icegreen.greenmail.util.ServerSetup;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import jakarta.mail.internet.MimeMessage;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +45,18 @@ public class ResetPasswordTest {
     private UserService userService;
     @RegisterExtension
     public static final GreenMailExtension GREEN_MAIL_RESET_PASSWORD = new GreenMailExtension(ServerSetup.SMTP);
+
+    private String firstStudentBasePass;
+
+    @BeforeEach
+    void saveBasePass() {
+        firstStudentBasePass = FIRST_STUDENT.getPassword();
+    }
+
+    @AfterEach
+    void setBasePass() {
+        FIRST_STUDENT.setPassword(firstStudentBasePass);
+    }
 
     @TestFactory
     @DisplayName("Test reset password flow")
@@ -128,8 +138,8 @@ public class ResetPasswordTest {
                 userBeforeUpdate.getFirstName(),
                 userBeforeUpdate.getLastName(),
                 userBeforeUpdate.getEmail(),
-                newPassword,
-                userBeforeUpdate.getPhone()
+                userBeforeUpdate.getPhone(),
+                newPassword
         );
 
         successfulLoginWithOldPasswordStep(requestWithOldPass);

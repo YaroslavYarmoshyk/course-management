@@ -21,23 +21,18 @@ jobs:
       - run: echo "The job was triggered by $TRIGGERING_ACTOR via $EVENT event to $SOURCE_BRANCH branch with commit $COMMIT"
 
   test:
+    needs: job-information
     runs-on: ubuntu-latest
-#    container:
-#      image: openjdk:17-jdk-slim
+    container:
+      image: openjdk:17-jdk-slim
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-          maven-version: 3.8.2
-#      - name: Install Maven
-#        run: |
-#          apt-get update -qy
-#          apt-get install -y maven
-#          mvn -version
+      - uses: actions/checkout@v4
+      - name: Install Maven
+        run: |
+          apt-get update -qy
+          apt-get install -y maven
+          mvn -version
       - run: echo "Testing code on $ENV environment"
-      - name: Get code
-        uses: actions/checkout@v4
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v3
@@ -52,41 +47,41 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Run tests
         run: mvn test -B
-      - name: Upload allure-results
-        if: failure() || env.ENV == 'prod'
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-results
-          path: target/allure-results
+#      - name: Upload allure-results
+#        if: failure() || env.ENV == 'prod'
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: allure-results
+#          path: target/allure-results
 
-  generate-allure-report:
-    needs: test
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download allure-results
-        uses: actions/download-artifact@v3
-        with:
-          name: allure-results
-          path: allure-results
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@master
-        if: always()
-        id: allure-report
-        with:
-          allure_results: allure-results
-          gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-      - name: Allure history information
-        run: ls
-      - name: Deploy report to Github Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ env.PERSONAL_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+#  generate-allure-report:
+#    needs: test
+#    if: failure()
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download allure-results
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: allure-results
+#          path: allure-results
+#      - name: Allure Report action from marketplace
+#        uses: simple-elf/allure-report-action@master
+#        if: always()
+#        id: allure-report
+#        with:
+#          allure_results: allure-results
+#          gh_pages: gh-pages
+#          allure_report: allure-report
+#          allure_history: allure-history
+#      - name: Allure history information
+#        run: ls
+#      - name: Deploy report to Github Pages
+#        if: always()
+#        uses: peaceiris/actions-gh-pages@v2
+#        env:
+#          PERSONAL_TOKEN: ${{ env.PERSONAL_TOKEN }}
+#          PUBLISH_BRANCH: gh-pages
+#          PUBLISH_DIR: allure-history
 
   push-to-dockerhub:
     needs: test

@@ -47,11 +47,11 @@ users:
     roles:
       - STUDENT
   new-user:
-    id: 3
+    id: 5
     firstName: Thor
     lastName: Odinson
     email: thor-odinson96@gmail.com
-    password: passw@rd-4
+    password: glory-to-Ukr@ine
     phone: +380637898875
     status: ACTIVE
     roles:

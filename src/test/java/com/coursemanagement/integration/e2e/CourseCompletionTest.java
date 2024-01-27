@@ -11,7 +11,6 @@ import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
-import com.coursemanagement.service.UserService;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -30,8 +29,7 @@ import static com.coursemanagement.util.BaseEndpoints.COURSE_COMPLETION_ENDPOINT
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_SCALE;
 import static com.coursemanagement.util.JwtTokenUtils.getAuthTokenRequestSpec;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.getModelIgnoringFields;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,8 +42,6 @@ public class CourseCompletionTest {
     private RequestSpecification requestSpecification;
     @Autowired
     private ResponseSpecification validResponseSpecification;
-    @Autowired
-    private UserService userService;
     @Autowired
     private CourseService courseService;
     @Autowired
@@ -143,7 +139,7 @@ public class CourseCompletionTest {
     }
 
     private Response makeCourseCompletionRequest(final CourseCompletionRequestDto courseCompletionRequestDto) {
-        final User user = userService.getUserById(courseCompletionRequestDto.studentId());
+        final User user = getUserById(courseCompletionRequestDto.studentId());
         return getAuthTokenRequestSpec(user, requestSpecification)
                 .body(courseCompletionRequestDto)
                 .post(COURSE_COMPLETION_ENDPOINT);

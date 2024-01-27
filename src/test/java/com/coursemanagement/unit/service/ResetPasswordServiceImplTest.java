@@ -12,9 +12,7 @@ import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.ResetPasswordServiceImpl;
 import org.apache.logging.log4j.util.Strings;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -50,6 +48,17 @@ class ResetPasswordServiceImplTest {
     private UserService userService;
 
     private static final String TEST_CONFIRMATION_TOKEN = "test-token";
+    private String firstStudentBasePass;
+
+    @BeforeEach
+    void saveBasePass() {
+        firstStudentBasePass = FIRST_STUDENT.getPassword();
+    }
+
+    @AfterEach
+    void setBasePass() {
+        FIRST_STUDENT.setPassword(firstStudentBasePass);
+    }
 
     @TestFactory
     @DisplayName("Test reset password flows")

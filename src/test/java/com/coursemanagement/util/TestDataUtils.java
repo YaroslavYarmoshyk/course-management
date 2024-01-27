@@ -18,6 +18,7 @@ import org.instancio.When;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -58,65 +59,67 @@ public final class TestDataUtils {
             .supply(field(Course::getUsers), gen -> createDefaultUsers())
             .toModel();
 
-    public static final User ADMIN = getAdmin();
-    public static final User INSTRUCTOR = getInstructor();
-    public static final User FIRST_STUDENT = getFistStudent();
-    public static final User SECOND_STUDENT = getSecondStudent();
-    public static final User NEW_USER = getNewUser();
+    public static final User ADMIN = new User(
+            1L,
+            "John",
+            "Smith",
+            "john-smith@gmail.com",
+            "passw@rd-1",
+            "+380974309331",
+            UserStatus.ACTIVE,
+            Set.of(Role.ADMIN)
+    );
+    public static final User INSTRUCTOR = new User(
+            2L,
+            "Marry",
+            "Poppins",
+            "poppins@yahoo.com",
+            "passw@rd-2",
+            "+380971668744",
+            UserStatus.ACTIVE,
+            Set.of(Role.INSTRUCTOR)
+    );
+    public static final User FIRST_STUDENT = new User(
+            3L,
+            "Tyrion",
+            "Lannister",
+            "goldlannister@gmail.com",
+            "passw@rd-3",
+            "+380971205151",
+            UserStatus.ACTIVE,
+            Set.of(Role.STUDENT)
+    );
+    public static final User SECOND_STUDENT = new User(
+            4L,
+            "Maria",
+            "Montesory",
+            "maria-montesory@gmail.com",
+            "passw@rd-4",
+            "+380971203332",
+            UserStatus.ACTIVE,
+            Set.of(Role.STUDENT)
+    );
+    public static final User NEW_USER = new User(
+            5L,
+            "Thor",
+            "Odinson",
+            "thor-odinson96@gmail.com",
+            "glory-to-Ukr@ine",
+            "+380971204444",
+            UserStatus.ACTIVE,
+            new HashSet<>()
+    );
     public static final Course RANDOM_COURSE = getRandomCourse();
 
     public static Set<User> createDefaultUsers() {
         return Instancio.ofSet(USER_TEST_MODEL).size(DEFAULT_USERS_COUNT).create();
     }
 
-    public static User getAdmin() {
-        return Instancio.of(User.class)
-                .set(field(User::getId), 1L)
-                .set(field(User::getEmail), "john-smith@gmail.com")
-                .set(field(User::getPassword), "passw@rd-1")
-                .set(field(User::getRoles), Set.of(Role.ADMIN))
-                .set(field(User::getStatus), UserStatus.ACTIVE)
-                .create();
-    }
-
-    public static User getInstructor() {
-        return Instancio.of(User.class)
-                .set(field(User::getId), 2L)
-                .set(field(User::getEmail), "poppins@yahoo.com")
-                .set(field(User::getPassword), "passw@rd-2")
-                .set(field(User::getRoles), Set.of(Role.INSTRUCTOR))
-                .set(field(User::getStatus), UserStatus.ACTIVE)
-                .create();
-    }
-
-    public static User getFistStudent() {
-        return Instancio.of(User.class)
-                .set(field(User::getId), 3L)
-                .set(field(User::getEmail), "goldlannister@gmail.com")
-                .set(field(User::getPassword), "passw@rd-3")
-                .set(field(User::getRoles), Set.of(Role.STUDENT))
-                .set(field(User::getStatus), UserStatus.ACTIVE)
-                .create();
-    }
-
-    public static User getSecondStudent() {
-        return Instancio.of(User.class)
-                .set(field(User::getId), 4L)
-                .set(field(User::getEmail), "maria-montesory@gmail.com")
-                .set(field(User::getPassword), "passw@rd-3")
-                .set(field(User::getRoles), Set.of(Role.STUDENT))
-                .set(field(User::getStatus), UserStatus.ACTIVE)
-                .create();
-    }
-
-    public static User getNewUser() {
-        return Instancio.of(User.class)
-                .set(field(User::getId), 5L)
-                .set(field(User::getEmail), "thor-odinson96@gmail.com")
-                .set(field(User::getPassword), "glory-to-Ukr@ine")
-                .set(field(User::getRoles), new HashSet<>())
-                .set(field(User::getStatus), UserStatus.ACTIVE)
-                .create();
+    public static User getUserById(final Long id) {
+        return Set.of(ADMIN, INSTRUCTOR, FIRST_STUDENT, SECOND_STUDENT, NEW_USER).stream()
+                .filter(user -> Objects.equals(user.getId(), id))
+                .findFirst()
+                .orElseThrow();
     }
 
     public static AuthenticationRequest getAuthenticationRequest() {

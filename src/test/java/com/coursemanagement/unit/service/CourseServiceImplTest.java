@@ -13,19 +13,11 @@ import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.impl.CourseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
@@ -36,17 +28,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
-import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
-import static com.coursemanagement.util.TestDataUtils.getNewUser;
-import static com.coursemanagement.util.TestDataUtils.getRandomCourses;
-import static com.coursemanagement.util.TestDataUtils.getRandomUserCourseByUser;
+import static com.coursemanagement.util.TestDataUtils.*;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(value = MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -112,7 +97,7 @@ class CourseServiceImplTest {
     @Test
     @DisplayName("Test add user to courses")
     void testAddUserToCourses() {
-        final User user = getNewUser();
+        final User user = NEW_USER;
         final Set<CourseEntity> courseEntities = Instancio.ofSet(CourseEntity.class)
                 .supply(field(CourseEntity::getUserCourses), () -> new HashSet<>())
                 .create();

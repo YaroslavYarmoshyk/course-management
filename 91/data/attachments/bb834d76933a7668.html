@@ -1,0 +1,31 @@
+<div>POST to http://localhost:37499/api/v1/lessons/assign-mark</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;instructorId&quot;: 1,
+    &quot;studentId&quot;: 3,
+    &quot;lessonId&quot;: 1,
+    &quot;mark&quot;: &quot;POOR&quot;
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiam9obi1zbWl0aEBnbWFpbC5jb20iLCJleHAiOjE3MDY0NjIyNjAsImlhdCI6MTcwNjM3NTg2MCwicm9sZXMiOiJBRE1JTiJ9.aKeKykJf2RyUHwdgTWTwD2jpU4YgOtgroJE8FHXTnIrsUJBPneOgZPi-fo4MRQYle36bru1VoU4Wuf_BnXXz84zYi7AmEGn1nfvOCn_OleWQMfOW8XW8vrTj0BioeVUr26L4Vfgtg9DVQBYG4wGpJiFn9LJf0rvvmPcyGrzmmSFP7YB6UtjelM8XubJ9xc9g_tcQ2RWPKuKP-w_8xU-q1b4f8GTjG4MB2IXrJDukzVuex75sH2Gp-J7GjoGIYpWI5v8xklGD9qjV21p91JfEkG19qIT7tDmepXA1A7aeBwMO1U3gW60WmC-iKTD8s-jrOrwOk_VaNC1JKmKpQ9uEfQ</div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:37499/api/v1/lessons/assign-mark&#39; -H &#39;Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiam9obi1zbWl0aEBnbWFpbC5jb20iLCJleHAiOjE3MDY0NjIyNjAsImlhdCI6MTcwNjM3NTg2MCwicm9sZXMiOiJBRE1JTiJ9.aKeKykJf2RyUHwdgTWTwD2jpU4YgOtgroJE8FHXTnIrsUJBPneOgZPi-fo4MRQYle36bru1VoU4Wuf_BnXXz84zYi7AmEGn1nfvOCn_OleWQMfOW8XW8vrTj0BioeVUr26L4Vfgtg9DVQBYG4wGpJiFn9LJf0rvvmPcyGrzmmSFP7YB6UtjelM8XubJ9xc9g_tcQ2RWPKuKP-w_8xU-q1b4f8GTjG4MB2IXrJDukzVuex75sH2Gp-J7GjoGIYpWI5v8xklGD9qjV21p91JfEkG19qIT7tDmepXA1A7aeBwMO1U3gW60WmC-iKTD8s-jrOrwOk_VaNC1JKmKpQ9uEfQ&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;instructorId&quot;: 1,
+    &quot;studentId&quot;: 3,
+    &quot;lessonId&quot;: 1,
+    &quot;mark&quot;: &quot;POOR&quot;
+}&#39;
+</div>

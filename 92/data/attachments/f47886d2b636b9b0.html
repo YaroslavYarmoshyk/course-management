@@ -1,0 +1,32 @@
+<div>POST to http://localhost:35217/api/v1/authentication/login</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;firstName&quot;: &quot;OYOK&quot;,
+    &quot;lastName&quot;: &quot;JLO&quot;,
+    &quot;email&quot;: &quot;goldlannister@gmail.com&quot;,
+    &quot;phone&quot;: &quot;OYICFO&quot;,
+    &quot;password&quot;: &quot;$2a$10$nKxaEmhTAtWfN/9oecj6XOMskUl5F1GY4oNEucp5dDVuFWR6W4Ze6&quot;
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:35217/api/v1/authentication/login&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;firstName&quot;: &quot;OYOK&quot;,
+    &quot;lastName&quot;: &quot;JLO&quot;,
+    &quot;email&quot;: &quot;goldlannister@gmail.com&quot;,
+    &quot;phone&quot;: &quot;OYICFO&quot;,
+    &quot;password&quot;: &quot;$2a$10$nKxaEmhTAtWfN/9oecj6XOMskUl5F1GY4oNEucp5dDVuFWR6W4Ze6&quot;
+}&#39;
+</div>

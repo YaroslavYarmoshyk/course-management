@@ -27,9 +27,9 @@ jobs:
     steps:
       - uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 17
-          maven-version: 3.8.2
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
 #      - name: Install Maven
 #        run: |
 #          apt-get update -qy
@@ -38,17 +38,17 @@ jobs:
       - run: echo "Testing code on $ENV environment"
       - name: Get code
         uses: actions/checkout@v4
-      - name: Cache dependencies
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: /root/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - name: Resolve dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: mvn dependency:go-offline -B
+#      - name: Cache dependencies
+#        id: cache
+#        uses: actions/cache@v3
+#        with:
+#          path: /root/.m2/repository
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-maven-
+#      - name: Resolve dependencies
+#        if: steps.cache.outputs.cache-hit != 'true'
+#        run: mvn dependency:go-offline -B
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Run tests
         run: mvn test -B

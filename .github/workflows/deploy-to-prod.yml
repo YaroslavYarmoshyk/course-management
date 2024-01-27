@@ -1,8 +1,8 @@
-name: Deploy to DEV
+name: Deploy to PROD
 on:
   workflow_dispatch:
   push:
-    branches: [develop, release]
+    branches: [release]
 env:
   ENV: dev
   REPOSITORY: ${{ github.repository }}

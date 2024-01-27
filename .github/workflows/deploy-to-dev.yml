@@ -25,6 +25,7 @@ jobs:
 #    container:
 #      image: openjdk:17-jdk-slim
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -36,8 +37,6 @@ jobs:
 #          apt-get install -y maven
 #          mvn -version
       - run: echo "Testing code on $ENV environment"
-      - name: Get code
-        uses: actions/checkout@v4
 #      - name: Cache dependencies
 #        id: cache
 #        uses: actions/cache@v3
@@ -59,37 +58,37 @@ jobs:
           name: allure-results
           path: target/allure-results
 
-  generate-allure-report:
-    needs: test
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download allure-results
-        uses: actions/download-artifact@v3
-        with:
-          name: allure-results
-          path: allure-results
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@master
-        if: always()
-        id: allure-report
-        with:
-          allure_results: allure-results
-          gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
-      - name: Allure history information
-        run: ls
-      - name: Deploy report to Github Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ env.PERSONAL_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+#  generate-allure-report:
+#    needs: test
+#    if: failure()
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download allure-results
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: allure-results
+#          path: allure-results
+#      - name: Allure Report action from marketplace
+#        uses: simple-elf/allure-report-action@master
+#        if: always()
+#        id: allure-report
+#        with:
+#          allure_results: allure-results
+#          gh_pages: gh-pages
+#          allure_report: allure-report
+#          allure_history: allure-history
+#      - name: Allure history information
+#        run: ls
+#      - name: Deploy report to Github Pages
+#        if: always()
+#        uses: peaceiris/actions-gh-pages@v2
+#        env:
+#          PERSONAL_TOKEN: ${{ env.PERSONAL_TOKEN }}
+#          PUBLISH_BRANCH: gh-pages
+#          PUBLISH_DIR: allure-history
 
   push-to-dockerhub:
-    needs: test
+    needs: generate-allure-report
     runs-on: ubuntu-latest
     environment: dev
     steps:

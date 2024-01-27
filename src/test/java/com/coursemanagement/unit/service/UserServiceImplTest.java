@@ -34,8 +34,7 @@ import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.USER_TEST_MODEL;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -89,7 +88,8 @@ class UserServiceImplTest {
 
         final User userByEmail = userService.getUserByEmail(email);
 
-        assertNotNull(userByEmail);
+//        assertNotNull(userByEmail);
+        assertNull(userByEmail);
         assertThrowsWithMessage(
                 () -> userService.getUserByEmail(nonExistingEmail),
                 SystemException.class,

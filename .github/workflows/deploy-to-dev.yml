@@ -23,34 +23,27 @@ jobs:
   test:
     needs: job-information
     runs-on: ubuntu-latest
-#    container:
-#      image: openjdk:17-jdk-slim
+    container:
+      image: openjdk:17-jdk-slim
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven'
-#      - name: Build with Maven
-#        run: mvn -B package --file pom.xml
-#      - name: Install Maven
-#        run: |
-#          apt-get update -qy
-#          apt-get install -y maven
-#          mvn -version
+      - name: Install Maven
+        run: |
+          apt-get update -qy
+          apt-get install -y maven
+          mvn -version
       - run: echo "Testing code on $ENV environment"
-#      - name: Cache dependencies
-#        id: cache
-#        uses: actions/cache@v3
-#        with:
-#          path: /root/.m2/repository
-#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: |
-#            ${{ runner.os }}-maven-
-#      - name: Resolve dependencies
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        run: mvn dependency:go-offline -B
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: /root/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Resolve dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: mvn dependency:go-offline -B
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Run tests
         run: mvn test -B

@@ -9,12 +9,7 @@ import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.impl.UserServiceImpl;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -34,7 +29,8 @@ import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.USER_TEST_MODEL;
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -88,8 +84,7 @@ class UserServiceImplTest {
 
         final User userByEmail = userService.getUserByEmail(email);
 
-//        assertNotNull(userByEmail);
-        assertNull(userByEmail);
+        assertNotNull(userByEmail);
         assertThrowsWithMessage(
                 () -> userService.getUserByEmail(nonExistingEmail),
                 SystemException.class,

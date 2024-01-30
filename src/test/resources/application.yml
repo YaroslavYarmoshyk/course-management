@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: db-username
+    password: db-password
+    url: jdbc:postgresql://localhost:5432/course-management
   jpa:
     open-in-view: false
     show-sql: false

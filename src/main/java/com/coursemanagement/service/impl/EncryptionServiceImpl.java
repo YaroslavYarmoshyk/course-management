@@ -29,13 +29,14 @@ public class EncryptionServiceImpl implements EncryptionService {
     private static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
     private static final String SUN_JSE = "SunJCE";
     private static final int IV_SIZE = 16;
-    @Value("${encryption.key}")
+    @Value("${encryption.key:strong-$key$1991}")
     private String encryptionKey;
 
     @Override
     public String encryptUrlToken(final String string) {
         try {
             final Cipher cipher = Cipher.getInstance(AES_CBC_PKCS5PADDING, SUN_JSE);
+            log.info("FUCKING ENCRYPTION KEY IS: {}", encryptionKey);
             final SecretKeySpec key = new SecretKeySpec(getBytes(encryptionKey), AES);
 
             final byte[] iv = generateIv();

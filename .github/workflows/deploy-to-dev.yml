@@ -30,6 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: openjdk:17-jdk-slim
+    env:
+      ENCRYPTION_KEY: strong-$key$2000
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -52,7 +54,7 @@ jobs:
       - name: Run tests
         run: mvn test -B
       - name: Upload allure-results
-        if: failure() || env.ENV == 'prod'
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: allure-results

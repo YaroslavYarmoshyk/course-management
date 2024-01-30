@@ -13,6 +13,7 @@ import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.impl.CourseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.instancio.Instancio;
+import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +34,10 @@ import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(value = MockitoExtension.class)
+@ExtendWith(value = {
+        MockitoExtension.class,
+        InstancioExtension.class
+})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CourseServiceImplTest {
     @Spy

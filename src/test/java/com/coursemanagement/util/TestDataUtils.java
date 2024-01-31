@@ -7,6 +7,7 @@ import com.coursemanagement.model.Course;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
+import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import org.instancio.GetMethodSelector;
@@ -21,6 +22,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.coursemanagement.util.JsonUtils.asObjectsCollection;
 import static org.instancio.Assign.given;
@@ -144,6 +147,12 @@ public final class TestDataUtils {
         return Instancio.of(COURSE_TEST_MODEL)
                 .set(field(Course::getUsers), Set.of(user))
                 .create();
+    }
+
+    public static Set<CourseEntity> generateNewCourses(final int count) {
+        return IntStream.rangeClosed(0, count)
+                .mapToObj(i -> new CourseEntity((long) i, "Subject" + i, "Description" + i, new HashSet<>()))
+                .collect(Collectors.toSet());
     }
 
     public static UserCourse getRandomUserCourseByUser(final User user) {

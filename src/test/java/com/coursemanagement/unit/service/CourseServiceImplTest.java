@@ -14,6 +14,7 @@ import com.coursemanagement.service.impl.CourseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.Seed;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -100,6 +101,7 @@ class CourseServiceImplTest {
     @Order(3)
     @Test
     @DisplayName("Test add user to courses")
+    @Seed(122343453L)
     void testAddUserToCourses() {
         final User user = NEW_USER;
         final Set<CourseEntity> courseEntities = Instancio.ofSet(CourseEntity.class)

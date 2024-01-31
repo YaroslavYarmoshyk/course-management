@@ -13,8 +13,6 @@ import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.impl.CourseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.instancio.Instancio;
-import org.instancio.junit.InstancioExtension;
-import org.instancio.junit.Seed;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,21 +22,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.TestDataUtils.*;
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(value = {
-        MockitoExtension.class,
-        InstancioExtension.class
-})
+@ExtendWith(value = MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CourseServiceImplTest {
     @Spy
@@ -101,12 +94,9 @@ class CourseServiceImplTest {
     @Order(3)
     @Test
     @DisplayName("Test add user to courses")
-    @Seed(122343453L)
     void testAddUserToCourses() {
         final User user = NEW_USER;
-        final Set<CourseEntity> courseEntities = Instancio.ofSet(CourseEntity.class)
-                .supply(field(CourseEntity::getUserCourses), () -> new HashSet<>())
-                .create();
+        final Set<CourseEntity> courseEntities = generateNewCourses(5);
         final Set<Long> courseCodes = courseEntities.stream()
                 .map(CourseEntity::getCode)
                 .collect(Collectors.toSet());

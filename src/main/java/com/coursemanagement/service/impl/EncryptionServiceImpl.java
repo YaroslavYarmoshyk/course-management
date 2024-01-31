@@ -48,6 +48,7 @@ public class EncryptionServiceImpl implements EncryptionService {
 
             return URLEncoder.encode(encryptedString, StandardCharsets.UTF_8);
         } catch (final GeneralSecurityException e) {
+            log.info("Error occurred", e);
             throw new SystemException("Unable to encrypt string", SystemErrorCode.INTERNAL_SERVER_ERROR);
         }
     }

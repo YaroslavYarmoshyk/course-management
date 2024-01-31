@@ -1,7 +1,7 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exeption.enumeration.SystemErrorCode;
 import com.coursemanagement.service.EncryptionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +36,6 @@ public class EncryptionServiceImpl implements EncryptionService {
     public String encryptUrlToken(final String string) {
         try {
             final Cipher cipher = Cipher.getInstance(AES_CBC_PKCS5PADDING, SUN_JSE);
-            log.info("FUCKING ENCRYPTION KEY IS: {}", encryptionKey);
             final SecretKeySpec key = new SecretKeySpec(getBytes(encryptionKey), AES);
 
             final byte[] iv = generateIv();

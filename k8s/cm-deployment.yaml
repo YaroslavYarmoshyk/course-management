@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: course-management
-          image: yaroslavyarmoshyk/course-management:${GIT_HASH}
+          image: yaroslavyarmoshyk/course-management:${COMMIT}
           imagePullPolicy: Always
           env:
             - name: ENCRYPTION_KEY

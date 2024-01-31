@@ -1,0 +1,31 @@
+<div>POST to http://localhost:44975/api/v1/course-management/enrollments</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;studentId&quot;: 3,
+    &quot;courseCodes&quot;: [
+        67891
+    ]
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiZ29sZGxhbm5pc3RlckBnbWFpbC5jb20iLCJleHAiOjE3MDY3NzU0NDYsImlhdCI6MTcwNjY4OTA0Niwicm9sZXMiOiJTVFVERU5UIn0.g3E_AkD924ZoM-OOijee9_yAiG_8R0DA-dIKO5qedETqthLEtqq_FLZQPxiW0gu_jrvxL29C5D6nomO7n9pl_2V0yxs9EnVTj0iIwAGv73zJKuyz-9r6aTllOjMzZK495GVRQZy2iqQb5EKSlTkaJsk4qunc2DSKP74kidrfEGiLUeVrvpX3asG14yrdCeNtYDaYwKomT80CqHbhoj_tsQchCuMmCRlq-M6i5M_XUf1WncFrUqE25YCMxmJ4cZgM_d4CGF3HX8CWpabV2mXcEKnW6NRxcyGKl5y3a8_sK68AMNu2311Hj9V9PV57a_ZGktjl7Qu5mB0vhYRIYZd8YA</div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:44975/api/v1/course-management/enrollments&#39; -H &#39;Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiZ29sZGxhbm5pc3RlckBnbWFpbC5jb20iLCJleHAiOjE3MDY3NzU0NDYsImlhdCI6MTcwNjY4OTA0Niwicm9sZXMiOiJTVFVERU5UIn0.g3E_AkD924ZoM-OOijee9_yAiG_8R0DA-dIKO5qedETqthLEtqq_FLZQPxiW0gu_jrvxL29C5D6nomO7n9pl_2V0yxs9EnVTj0iIwAGv73zJKuyz-9r6aTllOjMzZK495GVRQZy2iqQb5EKSlTkaJsk4qunc2DSKP74kidrfEGiLUeVrvpX3asG14yrdCeNtYDaYwKomT80CqHbhoj_tsQchCuMmCRlq-M6i5M_XUf1WncFrUqE25YCMxmJ4cZgM_d4CGF3HX8CWpabV2mXcEKnW6NRxcyGKl5y3a8_sK68AMNu2311Hj9V9PV57a_ZGktjl7Qu5mB0vhYRIYZd8YA&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;studentId&quot;: 3,
+    &quot;courseCodes&quot;: [
+        67891
+    ]
+}&#39;
+</div>

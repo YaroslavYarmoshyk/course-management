@@ -803,5 +803,3 @@ Docker
 1. Clone the repository: git clone https://github.com/YaroslavYarmoshyk/course-management.git
 2. Run docker compose: docker compose up -d
 3. The application is available by address http://localhost:8080
-Clone the repository: git clone https://github.com/YaroslavYarmoshyk/course-management.git
-Run docker compose: docker compose up -d

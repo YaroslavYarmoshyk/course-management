@@ -29,7 +29,7 @@ public class ResetPasswordController {
     private final ResetPasswordService resetPasswordService;
     private final ConfirmationTokenService confirmationTokenService;
 
-    @PostMapping(value = "request")
+    @PostMapping(value = "/request")
     public ResponseEntity<String> sendResetConfirmation(@RequestBody @Email final String email) {
         resetPasswordService.sendResetConfirmation(email);
         return ResponseEntity.ok("Reset password email request was successfully sent");

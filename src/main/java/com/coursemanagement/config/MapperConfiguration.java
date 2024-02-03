@@ -8,6 +8,7 @@ import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import jakarta.persistence.spi.LoadState;
 import org.hibernate.collection.spi.LazyInitializable;
 import org.hibernate.jpa.internal.util.PersistenceUtilHelper;
 import org.modelmapper.Condition;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class MapperConfiguration {
-    private final static Set<String> ALLOWED_PERSISTENCE_LOADING_STATES = Set.of("LOADED", "UNKNOWN");
+    private final static Set<LoadState> ALLOWED_PERSISTENCE_LOADING_STATES = Set.of(LoadState.LOADED, LoadState.UNKNOWN);
 
     @Bean
     public ModelMapper modelMapper() {
@@ -89,7 +90,7 @@ public class MapperConfiguration {
     }
 
     private static <T> boolean isLoaded(final T object) {
-        final String loadedState = PersistenceUtilHelper.isLoaded(object).name();
+        final LoadState loadedState = PersistenceUtilHelper.getLoadState(object);
         return ALLOWED_PERSISTENCE_LOADING_STATES.contains(loadedState);
     }
 

@@ -8,29 +8,28 @@ import com.coursemanagement.security.model.AuthenticationResponse;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.ResetPasswordService;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.coursemanagement.util.BaseEndpoints.RESET_PASSWORD_CONFIRMATION_ENDPOINT;
+import static com.coursemanagement.util.BaseEndpoints.RESET_PASSWORD_REQUEST_ENDPOINT;
 import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
-import static com.coursemanagement.util.BaseEndpoints.*;
-import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.MvcUtils.makeMockMvcRequest;
+import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SecuredResourceTest(value = ResetPasswordController.class)
@@ -50,8 +49,9 @@ class ResetPasswordControllerTest {
         final String email = FIRST_STUDENT.getEmail();
 
         doNothing().when(resetPasswordService).sendResetConfirmation(email);
-
-        makeMockMvcRequest(mockMvc, POST, RESET_PASSWORD_REQUEST_ENDPOINT, email)
+        mockMvc.perform(post(RESET_PASSWORD_REQUEST_ENDPOINT)
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content(email))
                 .andExpect(status().isOk())
                 .andExpect(responseBody().equalToString("Reset password email request was successfully sent"));
     }

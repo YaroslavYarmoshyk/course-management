@@ -8,6 +8,7 @@ import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseRepository;
 import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
+import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
 import com.coursemanagement.service.impl.CourseServiceImpl;
@@ -105,14 +106,14 @@ class CourseServiceImplTest {
 
         courseService.addUserToCourses(user, courseCodes);
         verify(courseRepository).saveAll(courseEntitiesCaptor.capture());
-        final Set<User> allUsersFromRequestedCourses = courseEntitiesCaptor.getValue().stream()
+        final Set<Long> allUsersFromRequestedCourses = courseEntitiesCaptor.getValue().stream()
                 .map(CourseEntity::getUserCourses)
                 .flatMap(Collection::stream)
                 .map(UserCourseEntity::getUser)
-                .map(userEntity -> mapper.map(userEntity, User.class))
+                .map(UserEntity::getId)
                 .collect(Collectors.toSet());
 
-        assertTrue(allUsersFromRequestedCourses.contains(user));
+        assertTrue(allUsersFromRequestedCourses.contains(user.getId()));
     }
 
     @Order(4)

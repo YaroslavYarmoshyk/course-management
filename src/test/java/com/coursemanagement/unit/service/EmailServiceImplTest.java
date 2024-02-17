@@ -1,7 +1,7 @@
 package com.coursemanagement.unit.service;
 
 import com.coursemanagement.config.properties.CourseProperties;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.service.EmailService;
 import com.coursemanagement.service.impl.EmailServiceImpl;
 import jakarta.mail.Address;

@@ -1,7 +1,7 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.UserCourseRepository;
@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,11 +61,12 @@ public class UserCourseServiceImpl implements UserCourseService {
     }
 
     @Override
-    public Set<UserDto> getStudentsByCourseCode(final Long courseCode) {
+    public List<UserDto> getStudentsByCourseCode(final Long courseCode) {
         return userCourseRepository.findStudentsByCourseCode(courseCode).stream()
                 .map(UserCourseEntity::getUser)
                 .map(UserDto::new)
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparingLong(UserDto::id))
+                .toList();
     }
 
     @Override

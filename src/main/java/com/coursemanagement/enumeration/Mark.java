@@ -1,8 +1,8 @@
 package com.coursemanagement.enumeration;
 
 import com.coursemanagement.enumeration.converter.DatabaseEnum;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

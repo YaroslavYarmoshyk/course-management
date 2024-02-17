@@ -1,7 +1,7 @@
 package com.coursemanagement.service.impl;
 
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.service.EncryptionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

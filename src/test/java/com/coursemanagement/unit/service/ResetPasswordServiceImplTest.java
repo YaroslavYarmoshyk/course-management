@@ -2,7 +2,7 @@ package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.security.model.AuthenticationRequest;

@@ -1,7 +1,7 @@
 package com.coursemanagement.unit.security;
 
 import com.coursemanagement.enumeration.UserStatus;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.repository.UserRepository;
 import com.coursemanagement.repository.entity.UserEntity;

@@ -1,7 +1,7 @@
 package com.coursemanagement.enumeration;
 
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 
 import java.util.Optional;
 

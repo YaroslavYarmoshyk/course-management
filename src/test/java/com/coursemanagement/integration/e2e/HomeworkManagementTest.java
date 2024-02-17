@@ -2,8 +2,8 @@ package com.coursemanagement.integration.e2e;
 
 import com.coursemanagement.config.annotation.IntegrationTest;
 import com.coursemanagement.enumeration.FileType;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.FileRepository;
 import com.coursemanagement.repository.HomeworkRepository;

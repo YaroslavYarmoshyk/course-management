@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 import static com.coursemanagement.util.Constants.COURSES_ENDPOINT;
@@ -41,7 +42,7 @@ public class CourseResource {
 
     @InstructorAccessLevel
     @GetMapping(value = "/{course-code}/students")
-    public Set<UserDto> getStudentsPerCourse(@PathVariable(value = "course-code") final Long courseCode) {
+    public List<UserDto> getStudentsPerCourse(@PathVariable(value = "course-code") final Long courseCode) {
         return userCourseService.getStudentsByCourseCode(courseCode);
     }
 

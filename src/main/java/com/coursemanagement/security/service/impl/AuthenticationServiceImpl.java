@@ -1,8 +1,8 @@
 package com.coursemanagement.security.service.impl;
 
 import com.coursemanagement.enumeration.UserStatus;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.UserRepository;

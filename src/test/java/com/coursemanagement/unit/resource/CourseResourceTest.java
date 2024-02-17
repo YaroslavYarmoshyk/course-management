@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -101,7 +102,7 @@ class CourseResourceTest {
     @DisplayName("Test students per course endpoint")
     Stream<DynamicTest> testStudentsPerCourseEndpoint() {
         final String studentsPerCourseEndpoint = String.format("%s%d%s", COURSES_ENDPOINT + "/", COURSE_CODE, "/students");
-        final Set<UserDto> students = Instancio.ofSet(UserDto.class).create();
+        final List<UserDto> students = Instancio.ofList(UserDto.class).create();
         return Stream.of(
                 dynamicTest("Test unauthorized access to endpoint",
                         () -> assertUnauthorizedAccess(mockMvc, GET, studentsPerCourseEndpoint, Role.INSTRUCTOR)),

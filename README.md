@@ -467,7 +467,7 @@ Welcome to the Online Learning Management System README! This application is des
     "instructorId": 2,
     "studentId": 5,
     "lessonId": 5,
-    "mark": "EXCELLENT"
+    "mark": 5
 }
 ```
    - Response body:

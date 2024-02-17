@@ -1,6 +1,6 @@
 package com.coursemanagement.unit.service;
 
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.service.impl.EncryptionServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;

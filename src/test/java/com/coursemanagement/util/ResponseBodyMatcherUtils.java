@@ -1,7 +1,7 @@
 package com.coursemanagement.util;
 
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.dto.ErrorDto;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.dto.ErrorDto;
 import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserLessonDto;

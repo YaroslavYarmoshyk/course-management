@@ -1,8 +1,8 @@
 package com.coursemanagement.service.impl;
 
 import com.coursemanagement.config.properties.CourseProperties;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.User;
 import com.coursemanagement.service.EmailService;
 import com.coursemanagement.util.EmailUtils;

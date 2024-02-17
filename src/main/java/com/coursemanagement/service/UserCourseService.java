@@ -5,6 +5,7 @@ import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserDto;
 
+import java.util.List;
 import java.util.Set;
 
 public interface UserCourseService {
@@ -17,7 +18,7 @@ public interface UserCourseService {
 
     UserCourse saveUserCourse(final UserCourse userCourse);
 
-    Set<UserDto> getStudentsByCourseCode(final Long courseCode);
+    List<UserDto> getStudentsByCourseCode(final Long courseCode);
 
     UserCourseDetailsDto getUserCourseDetails(final Long userId, final Long courseCode);
 }

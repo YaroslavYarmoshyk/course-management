@@ -34,7 +34,7 @@ public class MarkServiceImpl implements MarkService {
         final Long studentId = markAssignmentRequestDto.studentId();
         final Long lessonId = markAssignmentRequestDto.lessonId();
 
-        final Mark mark = markAssignmentRequestDto.mark();
+        final Mark mark = Mark.of(markAssignmentRequestDto.mark());
         final LessonMark lessonMark = new LessonMark().setStudentId(studentId)
                 .setLessonId(lessonId)
                 .setMark(mark)

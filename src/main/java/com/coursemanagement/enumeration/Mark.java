@@ -14,6 +14,7 @@ import java.util.Optional;
 import static com.coursemanagement.util.Constants.MARK_CONVERTER_SCALE;
 import static com.coursemanagement.util.Constants.MARK_ROUNDING_MODE;
 
+@Getter
 @RequiredArgsConstructor
 public enum Mark implements DatabaseEnum {
     POOR(BigDecimal.valueOf(1)),
@@ -22,13 +23,19 @@ public enum Mark implements DatabaseEnum {
     ABOVE_AVERAGE(BigDecimal.valueOf(4)),
     EXCELLENT(BigDecimal.valueOf(5));
 
-    @Getter
     private final BigDecimal value;
 
     public static Mark of(final BigDecimal value) {
         return Optional.ofNullable(value)
                 .map(Mark::getMarkByValue)
                 .orElse(null);
+    }
+
+    public static Mark of(final int value) {
+        return Arrays.stream(Mark.values())
+                .filter(mark -> mark.getValue().intValue() == value)
+                .findFirst()
+                .orElseThrow(() -> new SystemException("Cannot parse " + value + " to mark", SystemErrorCode.INTERNAL_SERVER_ERROR));
     }
 
     private static Mark getMarkByValue(final BigDecimal markValue) {

@@ -105,7 +105,7 @@ class LessonServiceImplTest {
         when(userAssociationService.isUserAssociatedWithLesson(anyLong(), anyLong())).thenReturn(studentHasAccessToLesson);
 
         assertThrowsWithMessage(
-                () -> lessonService.assignMarkToUserLesson(new MarkAssignmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, Mark.EXCELLENT)),
+                () -> lessonService.assignMarkToUserLesson(new MarkAssignmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, 5)),
                 SystemException.class,
                 expectedMessage
         );
@@ -180,7 +180,7 @@ class LessonServiceImplTest {
     }
 
     private void testLessonMarkAssigment() {
-        final var requestDto = new MarkAssignmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, Mark.AVERAGE);
+        final var requestDto = new MarkAssignmentRequestDto(INSTRUCTOR.getId(), FIRST_STUDENT.getId(), 1L, 3);
 
         when(userAssociationService.currentUserHasAccessTo(requestDto.instructorId())).thenReturn(true);
         when(userAssociationService.isUserAssociatedWithLesson(requestDto.studentId(), requestDto.lessonId())).thenReturn(true);

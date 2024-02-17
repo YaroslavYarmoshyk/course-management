@@ -59,7 +59,7 @@ public class MarkAssignmentTest {
                 dynamicTest("Test unauthorized mark assignment student access",
                         () -> testUnauthorizedMarkAssignment(FIRST_STUDENT, Instancio.create(MarkAssignmentRequestDto.class))),
                 dynamicTest("Test unauthorized mark assignment when student is not associated with lesson",
-                        () -> testUnauthorizedMarkAssignment(INSTRUCTOR, new MarkAssignmentRequestDto(2L, 3L, 25L, Mark.EXCELLENT))),
+                        () -> testUnauthorizedMarkAssignment(INSTRUCTOR, new MarkAssignmentRequestDto(2L, 3L, 25L, 5))),
                 dynamicTest("Test mark assignment without specifying an instructor",
                         () -> testBadMarkAssignmentRequest(getMarkAssignmentDtoIgnoring(MarkAssignmentRequestDto::instructorId))),
                 dynamicTest("Test mark assignment without specifying a student",
@@ -77,7 +77,7 @@ public class MarkAssignmentTest {
     void testValidMarkAssignmentRequest(final User user, final String ignore, final Mark mark) {
         final var graderId = user.getId();
         final var studentId = FIRST_STUDENT.getId();
-        final var markAssigmentRequestDto = new MarkAssignmentRequestDto(graderId, studentId, 1L, mark);
+        final var markAssigmentRequestDto = new MarkAssignmentRequestDto(graderId, studentId, 1L, mark.getValue().intValue());
 
         final MarkAssignmentResponseDto actualResponse = makeMarkAssignmentRequest(user, markAssigmentRequestDto)
                 .then()

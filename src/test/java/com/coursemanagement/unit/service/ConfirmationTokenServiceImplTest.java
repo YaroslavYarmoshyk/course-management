@@ -3,7 +3,7 @@ package com.coursemanagement.unit.service;
 import com.coursemanagement.config.extension.UserProviderExtension;
 import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
@@ -12,15 +12,7 @@ import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EncryptionService;
 import com.coursemanagement.service.UserService;
 import com.coursemanagement.service.impl.ConfirmationTokenServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -28,21 +20,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -51,7 +34,8 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(value = MockitoExtension.class)
@@ -248,7 +232,7 @@ class ConfirmationTokenServiceImplTest {
     }
 
     private static Set<ConfirmationTokenEntity> generateTokenEntities(final TokenType tokenType) {
-        final LocalDateTime expirationDate = LocalDateTime.now(DEFAULT_ZONE_ID).plus(TEST_TOKEN_EXPIRATION_SECONDS, ChronoUnit.SECONDS);
+        final LocalDateTime expirationDate = LocalDateTime.now(DEFAULT_ZONE_ID).plusSeconds(TEST_TOKEN_EXPIRATION_SECONDS);
         final int randomTokenCount = new Random().nextInt(RANDOM_OLD_TOKEN_COUNT_LIMIT);
         return LongStream.rangeClosed(START_IDS_NUMBER, randomTokenCount)
                 .mapToObj(i -> {

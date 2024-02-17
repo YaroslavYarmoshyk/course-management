@@ -1,8 +1,8 @@
 package com.coursemanagement.util;
 
 import com.coursemanagement.enumeration.Role;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import org.junit.function.ThrowingRunnable;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;

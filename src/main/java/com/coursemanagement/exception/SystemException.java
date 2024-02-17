@@ -1,10 +1,10 @@
-package com.coursemanagement.exeption;
+package com.coursemanagement.exception;
 
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import lombok.Getter;
 
+@Getter
 public class SystemException extends RuntimeException {
-    @Getter
     private final SystemErrorCode errorCode;
 
     public SystemException(final String message, final SystemErrorCode errorCode) {

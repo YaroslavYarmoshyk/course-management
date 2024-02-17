@@ -1,7 +1,7 @@
 package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.FileType;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.File;
 import com.coursemanagement.repository.FileRepository;
 import com.coursemanagement.repository.entity.FileEntity;

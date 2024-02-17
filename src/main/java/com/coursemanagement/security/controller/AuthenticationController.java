@@ -33,7 +33,7 @@ public class AuthenticationController {
         return authenticationService.authenticate(authenticationRequest);
     }
 
-    @GetMapping(value = EMAIL_CONFIRMATION_ENDPOINT)
+    @GetMapping(value = "/confirm-email")
     public User confirmEmail(@RequestParam(value = TOKEN_CONFIRMATION_ENDPOINT_PARAMETER) final String token) {
         return confirmationTokenService.confirmUserByEmailToken(token);
     }

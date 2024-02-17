@@ -1,7 +1,7 @@
 package com.coursemanagement.util;
 
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import jakarta.mail.Multipart;
 import jakarta.mail.Part;

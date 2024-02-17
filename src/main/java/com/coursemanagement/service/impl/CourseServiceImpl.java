@@ -1,8 +1,8 @@
 package com.coursemanagement.service.impl;
 
 import com.coursemanagement.enumeration.UserCourseStatus;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.model.User;

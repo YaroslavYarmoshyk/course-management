@@ -4,7 +4,7 @@ import com.coursemanagement.config.annotation.IntegrationTest;
 import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.enumeration.UserStatus;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.security.model.AuthenticationRequest;

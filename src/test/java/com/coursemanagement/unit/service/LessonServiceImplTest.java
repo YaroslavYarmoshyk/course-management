@@ -1,7 +1,7 @@
 package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.Mark;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.Course;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.LessonContent;

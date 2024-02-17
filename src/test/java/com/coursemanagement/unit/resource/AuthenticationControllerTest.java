@@ -1,8 +1,8 @@
 package com.coursemanagement.unit.resource;
 
 import com.coursemanagement.config.annotation.EnableSecurityConfiguration;
-import com.coursemanagement.exeption.SystemException;
-import com.coursemanagement.exeption.enumeration.SystemErrorCode;
+import com.coursemanagement.exception.SystemException;
+import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.User;
 import com.coursemanagement.security.controller.AuthenticationController;
 import com.coursemanagement.security.model.AuthenticationRequest;
@@ -36,6 +36,7 @@ import static com.coursemanagement.util.ResponseBodyMatcherUtils.responseBody;
 import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.getAuthenticationRequest;
 import static org.instancio.Select.field;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.Mockito.when;
@@ -115,7 +116,7 @@ class AuthenticationControllerTest {
 
             makeMockMvcRequest(mockMvc, POST, LOGIN_ENDPOINT, AUTHENTICATION_REQUEST)
                     .andExpect(status().isForbidden())
-                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadCredentialsException));
+                    .andExpect(result -> assertInstanceOf(BadCredentialsException.class, result.getResolvedException()));
         }
     }
 

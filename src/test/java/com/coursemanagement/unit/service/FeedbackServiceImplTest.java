@@ -1,7 +1,7 @@
 package com.coursemanagement.unit.service;
 
 import com.coursemanagement.enumeration.Role;
-import com.coursemanagement.exeption.SystemException;
+import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.model.User;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.repository.CourseFeedbackRepository;

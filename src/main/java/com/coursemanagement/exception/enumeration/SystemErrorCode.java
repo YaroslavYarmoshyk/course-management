@@ -1,8 +1,9 @@
-package com.coursemanagement.exeption.enumeration;
+package com.coursemanagement.exception.enumeration;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum SystemErrorCode {
     BAD_REQUEST(400, "Bad Request"),
@@ -11,8 +12,6 @@ public enum SystemErrorCode {
     NOT_FOUND(404, "Not found"),
     INTERNAL_SERVER_ERROR(500, "Internal server error");
 
-    @Getter
     private final int value;
-    @Getter
     private final String description;
 }

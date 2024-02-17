@@ -14,12 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,10 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userEntity -> mapper.map(userEntity, User.class))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparingLong(User::getId))
+                .toList();
     }
 
     @Override
@@ -65,7 +62,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User save(final User user) {
         final UserEntity userEntity = mapper.map(user, UserEntity.class);
         final Set<RoleEntity> roleEntities = Optional.ofNullable(user.getRoles())

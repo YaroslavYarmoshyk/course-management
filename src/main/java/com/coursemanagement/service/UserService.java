@@ -2,7 +2,7 @@ package com.coursemanagement.service;
 
 import com.coursemanagement.model.User;
 
-import java.util.Set;
+import java.util.List;
 
 public interface UserService {
 
@@ -12,7 +12,7 @@ public interface UserService {
 
     User getUserById(final Long userId);
 
-    Set<User> getAllUsers();
+    List<User> getAllUsers();
 
     User activateById(final Long userId);
 

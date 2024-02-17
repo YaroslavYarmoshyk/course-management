@@ -7,20 +7,12 @@ import com.coursemanagement.rest.dto.RoleAssignmentDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
-import com.coursemanagement.service.CourseService;
-import com.coursemanagement.service.LessonService;
-import com.coursemanagement.service.RoleManagementService;
-import com.coursemanagement.service.UserCourseService;
-import com.coursemanagement.service.UserService;
+import com.coursemanagement.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 import static com.coursemanagement.util.Constants.ADMIN_RESOURCE_ENDPOINT;
@@ -42,7 +34,7 @@ public class AdminResource {
     }
 
     @GetMapping("/users")
-    public Set<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 

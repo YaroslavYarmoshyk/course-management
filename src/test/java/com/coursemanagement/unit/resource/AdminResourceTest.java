@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -90,7 +91,7 @@ class AdminResourceTest {
     @DisplayName("Test admins all users endpoint")
     Stream<DynamicTest> testAdminAllUsersEndpoint() {
         final String allUsersEndpoint = ADMIN_RESOURCE_ENDPOINT + "/users";
-        final Set<User> users = Instancio.ofSet(USER_TEST_MODEL).create();
+        final List<User> users = Instancio.ofList(USER_TEST_MODEL).create();
         return Stream.of(
                 dynamicTest("Test unauthorized access to admins endpoint",
                         () -> assertUnauthorizedAccess(mockMvc, GET, allUsersEndpoint, Role.ADMIN)),

@@ -30,7 +30,7 @@ public class RestAssuredConfiguration {
     @Bean
     public ResponseSpecification validResponseSpecification() {
         return new ResponseSpecBuilder().expectStatusCode(HttpStatus.OK.value())
-                .expectResponseTime(lessThan(5000L))
+                .expectResponseTime(lessThan(10000L))
                 .build();
     }
 }

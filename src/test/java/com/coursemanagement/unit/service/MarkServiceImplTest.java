@@ -9,16 +9,9 @@ import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
 import com.coursemanagement.service.impl.MarkServiceImpl;
 import org.instancio.Instancio;
-import org.instancio.InstancioOfClassApi;
 import org.instancio.junit.InstancioExtension;
 import org.instancio.junit.Seed;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -88,7 +81,7 @@ class MarkServiceImplTest {
         final Long studentId = lessonMarkEntity.getStudent().getId();
         final Long lessonId = lessonMarkEntity.getLesson().getId();
         final Mark mark = lessonMarkEntity.getMark();
-        final var requestDto = new MarkAssignmentRequestDto(instructorId, studentId, lessonId, mark);
+        final var requestDto = new MarkAssignmentRequestDto(instructorId, studentId, lessonId, mark.getValue().intValue());
 
         when(lessonMarkRepository.save(argThat(entity -> {
             assertEquals(instructorId, entity.getInstructor().getId());
@@ -103,7 +96,7 @@ class MarkServiceImplTest {
         assertEquals(instructorId, responseDto.instructor().id());
         assertEquals(studentId, responseDto.student().id());
         assertEquals(lessonId, responseDto.lesson().id());
-        assertEquals(requestDto.mark(), responseDto.mark());
+        assertEquals(Mark.of(requestDto.mark()), responseDto.mark());
     }
 
     void testGetAverageLessonMarks(final Long studentId,

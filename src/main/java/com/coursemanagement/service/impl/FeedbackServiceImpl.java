@@ -16,7 +16,6 @@ import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -36,7 +35,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final ModelMapper mapper;
 
     @Override
-    @Transactional
     public FeedbackResponseDto provideFeedbackToUserCourse(final FeedbackRequestDto feedbackRequestDto) {
         final User instructor = userService.getUserById(feedbackRequestDto.instructorId());
         final User student = userService.getUserById(feedbackRequestDto.studentId());

@@ -6,40 +6,16 @@ import com.coursemanagement.enumeration.Role;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.exception.enumeration.SystemErrorCode;
-import com.coursemanagement.model.Course;
-import com.coursemanagement.model.CourseMark;
-import com.coursemanagement.model.Lesson;
-import com.coursemanagement.model.User;
-import com.coursemanagement.model.UserCourse;
-import com.coursemanagement.rest.dto.CourseCompletionRequestDto;
-import com.coursemanagement.rest.dto.CourseFeedbackDto;
-import com.coursemanagement.rest.dto.InstructorAssignmentRequestDto;
-import com.coursemanagement.rest.dto.InstructorAssignmentResponseDto;
-import com.coursemanagement.rest.dto.StudentEnrollInCourseRequestDto;
-import com.coursemanagement.rest.dto.StudentEnrollInCourseResponseDto;
-import com.coursemanagement.rest.dto.UserCourseDetailsDto;
-import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
-import com.coursemanagement.service.CourseManagementService;
-import com.coursemanagement.service.CourseService;
-import com.coursemanagement.service.FeedbackService;
-import com.coursemanagement.service.LessonService;
-import com.coursemanagement.service.MarkService;
-import com.coursemanagement.service.UserAssociationService;
-import com.coursemanagement.service.UserCourseService;
-import com.coursemanagement.service.UserService;
+import com.coursemanagement.model.*;
+import com.coursemanagement.rest.dto.*;
+import com.coursemanagement.service.*;
 import com.coursemanagement.util.AuthorizationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.AbstractMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.coursemanagement.util.Constants.*;
@@ -59,7 +35,6 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
 
     @Override
-    @Transactional
     public InstructorAssignmentResponseDto assignInstructorToCourse(final InstructorAssignmentRequestDto instructorAssignmentRequestDto) {
         final Long instructorId = instructorAssignmentRequestDto.instructorId();
         final Long courseCode = instructorAssignmentRequestDto.courseCode();
@@ -97,7 +72,6 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
     @Override
-    @Transactional
     public StudentEnrollInCourseResponseDto enrollStudentInCourses(final StudentEnrollInCourseRequestDto studentEnrollInCourseRequestDto) {
         final Long studentId = studentEnrollInCourseRequestDto.studentId();
         final User student = userService.getUserById(studentId);

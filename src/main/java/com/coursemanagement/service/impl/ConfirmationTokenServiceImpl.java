@@ -50,7 +50,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    @Transactional
     public ConfirmationToken createEmailConfirmationToken(final User user) {
         return saveConfirmationToken(user, TokenType.EMAIL_CONFIRMATION, emailTokenExpirationTime, ChronoUnit.HOURS);
     }

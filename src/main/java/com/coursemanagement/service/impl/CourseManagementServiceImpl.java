@@ -103,10 +103,8 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         final User student = userService.getUserById(studentId);
         validateStudentEnrollment(student);
 
-        final Set<UserCourse> alreadyTakenUserCourses = userCourseService.getUserCoursesByUserId(studentId).stream()
+        final Set<Long> alreadyTakenCourseCodes = userCourseService.getUserCoursesByUserId(studentId).stream()
                 .filter(userCourse -> Objects.equals(userCourse.getStatus(), UserCourseStatus.STARTED))
-                .collect(Collectors.toSet());
-        final Set<Long> alreadyTakenCourseCodes = alreadyTakenUserCourses.stream()
                 .map(UserCourse::getCourse)
                 .map(Course::getCode)
                 .collect(Collectors.toSet());

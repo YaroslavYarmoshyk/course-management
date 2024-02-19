@@ -8,6 +8,7 @@ import com.coursemanagement.model.ConfirmationToken;
 import com.coursemanagement.model.User;
 import com.coursemanagement.repository.ConfirmationTokenRepository;
 import com.coursemanagement.repository.entity.ConfirmationTokenEntity;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.ConfirmationTokenService;
 import com.coursemanagement.service.EncryptionService;
 import com.coursemanagement.service.UserService;
@@ -78,11 +79,11 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     @Override
     @Transactional
-    public User confirmUserByEmailToken(final String token) {
+    public UserDto confirmUserByEmailToken(final String token) {
         final String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
         final ConfirmationToken confirmationToken = confirmToken(encodedToken, TokenType.EMAIL_CONFIRMATION);
         final Long userId = confirmationToken.getUserId();
-        return userService.activateById(userId);
+        return new UserDto(userService.activateById(userId));
     }
 
     private void invalidateToken(final ConfirmationToken token) {

@@ -74,6 +74,6 @@ public class UserCourseServiceImpl implements UserCourseService {
         final UserCourse userCourse = getUserCourse(userId, courseCode);
         final CourseMark courseMark = markService.getStudentCourseMark(userId, courseCode);
         final Set<CourseFeedbackDto> feedback = feedbackService.getTotalCourseFeedback(userId, courseCode);
-        return new UserCourseDetailsDto(userCourse, courseMark, feedback);
+        return UserCourseDetailsDto.of(userCourse, courseMark, feedback);
     }
 }

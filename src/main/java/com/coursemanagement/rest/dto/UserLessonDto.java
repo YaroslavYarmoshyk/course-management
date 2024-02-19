@@ -4,10 +4,12 @@ import com.coursemanagement.enumeration.Mark;
 import com.coursemanagement.model.Lesson;
 import com.coursemanagement.model.LessonContent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserLessonDto(
         Long lessonId,
         String title,

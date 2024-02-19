@@ -1,182 +1,54 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
   "type": "array",
-  "items": [
-    {
-      "type": "object",
-      "properties": {
-        "lessonId": {
-          "type": "integer"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "lessonContent": {
-          "type": "array",
-          "items": [
-            {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer"
-                },
-                "lessonPart": {
-                  "type": "string"
-                },
-                "fileId": {
-                  "type": "integer"
-                }
-              },
-              "required": [
-                "id",
-                "lessonPart",
-                "fileId"
-              ]
+  "items": {
+    "type": "object",
+    "properties": {
+      "lessonId": {
+        "type": "number"
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "lessonContent": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "lessonPart": {
+              "type": "string"
+            },
+            "fileId": {
+              "type": "number"
             }
+          },
+          "required": [
+            "id",
+            "lessonPart",
+            "fileId"
           ]
-        },
-        "markValue": {
-          "type": "number"
-        },
-        "mark": {
-          "type": "string"
         }
       },
-      "required": [
-        "lessonId",
-        "title",
-        "description",
-        "lessonContent",
-        "markValue",
-        "mark"
-      ]
+      "markValue": {
+        "type": "number"
+      },
+      "mark": {
+        "type": "string"
+      }
     },
-    {
-      "type": "object",
-      "properties": {
-        "lessonId": {
-          "type": "integer"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "lessonContent": {
-          "type": "null"
-        },
-        "markValue": {
-          "type": "number"
-        },
-        "mark": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "lessonId",
-        "title",
-        "description",
-        "lessonContent",
-        "markValue",
-        "mark"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "lessonId": {
-          "type": "integer"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "lessonContent": {
-          "type": "null"
-        },
-        "markValue": {
-          "type": "number"
-        },
-        "mark": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "lessonId",
-        "title",
-        "description",
-        "lessonContent",
-        "markValue",
-        "mark"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "lessonId": {
-          "type": "integer"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "lessonContent": {
-          "type": "null"
-        },
-        "markValue": {
-          "type": "number"
-        },
-        "mark": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "lessonId",
-        "title",
-        "description",
-        "lessonContent",
-        "markValue",
-        "mark"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "lessonId": {
-          "type": "integer"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "lessonContent": {
-          "type": "null"
-        },
-        "markValue": {
-          "type": "number"
-        },
-        "mark": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "lessonId",
-        "title",
-        "description",
-        "lessonContent",
-        "markValue",
-        "mark"
-      ]
-    }
-  ]
+    "required": [
+      "lessonId",
+      "title",
+      "description",
+      "markValue",
+      "mark"
+    ]
+  }
 }

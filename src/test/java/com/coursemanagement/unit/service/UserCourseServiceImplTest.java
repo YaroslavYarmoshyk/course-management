@@ -11,6 +11,7 @@ import com.coursemanagement.repository.entity.CourseEntity;
 import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseFeedbackDto;
+import com.coursemanagement.rest.dto.MarkInfoDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
 import com.coursemanagement.rest.dto.UserInfoDto;
@@ -188,12 +189,12 @@ class UserCourseServiceImplTest {
         when(feedbackService.getTotalCourseFeedback(userId, courseCode)).thenReturn(feedback);
 
         final UserCourseDetailsDto userCourseDetails = userCourseService.getUserCourseDetails(userId, courseCode);
-
+        final MarkInfoDto expectedMarkInfo = new MarkInfoDto(courseMark.getLessonMarks(), courseMark.getMarkValue(), courseMark.getMark());
         assertEquals(courseCode, userCourseDetails.courseCode());
         assertEquals(courseEntity.getSubject(), userCourseDetails.subject());
         assertEquals(courseEntity.getDescription(), userCourseDetails.description());
         assertEquals(userCourseEntity.getStatus(), userCourseDetails.status());
-        assertEquals(courseMark, userCourseDetails.courseMark());
+        assertEquals(expectedMarkInfo, userCourseDetails.markInfo());
         assertEquals(feedback, userCourseDetails.courseFeedback());
     }
 

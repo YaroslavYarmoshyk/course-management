@@ -139,7 +139,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         studentCourse.setAccomplishmentDate(LocalDateTime.now(DEFAULT_ZONE_ID));
         final UserCourse completedStudentCourse = userCourseService.saveUserCourse(studentCourse);
         final Set<CourseFeedbackDto> feedback = feedbackService.getTotalCourseFeedback(studentId, courseCode);
-        return new UserCourseDetailsDto(completedStudentCourse, courseMark, feedback);
+        return UserCourseDetailsDto.of(completedStudentCourse, courseMark, feedback);
     }
 
     private void validateStudentCourseCompletion(final Set<Lesson> lessonsPerCourse,

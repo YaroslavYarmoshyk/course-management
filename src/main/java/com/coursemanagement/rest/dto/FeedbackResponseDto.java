@@ -9,8 +9,8 @@ import static com.coursemanagement.util.DateTimeUtils.DEFAULT_DATE_FORMAT_PATTER
 
 @Builder(setterPrefix = "with")
 public record FeedbackResponseDto(
-        UserDto student,
-        UserDto instructor,
+        UserInfoDto student,
+        UserInfoDto instructor,
         Long courseCode,
         String feedback,
         @JsonFormat(pattern = DEFAULT_DATE_FORMAT_PATTERN)

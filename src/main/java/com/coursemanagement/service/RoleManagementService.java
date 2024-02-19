@@ -1,9 +1,9 @@
 package com.coursemanagement.service;
 
-import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
+import com.coursemanagement.rest.dto.UserDto;
 
 public interface RoleManagementService {
 
-    User assignRoleToUser(final RoleAssignmentDto roleAssignmentDto);
+    UserDto assignRoleToUser(final RoleAssignmentDto roleAssignmentDto);
 }

@@ -2,15 +2,24 @@ package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.AdminAccessLevel;
 import com.coursemanagement.model.CourseMark;
-import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
-import com.coursemanagement.service.*;
+import com.coursemanagement.service.CourseService;
+import com.coursemanagement.service.LessonService;
+import com.coursemanagement.service.RoleManagementService;
+import com.coursemanagement.service.UserCourseService;
+import com.coursemanagement.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
@@ -29,18 +38,18 @@ public class AdminResource {
     private final LessonService lessonService;
 
     @PostMapping(value = "/assign-role")
-    public User assignRoleToUser(@Valid @RequestBody final RoleAssignmentDto roleAssignmentDto) {
+    public UserDto assignRoleToUser(@Valid @RequestBody final RoleAssignmentDto roleAssignmentDto) {
         return roleManagementService.assignRoleToUser(roleAssignmentDto);
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/users/{user-id}")
-    public User getUserById(@PathVariable(value = "user-id") final Long userId) {
-        return userService.getUserById(userId);
+    public UserDto getUserById(@PathVariable(value = "user-id") final Long userId) {
+        return new UserDto(userService.getUserById(userId));
     }
 
     @GetMapping("/users/{user-id}/courses")

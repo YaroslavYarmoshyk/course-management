@@ -8,6 +8,7 @@ import com.coursemanagement.rest.AdminResource;
 import com.coursemanagement.rest.dto.RoleAssignmentDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
@@ -71,7 +72,7 @@ class AdminResourceTest {
                         () -> assertUnauthorizedAccess(mockMvc, POST, assignRoleEndpoint, roleAssignmentDto, Role.ADMIN)),
                 dynamicTest("Test valid role assigment request",
                         () -> {
-                            when(roleManagementService.assignRoleToUser(roleAssignmentDto)).thenReturn(FIRST_STUDENT);
+                            when(roleManagementService.assignRoleToUser(roleAssignmentDto)).thenReturn(new UserDto(FIRST_STUDENT));
                             makeMockMvcRequest(mockMvc, POST, assignRoleEndpoint, roleAssignmentDto, ADMIN)
                                     .andExpect(responseBody().containsObjectAsJson(FIRST_STUDENT, User.class));
                         }),
@@ -91,7 +92,9 @@ class AdminResourceTest {
     @DisplayName("Test admins all users endpoint")
     Stream<DynamicTest> testAdminAllUsersEndpoint() {
         final String allUsersEndpoint = ADMIN_RESOURCE_ENDPOINT + "/users";
-        final List<User> users = Instancio.ofList(USER_TEST_MODEL).create();
+        final List<UserDto> users = Instancio.ofList(USER_TEST_MODEL).create().stream()
+                .map(UserDto::new)
+                .toList();
         return Stream.of(
                 dynamicTest("Test unauthorized access to admins endpoint",
                         () -> assertUnauthorizedAccess(mockMvc, GET, allUsersEndpoint, Role.ADMIN)),
@@ -99,7 +102,7 @@ class AdminResourceTest {
                         () -> {
                             when(userService.getAllUsers()).thenReturn(users);
                             makeMockMvcRequest(mockMvc, GET, allUsersEndpoint, ADMIN)
-                                    .andExpect(responseBody().containsObjectsAsJson(users, User.class));
+                                    .andExpect(responseBody().containsObjectsAsJson(users, UserDto.class));
                         }),
                 dynamicTest("Test exception deserialization", () -> assertExceptionDeserialization(
                                 mockMvc,

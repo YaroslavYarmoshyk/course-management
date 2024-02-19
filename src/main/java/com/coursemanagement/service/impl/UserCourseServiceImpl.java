@@ -9,7 +9,7 @@ import com.coursemanagement.repository.entity.UserCourseEntity;
 import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.UserCourseService;
@@ -61,11 +61,11 @@ public class UserCourseServiceImpl implements UserCourseService {
     }
 
     @Override
-    public List<UserDto> getStudentsByCourseCode(final Long courseCode) {
+    public List<UserInfoDto> getStudentsByCourseCode(final Long courseCode) {
         return userCourseRepository.findStudentsByCourseCode(courseCode).stream()
                 .map(UserCourseEntity::getUser)
-                .map(UserDto::new)
-                .sorted(Comparator.comparingLong(UserDto::id))
+                .map(UserInfoDto::new)
+                .sorted(Comparator.comparingLong(UserInfoDto::id))
                 .toList();
     }
 

@@ -44,7 +44,7 @@ public class CourseManagementServiceImpl implements CourseManagementService {
         courseService.addUserToCourses(potentialInstructor, Set.of(courseCode));
 
         final Course course = courseService.getCourseByCode(courseCode);
-        final Map<Role, Set<UserDto>> usersByRole = getGroupedUsersByRole(course);
+        final Map<Role, Set<UserInfoDto>> usersByRole = getGroupedUsersByRole(course);
         return new InstructorAssignmentResponseDto(
                 course.getCode(),
                 course.getSubject(),
@@ -60,10 +60,10 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     }
 
 
-    private Map<Role, Set<UserDto>> getGroupedUsersByRole(final Course course) {
+    private Map<Role, Set<UserInfoDto>> getGroupedUsersByRole(final Course course) {
         return course.getUsers().stream()
                 .flatMap(user -> user.getRoles().stream().map(
-                        role -> new AbstractMap.SimpleEntry<>(role, new UserDto(user)))
+                        role -> new AbstractMap.SimpleEntry<>(role, new UserInfoDto(user)))
                 )
                 .collect(
                         Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,

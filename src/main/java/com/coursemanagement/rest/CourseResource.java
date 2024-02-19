@@ -5,7 +5,7 @@ import com.coursemanagement.annotation.InstructorAccessLevel;
 import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
@@ -42,7 +42,7 @@ public class CourseResource {
 
     @InstructorAccessLevel
     @GetMapping(value = "/{course-code}/students")
-    public List<UserDto> getStudentsPerCourse(@PathVariable(value = "course-code") final Long courseCode) {
+    public List<UserInfoDto> getStudentsPerCourse(@PathVariable(value = "course-code") final Long courseCode) {
         return userCourseService.getStudentsByCourseCode(courseCode);
     }
 

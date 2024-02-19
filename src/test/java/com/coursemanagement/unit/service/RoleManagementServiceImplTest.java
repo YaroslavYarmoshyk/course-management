@@ -15,8 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
+import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static com.coursemanagement.util.TestDataUtils.NEW_USER;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +35,7 @@ class RoleManagementServiceImplTest {
         final ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
         when(userService.getUserById(NEW_USER.getId())).thenReturn(NEW_USER);
+        when(userService.save(any(User.class))).thenReturn(FIRST_STUDENT);
 
         roleManagementService.assignRoleToUser(new RoleAssignmentDto(NEW_USER.getId(), Set.of(Role.STUDENT)));
 

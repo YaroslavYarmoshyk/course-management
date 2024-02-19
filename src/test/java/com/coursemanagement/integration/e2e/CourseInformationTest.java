@@ -4,7 +4,7 @@ import com.coursemanagement.config.annotation.IntegrationTest;
 import com.coursemanagement.enumeration.UserCourseStatus;
 import com.coursemanagement.model.User;
 import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.UserService;
 import io.restassured.response.Response;
@@ -70,13 +70,13 @@ public class CourseInformationTest {
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
-    private void testStudentsPerCourseValidRequest(final Long courseCode, final Set<UserDto> expectedUsers) {
-        final List<UserDto> actualUsers = Arrays.stream(getStudentsPerCourseRequest(INSTRUCTOR, courseCode)
+    private void testStudentsPerCourseValidRequest(final Long courseCode, final Set<UserInfoDto> expectedUsers) {
+        final List<UserInfoDto> actualUsers = Arrays.stream(getStudentsPerCourseRequest(INSTRUCTOR, courseCode)
                 .then()
                 .spec(validResponseSpecification)
                 .body(matchesJsonSchemaInClasspath("schemas/studentsPerCourseResponseSchema.json"))
                 .extract()
-                .as(UserDto[].class)).toList();
+                .as(UserInfoDto[].class)).toList();
 
         assertTrue(CollectionUtils.isEqualCollection(expectedUsers, actualUsers));
     }
@@ -119,8 +119,8 @@ public class CourseInformationTest {
         );
     }
 
-    private Set<UserDto> getPhysicsCourseStudents() {
-        return Set.of(new UserDto(userService.getUserById(FIRST_STUDENT.getId())));
+    private Set<UserInfoDto> getPhysicsCourseStudents() {
+        return Set.of(new UserInfoDto(userService.getUserById(FIRST_STUDENT.getId())));
     }
 
 }

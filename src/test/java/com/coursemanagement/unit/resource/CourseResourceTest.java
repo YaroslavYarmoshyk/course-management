@@ -6,7 +6,7 @@ import com.coursemanagement.model.CourseMark;
 import com.coursemanagement.rest.CourseResource;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.rest.dto.UserLessonDto;
 import com.coursemanagement.service.CourseService;
 import com.coursemanagement.service.LessonService;
@@ -102,7 +102,7 @@ class CourseResourceTest {
     @DisplayName("Test students per course endpoint")
     Stream<DynamicTest> testStudentsPerCourseEndpoint() {
         final String studentsPerCourseEndpoint = String.format("%s%d%s", COURSES_ENDPOINT + "/", COURSE_CODE, "/students");
-        final List<UserDto> students = Instancio.ofList(UserDto.class).create();
+        final List<UserInfoDto> students = Instancio.ofList(UserInfoDto.class).create();
         return Stream.of(
                 dynamicTest("Test unauthorized access to endpoint",
                         () -> assertUnauthorizedAccess(mockMvc, GET, studentsPerCourseEndpoint, Role.INSTRUCTOR)),
@@ -110,7 +110,7 @@ class CourseResourceTest {
                         () -> {
                             when(userCourseService.getStudentsByCourseCode(COURSE_CODE)).thenReturn(students);
                             makeMockMvcRequest(mockMvc, GET, studentsPerCourseEndpoint, INSTRUCTOR)
-                                    .andExpect(responseBody().containsObjectsAsJson(students, UserDto.class));
+                                    .andExpect(responseBody().containsObjectsAsJson(students, UserInfoDto.class));
                         }),
                 dynamicTest("Test exception deserialization", () -> assertExceptionDeserialization(
                                 mockMvc,

@@ -1,7 +1,7 @@
 package com.coursemanagement.rest;
 
 import com.coursemanagement.annotation.CurrentUserId;
-import com.coursemanagement.model.User;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class UserResource {
     private final UserService userService;
 
     @GetMapping("/me")
-    public User getCurrentUser(@CurrentUserId final Long userId) {
-        return userService.getUserById(userId);
+    public UserDto getCurrentUser(@CurrentUserId final Long userId) {
+        return new UserDto(userService.getUserById(userId));
     }
 }

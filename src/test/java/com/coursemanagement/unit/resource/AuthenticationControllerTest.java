@@ -4,6 +4,7 @@ import com.coursemanagement.config.annotation.EnableSecurityConfiguration;
 import com.coursemanagement.exception.SystemException;
 import com.coursemanagement.exception.enumeration.SystemErrorCode;
 import com.coursemanagement.model.User;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.security.controller.AuthenticationController;
 import com.coursemanagement.security.model.AuthenticationRequest;
 import com.coursemanagement.security.model.AuthenticationResponse;
@@ -129,7 +130,7 @@ class AuthenticationControllerTest {
         @Test
         @DisplayName("Test email confirmation endpoint with valid confirmation token")
         void testEmailConfirmationEndpoint_TokenIsPresent() throws Exception {
-            when(confirmationTokenService.confirmUserByEmailToken(TEST_AUTHENTICATION_TOKEN)).thenReturn(FIRST_STUDENT);
+            when(confirmationTokenService.confirmUserByEmailToken(TEST_AUTHENTICATION_TOKEN)).thenReturn(new UserDto(FIRST_STUDENT));
 
             makeMockMvcRequest(mockMvc, GET, CONFIRMATION_ENDPOINT, Map.of("token", TEST_AUTHENTICATION_TOKEN))
                     .andExpect(status().isOk())
@@ -141,7 +142,7 @@ class AuthenticationControllerTest {
         @Test
         @DisplayName("Test email confirmation endpoint with invalid confirmation token")
         void testEmailConfirmationEndpoint_InvalidToken() throws Exception {
-            when(confirmationTokenService.confirmUserByEmailToken(TEST_AUTHENTICATION_TOKEN)).thenReturn(FIRST_STUDENT);
+            when(confirmationTokenService.confirmUserByEmailToken(TEST_AUTHENTICATION_TOKEN)).thenReturn(new UserDto(FIRST_STUDENT));
 
             makeMockMvcRequest(mockMvc, GET, CONFIRMATION_ENDPOINT, Map.of("token", TEST_AUTHENTICATION_TOKEN + "invalid"))
                     .andExpect(status().isOk())

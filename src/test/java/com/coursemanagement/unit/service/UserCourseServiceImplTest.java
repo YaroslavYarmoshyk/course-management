@@ -13,7 +13,7 @@ import com.coursemanagement.repository.entity.UserEntity;
 import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.MarkService;
 import com.coursemanagement.service.impl.UserCourseServiceImpl;
@@ -170,7 +170,7 @@ class UserCourseServiceImplTest {
         when(userCourseRepository.findStudentsByCourseCode(courseCode)).thenReturn(new ArrayList<>(studentCourseEntities));
 
         final Set<Long> foundStudentIds = userCourseService.getStudentsByCourseCode(courseCode).stream()
-                .map(UserDto::id)
+                .map(UserInfoDto::id)
                 .collect(Collectors.toSet());
 
         assertTrue(CollectionUtils.isEqualCollection(expectedStudentIds, foundStudentIds));

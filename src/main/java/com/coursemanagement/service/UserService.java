@@ -1,6 +1,7 @@
 package com.coursemanagement.service;
 
 import com.coursemanagement.model.User;
+import com.coursemanagement.rest.dto.UserDto;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface UserService {
 
     User getUserById(final Long userId);
 
-    List<User> getAllUsers();
+    List<UserDto> getAllUsers();
 
     User activateById(final Long userId);
 

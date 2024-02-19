@@ -9,7 +9,7 @@ import com.coursemanagement.repository.entity.LessonMarkEntity;
 import com.coursemanagement.rest.dto.LessonDto;
 import com.coursemanagement.rest.dto.MarkAssignmentRequestDto;
 import com.coursemanagement.rest.dto.MarkAssignmentResponseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -87,8 +87,8 @@ public class MarkAssignmentTest {
                 .extract()
                 .as(MarkAssignmentResponseDto.class);
 
-        final UserDto grader = new UserDto(getUserById(graderId));
-        final UserDto student = new UserDto(getUserById(studentId));
+        final UserInfoDto grader = new UserInfoDto(getUserById(graderId));
+        final UserInfoDto student = new UserInfoDto(getUserById(studentId));
         final LessonDto lessonDto = lessonRepository.findById(markAssigmentRequestDto.lessonId()).map(LessonDto::new).orElseThrow();
         final LocalDateTime markSubmissionDate = lessonMarkRepository.findAllByStudentIdAndLessonCourseCode(studentId, 22324L).stream()
                 .findFirst()

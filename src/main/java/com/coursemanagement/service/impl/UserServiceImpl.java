@@ -8,6 +8,7 @@ import com.coursemanagement.repository.RoleRepository;
 import com.coursemanagement.repository.UserRepository;
 import com.coursemanagement.repository.entity.RoleEntity;
 import com.coursemanagement.repository.entity.UserEntity;
+import com.coursemanagement.rest.dto.UserDto;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -47,10 +48,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(userEntity -> mapper.map(userEntity, User.class))
-                .sorted(Comparator.comparingLong(User::getId))
+                .map(UserDto::new)
+                .sorted(Comparator.comparingLong(UserDto::id))
                 .toList();
     }
 

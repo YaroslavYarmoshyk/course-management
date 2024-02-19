@@ -9,14 +9,13 @@ import com.coursemanagement.repository.entity.CourseFeedbackEntity;
 import com.coursemanagement.rest.dto.CourseFeedbackDto;
 import com.coursemanagement.rest.dto.FeedbackRequestDto;
 import com.coursemanagement.rest.dto.FeedbackResponseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 import com.coursemanagement.service.FeedbackService;
 import com.coursemanagement.service.UserAssociationService;
 import com.coursemanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -36,7 +35,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final ModelMapper mapper;
 
     @Override
-    @Transactional
     public FeedbackResponseDto provideFeedbackToUserCourse(final FeedbackRequestDto feedbackRequestDto) {
         final User instructor = userService.getUserById(feedbackRequestDto.instructorId());
         final User student = userService.getUserById(feedbackRequestDto.studentId());
@@ -56,8 +54,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         return FeedbackResponseDto.builder()
                 .withCourseCode(courseCode)
-                .withStudent(new UserDto(student))
-                .withInstructor(new UserDto(instructor))
+                .withStudent(new UserInfoDto(student))
+                .withInstructor(new UserInfoDto(instructor))
                 .withFeedback(savedEntity.getFeedback())
                 .withFeedbackSubmissionDate(savedEntity.getFeedbackSubmissionDate())
                 .build();

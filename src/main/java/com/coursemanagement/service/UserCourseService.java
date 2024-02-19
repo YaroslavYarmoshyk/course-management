@@ -3,7 +3,7 @@ package com.coursemanagement.service;
 import com.coursemanagement.model.UserCourse;
 import com.coursemanagement.rest.dto.UserCourseDetailsDto;
 import com.coursemanagement.rest.dto.UserCourseDto;
-import com.coursemanagement.rest.dto.UserDto;
+import com.coursemanagement.rest.dto.UserInfoDto;
 
 import java.util.List;
 import java.util.Set;
@@ -18,7 +18,7 @@ public interface UserCourseService {
 
     UserCourse saveUserCourse(final UserCourse userCourse);
 
-    List<UserDto> getStudentsByCourseCode(final Long courseCode);
+    List<UserInfoDto> getStudentsByCourseCode(final Long courseCode);
 
     UserCourseDetailsDto getUserCourseDetails(final Long userId, final Long courseCode);
 }

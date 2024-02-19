@@ -10,14 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -28,7 +25,11 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static com.coursemanagement.util.Constants.*;
+import static com.coursemanagement.util.Constants.AUTHENTICATION_ENDPOINT;
+import static com.coursemanagement.util.Constants.ERROR_ENDPOINT;
+import static com.coursemanagement.util.Constants.FAVICON;
+import static com.coursemanagement.util.Constants.RESET_PASSWORD_ENDPOINT;
+import static com.coursemanagement.util.Constants.ROLES_CLAIM;
 
 @Configuration
 @EnableMethodSecurity
@@ -36,7 +37,6 @@ import static com.coursemanagement.util.Constants.*;
 public class SecurityConfiguration {
     private final ApplicationAccessDeniedHandler accessDeniedHandler;
     private final ApplicationAuthenticationEntryPoint authenticationEntryPoint;
-    private final UserDetailsService userDetailsService;
     private final RSAKeyProperties keys;
 
     @Bean
@@ -60,14 +60,6 @@ public class SecurityConfiguration {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        return authenticationProvider;
     }
 
     @Bean

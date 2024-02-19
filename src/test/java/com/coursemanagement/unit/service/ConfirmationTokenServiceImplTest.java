@@ -1,6 +1,5 @@
 package com.coursemanagement.unit.service;
 
-import com.coursemanagement.config.extension.UserProviderExtension;
 import com.coursemanagement.enumeration.TokenStatus;
 import com.coursemanagement.enumeration.TokenType;
 import com.coursemanagement.exception.SystemException;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -50,6 +48,7 @@ import java.util.stream.Stream;
 
 import static com.coursemanagement.util.AssertionsUtils.assertThrowsWithMessage;
 import static com.coursemanagement.util.DateTimeUtils.DEFAULT_ZONE_ID;
+import static com.coursemanagement.util.TestDataUtils.FIRST_STUDENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
@@ -74,8 +73,6 @@ class ConfirmationTokenServiceImplTest {
     @Spy
     private ModelMapper mapper;
 
-    @RegisterExtension
-    private static final UserProviderExtension USER_PROVIDER = new UserProviderExtension();
     @Captor
     private ArgumentCaptor<Set<ConfirmationTokenEntity>> tokenEntitiesCaptor;
 
@@ -85,7 +82,6 @@ class ConfirmationTokenServiceImplTest {
     private static final Long START_IDS_NUMBER = 1L;
     private static final int RANDOM_OLD_TOKEN_COUNT_LIMIT = 5;
     private static final String TOKEN_VALUE = UUID.randomUUID().toString();
-    private static final User STUDENT = USER_PROVIDER.getStudent();
 
     @BeforeEach
     void setUp() {
@@ -125,8 +121,8 @@ class ConfirmationTokenServiceImplTest {
 
         private static Stream<Arguments> provideTokenTypesAndServiceMethods() {
             return Stream.of(
-                    Arguments.of(TokenType.EMAIL_CONFIRMATION, (Consumer<ConfirmationTokenService>) service -> service.createEmailConfirmationToken(STUDENT)),
-                    Arguments.of(TokenType.RESET_PASSWORD, (Consumer<ConfirmationTokenService>) service -> service.createResetPasswordToken(STUDENT))
+                    Arguments.of(TokenType.EMAIL_CONFIRMATION, (Consumer<ConfirmationTokenService>) service -> service.createEmailConfirmationToken(FIRST_STUDENT)),
+                    Arguments.of(TokenType.RESET_PASSWORD, (Consumer<ConfirmationTokenService>) service -> service.createResetPasswordToken(FIRST_STUDENT))
             );
         }
     }

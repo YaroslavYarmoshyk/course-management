@@ -1,0 +1,31 @@
+<div>POST to http://localhost:44267/api/v1/course-management/provide-feedback</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;instructorId&quot;: 2,
+    &quot;studentId&quot;: 3,
+    &quot;courseCode&quot;: 34432,
+    &quot;feedback&quot;: &quot;Good Job!&quot;
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoicG9wcGluc0B5YWhvby5jb20iLCJleHAiOjE3MDg0NjUyNTksImlhdCI6MTcwODM3ODg1OSwicm9sZXMiOiJJTlNUUlVDVE9SIn0.LiUV-FYA-k5ngU9PUYtwOVzhOyT0go5fWIct734dEaK978D_vjRTLNMNGso4iuZDHwxO7GDiEsBDvyteJbJDfZIroDoTFp1OW98hfUdHVuWCP-N-7qVzd3XKX0CnAi1X4Qp38cjBWpBC9SC7BqXRG3-puNj99QeL2FLeXvQqyR3eodrPb45DZKcAA-sgxRvIxqDjKWFAZejHBx8B4cc1yWIvEYTp8qSego8RBB0-w0aIaGoxPaAfvczt9Rxxfn12nhh-eKe6xxvdsq03QLURvxrfhGbfyCC8cvMNsTroIvz1IZ1mhZVxWQAYMxVRjT6G5FUbYfHfT4U0V__R9zMW7A</div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:44267/api/v1/course-management/provide-feedback&#39; -H &#39;Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoicG9wcGluc0B5YWhvby5jb20iLCJleHAiOjE3MDg0NjUyNTksImlhdCI6MTcwODM3ODg1OSwicm9sZXMiOiJJTlNUUlVDVE9SIn0.LiUV-FYA-k5ngU9PUYtwOVzhOyT0go5fWIct734dEaK978D_vjRTLNMNGso4iuZDHwxO7GDiEsBDvyteJbJDfZIroDoTFp1OW98hfUdHVuWCP-N-7qVzd3XKX0CnAi1X4Qp38cjBWpBC9SC7BqXRG3-puNj99QeL2FLeXvQqyR3eodrPb45DZKcAA-sgxRvIxqDjKWFAZejHBx8B4cc1yWIvEYTp8qSego8RBB0-w0aIaGoxPaAfvczt9Rxxfn12nhh-eKe6xxvdsq03QLURvxrfhGbfyCC8cvMNsTroIvz1IZ1mhZVxWQAYMxVRjT6G5FUbYfHfT4U0V__R9zMW7A&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;instructorId&quot;: 2,
+    &quot;studentId&quot;: 3,
+    &quot;courseCode&quot;: 34432,
+    &quot;feedback&quot;: &quot;Good Job!&quot;
+}&#39;
+</div>

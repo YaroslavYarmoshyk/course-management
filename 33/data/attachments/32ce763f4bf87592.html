@@ -1,0 +1,31 @@
+<div>POST to http://localhost:36639/api/v1/admin/assign-role</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+{
+    &quot;userId&quot;: 2,
+    &quot;roles&quot;: [
+        &quot;STUDENT&quot;
+    ]
+}    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiam9obi1zbWl0aEBnbWFpbC5jb20iLCJleHAiOjE3MDg0OTYyMTYsImlhdCI6MTcwODQwOTgxNiwicm9sZXMiOiJBRE1JTiBTVFVERU5UIn0.yP815LFZdWuPqwU5TbGUAwlGhIlTu-Wu8_3jiW8wwQG9K8amEyQ3-VQ_A4ANBbt1zOR7p3mBxotK92QirBn3-DjS-1e6Zsb3tYAo5KJNnjoEASzyN1XYB0i_YEB2Nkhg5TsCUJQi2Wpb8PEYZyoH7my39o9DS_27ZZxW-SH2mmYyALQX924S4EGhV14tbXrey37i1nhlm5Qmsr6XO1YwQujQnJrJxKwipejsZq_c_kOBM-Xq8JgpZ6dgvlSS6WVjP3F12--clJUQetVozQ0t7zEI3zMajYvcuKcwxeom8YISak2kelMLf0yvSJtB7YcuFUtfs_fM5zsco4lwd6FZWw</div>
+        <div>Accept: */*</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X POST &#39;http://localhost:36639/api/v1/admin/assign-role&#39; -H &#39;Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiam9obi1zbWl0aEBnbWFpbC5jb20iLCJleHAiOjE3MDg0OTYyMTYsImlhdCI6MTcwODQwOTgxNiwicm9sZXMiOiJBRE1JTiBTVFVERU5UIn0.yP815LFZdWuPqwU5TbGUAwlGhIlTu-Wu8_3jiW8wwQG9K8amEyQ3-VQ_A4ANBbt1zOR7p3mBxotK92QirBn3-DjS-1e6Zsb3tYAo5KJNnjoEASzyN1XYB0i_YEB2Nkhg5TsCUJQi2Wpb8PEYZyoH7my39o9DS_27ZZxW-SH2mmYyALQX924S4EGhV14tbXrey37i1nhlm5Qmsr6XO1YwQujQnJrJxKwipejsZq_c_kOBM-Xq8JgpZ6dgvlSS6WVjP3F12--clJUQetVozQ0t7zEI3zMajYvcuKcwxeom8YISak2kelMLf0yvSJtB7YcuFUtfs_fM5zsco4lwd6FZWw&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;userId&quot;: 2,
+    &quot;roles&quot;: [
+        &quot;STUDENT&quot;
+    ]
+}&#39;
+</div>

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HomeworkRepository extends JpaRepository<HomeworkEntity, Long> {
+
+    HomeworkEntity findByStudentIdAndLessonId(final Long studentId, final Long lessonId);
 }

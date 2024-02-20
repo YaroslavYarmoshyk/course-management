@@ -1,15 +1,18 @@
 package com.coursemanagement.enumeration;
 
 import com.coursemanagement.enumeration.converter.DatabaseEnum;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
+@Getter
 @RequiredArgsConstructor
 public enum FileType implements DatabaseEnum {
-    TEXT(1), IMAGE(2), AUDIO(3), VIDEO(4);
+    TEXT(1, "txt"), IMAGE(2, "png"), AUDIO(3, "mp3"), VIDEO(4, "mp4");
 
     private final Integer dbAlias;
+    private final String extension;
 
     @Override
     public Integer toDbValue() {

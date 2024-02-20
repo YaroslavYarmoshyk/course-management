@@ -53,6 +53,13 @@ public class HomeworkServiceImpl implements HomeworkService {
         return fileService.getFileById(fileId);
     }
 
+    @Override
+    public File downloadStudentSolution(final Long studentId, final Long lessonId) {
+        final HomeworkEntity homework = homeworkRepository.findByStudentIdAndLessonId(studentId, lessonId);
+        final Long fileId = homework.getFileId();
+        return fileService.getFileById(fileId);
+    }
+
     private void validateHomeworkDownloading(final Long studentId, final Long fileId) {
         if (!userAssociationService.isUserAssociatedWithLessonFile(studentId, fileId)) {
             throw new SystemException("Access to the homework downloading is limited to associated lesson only", SystemErrorCode.FORBIDDEN);

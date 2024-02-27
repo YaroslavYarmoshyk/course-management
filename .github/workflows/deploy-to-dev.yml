@@ -113,31 +113,31 @@ jobs:
       - name: Push image to Docker Hub
         run: docker push ${{ env.REGISTRY_URL }}/yaroslavyarmoshyk/course-management:${{ env.COMMIT }}
 
-  deploy-to-aws:
-    needs: push-to-dockerhub
-    runs-on: ubuntu-latest
-    environment: dev
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Get code
-        uses: actions/checkout@v4
-      - uses: azure/setup-kubectl@v3
-        with:
-          version: 'v1.29.1'
-        id: install
-      - name: Configure AWS Credentials 1
-        id: creds
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::992382731666:role/GitHubOidcRole
-          aws-region: eu-west-2
-          output-credentials: true
-      - name: Update kube config
-        run: |
-          aws eks update-kubeconfig --region eu-west-2 --name cm-kubernetes
-      - name: Render k8s manifests
-        run: envsubst < k8s/cm-deployment.yaml > deployment.yml
-      - name: Deploy to EKS
-        run: kubectl apply -f deployment.yml
+#  deploy-to-aws:
+#    needs: push-to-dockerhub
+#    runs-on: ubuntu-latest
+#    environment: dev
+#    permissions:
+#      id-token: write
+#      contents: read
+#    steps:
+#      - name: Get code
+#        uses: actions/checkout@v4
+#      - uses: azure/setup-kubectl@v3
+#        with:
+#          version: 'v1.29.1'
+#        id: install
+#      - name: Configure AWS Credentials 1
+#        id: creds
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          role-to-assume: arn:aws:iam::992382731666:role/GitHubOidcRole
+#          aws-region: eu-west-2
+#          output-credentials: true
+#      - name: Update kube config
+#        run: |
+#          aws eks update-kubeconfig --region eu-west-2 --name cm-kubernetes
+#      - name: Render k8s manifests
+#        run: envsubst < k8s/cm-deployment.yaml > deployment.yml
+#      - name: Deploy to EKS
+#        run: kubectl apply -f deployment.yml
